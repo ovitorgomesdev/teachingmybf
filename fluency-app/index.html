@@ -387,6 +387,10 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .toast-f{background:linear-gradient(135deg,#7c2d00,#92400e);border:1px solid rgba(255,107,26,.4);}
 
 
+/* ══ VOCAB EXTRACTOR ══ */
+.vocab-extract-row{padding:12px;border:1px solid var(--stone);border-radius:10px;transition:all .2s;background:white;}
+.vocab-extract-row:hover{border-color:var(--teal);background:var(--teal-pale);}
+
 /* ══ FLYING LEAVE ══ */
 .fl-badge{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:14px;font-size:13px;font-weight:600;margin-bottom:16px;}
 .fl-available{background:linear-gradient(135deg,rgba(79,195,247,.15),rgba(79,195,247,.05));border:1px solid rgba(79,195,247,.35);color:#4fc3f7;}
@@ -1879,6 +1883,7 @@ function tAIBuilder(){
       '<div id="aiButtons" style="display:none">'+
         '<div class="btn-row">'+
           '<button class="btn-save" onclick="runAILesson()">✦ Generate Lesson Plan</button>'+
+          '<button class="btn-save" style="background:linear-gradient(135deg,var(--teal),#1a9e8e)" onclick="runVocabExtractor()">📚 Extract Vocabulary</button>'+
           '<button class="btn-cancel" onclick="resetAIBuilder()">Reset</button>'+
         '</div>'+
       '</div>'+
@@ -1939,6 +1944,123 @@ window.setAIToggle=function(mode){
   aiToggleMode=mode;
   document.getElementById('aib-comm').classList.toggle('active',mode==='communicative');
   document.getElementById('aib-struct').classList.toggle('active',mode==='structured');
+};
+
+window.runVocabExtractor=function(){
+  if(!aiImageData){showToast('Please upload an image first.','d');return;}
+  startLoadAnimation();
+  document.getElementById('aiAnalysisArea').innerHTML='';
+  document.getElementById('aiLessonArea').innerHTML='';
+  var diff=document.getElementById('aiDiffSlider');
+  var diffLabel=aiDiffMap[diff?parseInt(diff.value):3]||'B1 Intermediate';
+  var base64Data=aiImageData.split(',')[1];
+  var mediaType=aiImageData.split(';')[0].split(':')[1]||'image/jpeg';
+  var systemPrompt='You are an expert EFL vocabulary specialist. Analyze the uploaded image and extract all useful vocabulary for an English learner at '+diffLabel+' level. Respond ONLY with a raw JSON object, no markdown, no explanation. Format:\n{\n  "topic": "string",\n  "words": [\n    {\n      "word": "string",\n      "type": "noun|verb|adjective|adverb|phrase|idiom|expression",\n      "ipa": "string e.g. /\\u02c8w\\u025b.r\\u026a/",\n      "definition": "string simple English definition",\n      "example": "string natural example sentence"\n    }\n  ]\n}\nExtract 8 to 20 words. Prioritize: new vocabulary, key topic words, useful phrases, idioms, collocations. Skip basic words like the, and, is.';
+  fetch('/.netlify/functions/ai-lesson',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({systemPrompt:systemPrompt,imageData:base64Data,mediaType:mediaType})
+  })
+  .then(function(r){
+    return r.text().then(function(txt){
+      if(!txt||!txt.trim()) throw new Error('Empty response (status '+r.status+'). Try a smaller image.');
+      var data;try{data=JSON.parse(txt);}catch(e){throw new Error('Invalid response: '+txt.slice(0,200));}
+      if(!r.ok) throw new Error('Status '+r.status+': '+(data.detail||data.error||'Unknown error'));
+      return data;
+    });
+  })
+  .then(function(data){
+    stopLoadAnimation();
+    var text=(data.content||[]).map(function(b){return b.text||'';}).join('');
+    var clean=text.replace(/```json[\s\S]*?```|```/g,'').trim();
+    var jsonMatch=clean.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON found in response.');
+    var result=JSON.parse(jsonMatch[0]);
+    renderVocabExtractorResults(result);
+    showToast('Vocabulary extracted!','t');
+  })
+  .catch(function(err){
+    stopLoadAnimation();
+    document.getElementById('aiLessonArea').innerHTML=
+      '<div class="card"><div style="color:#c0392b;font-size:13px;line-height:1.8">'+
+      '<strong>Extraction failed.</strong><br>'+
+      '<code style="background:#fef2f2;padding:4px 8px;border-radius:5px;font-size:12px;display:block;margin:8px 0;word-break:break-all">'+err.message+'</code>'+
+      '</div></div>';
+  });
+};
+
+function renderVocabExtractorResults(result){
+  var words=result.words||[];
+  if(!words.length){
+    document.getElementById('aiLessonArea').innerHTML='<div class="card"><div style="font-size:13px;color:var(--warm-gray)">No vocabulary found.</div></div>';
+    return;
+  }
+  window._vocabExtractWords=words;
+  window._vocabExtractSelected=words.map(function(_,i){return i;});
+  var rows=words.map(function(w,i){
+    var typeCls=w.type==='verb'?'ct-exercise':w.type==='phrase'||w.type==='idiom'||w.type==='expression'?'ct-dialogue':'ct-text';
+    return '<div class="vocab-extract-row" id="vxrow'+i+'">'+
+      '<label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;width:100%">'+
+        '<input type="checkbox" class="vx-check" data-idx="'+i+'" checked style="margin-top:3px;accent-color:var(--teal);width:16px;height:16px;flex-shrink:0" onchange="vxToggle('+i+',this.checked)">'+
+        '<div style="flex:1">'+
+          '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px">'+
+            '<span style="font-size:15px;font-weight:700;color:var(--dark-brown)">'+w.word+'</span>'+
+            '<span class="ct-badge '+typeCls+'" style="font-size:10px;padding:2px 8px">'+w.type+'</span>'+
+            (w.ipa?'<span style="font-size:12px;color:var(--warm-gray);font-family:monospace">'+w.ipa+'</span>':'')+
+          '</div>'+
+          '<div style="font-size:13px;color:var(--mid-brown);margin-bottom:2px">'+w.definition+'</div>'+
+          '<div style="font-size:12px;color:var(--warm-gray);font-style:italic">\u2192 '+w.example+'</div>'+
+        '</div>'+
+      '</label>'+
+    '</div>';
+  }).join('');
+  document.getElementById('aiLessonArea').innerHTML=
+    '<div class="card" style="border-top:3px solid var(--teal)">'+
+      '<div class="card-title"><div class="dot" style="background:var(--teal)"></div>Extracted Vocabulary \u00b7 '+words.length+' words \u00b7 <em style="font-size:12px;color:var(--teal)">'+result.topic+'</em></div>'+
+      '<div style="font-size:12px;color:var(--warm-gray);margin-bottom:14px">Select words to add to '+appData.student.name+'\'s vocabulary bank.</div>'+
+      '<div style="display:flex;gap:8px;align-items:center;margin-bottom:16px">'+
+        '<button class="btn-sm btn-sm-success" onclick="vxSelectAll(true)">Select All</button>'+
+        '<button class="btn-sm" onclick="vxSelectAll(false)">Deselect All</button>'+
+        '<span style="margin-left:auto;font-size:12px;color:var(--teal);font-weight:600" id="vxCount">'+words.length+' selected</span>'+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">'+rows+'</div>'+
+      '<div class="btn-row">'+
+        '<button class="btn-save" style="background:linear-gradient(135deg,var(--teal),#1a9e8e)" onclick="vxAddToBank()">📚 Add Selected to Vocab Bank</button>'+
+      '</div>'+
+    '</div>';
+}
+
+window.vxToggle=function(idx,checked){
+  var sel=window._vocabExtractSelected||[];
+  if(checked){if(sel.indexOf(idx)===-1) sel.push(idx);}
+  else{var i=sel.indexOf(idx);if(i!==-1) sel.splice(i,1);}
+  window._vocabExtractSelected=sel;
+  var cnt=document.getElementById('vxCount');if(cnt) cnt.textContent=sel.length+' selected';
+};
+
+window.vxSelectAll=function(val){
+  var words=window._vocabExtractWords||[];
+  window._vocabExtractSelected=val?words.map(function(_,i){return i;}):[]; 
+  document.querySelectorAll('.vx-check').forEach(function(cb){cb.checked=val;});
+  var cnt=document.getElementById('vxCount');if(cnt) cnt.textContent=(val?words.length:0)+' selected';
+};
+
+window.vxAddToBank=function(){
+  var words=window._vocabExtractWords||[];
+  var sel=window._vocabExtractSelected||[];
+  if(!sel.length){showToast('Select at least one word.','d');return;}
+  var added=0,skipped=0;
+  sel.forEach(function(i){
+    var w=words[i];if(!w)return;
+    var exists=(appData.vocabulary||[]).some(function(v){return v.word.toLowerCase()===w.word.toLowerCase();});
+    if(exists){skipped++;return;}
+    if(!appData.vocabulary) appData.vocabulary=[];
+    appData.vocabulary.push({word:w.word,type:w.type||'word',ipa:w.ipa||'',def:w.definition||'',ex:w.example||'',ex2:'',addedDate:Date.now()});
+    added++;
+  });
+  appData.student.vocab=appData.vocabulary.length;
+  saveData();
+  showToast('✦ '+added+' words added to vocab bank'+(skipped?' · '+skipped+' already existed':''),'t');
+  setTimeout(function(){showPanel('t-vocab');},700);
 };
 
 window.resetAIBuilder=function(){
