@@ -123,6 +123,13 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .pill-locked{background:var(--stone);color:var(--warm-gray);}
 .pill-open{background:var(--accent-pale);color:var(--accent);}
 
+/* AVATAR UPLOAD */
+.avatar-upload-wrap { position:relative; display:inline-block; cursor:pointer; }
+.avatar-upload-wrap input[type=file] { display:none; }
+.avatar-img { width:100%; height:100%; border-radius:50%; object-fit:cover; }
+.avatar-overlay { position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; font-size:12px; color:white; }
+.avatar-upload-wrap:hover .avatar-overlay { display:flex; }
+
 /* TOGGLE */
 .tog{width:38px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;flex-shrink:0;}
 .tog-on{background:var(--success);} .tog-off{background:var(--sand);}
@@ -189,7 +196,23 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .toast.show{display:block;}
 .toast-d{background:var(--dark-brown);} .toast-t{background:var(--teacher);}
 
-@media(max-width:800px){.sidebar{display:none;} .panel{padding:22px 16px;} .stat-grid{grid-template-columns:repeat(2,1fr);} .two-col{grid-template-columns:1fr;}}
+/* ── BOTTOM NAV (mobile) ── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark-brown);border-top:1px solid rgba(255,255,255,.1);z-index:1000;padding:0 4px 4px;}
+.bottom-nav.teacher-nav{background:var(--teacher);}
+.bottom-nav-inner{display:flex;justify-content:space-around;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 6px;cursor:pointer;color:rgba(255,255,255,.45);flex:1;border:none;background:none;font-family:inherit;transition:color .15s;}
+.bn-item.active{color:white;}
+.bn-icon{font-size:18px;line-height:1;}
+.bn-label{font-size:9px;letter-spacing:.5px;text-transform:uppercase;font-weight:500;}
+
+@media(max-width:800px){
+  .sidebar{display:none;}
+  .bottom-nav{display:block;}
+  .main-content{padding-bottom:68px;}
+  .panel{padding:22px 16px;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
@@ -238,6 +261,9 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
     </div>
   </aside>
   <main class="main-content" id="main"></main>
+  <nav class="bottom-nav" id="bottom-nav">
+    <div class="bottom-nav-inner" id="bottom-nav-inner"></div>
+  </nav>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -249,7 +275,8 @@ var editingLes = -1;
 var editingContent = -1;
 
 var appData = {
-  student: { name:'Lucas', lessons:0, vocab:0, streak:0, fluency:null },
+  student: { name:'Lucas', lessons:0, vocab:0, streak:0, fluency:null, photo:null },
+  teacherPhoto: null,
   note:'', noteDate:'',
   skills:{ Speaking:0, Vocabulary:0, Grammar:0, Pronunciation:0, Writing:0 },
   feedback:[], vocabulary:[],
@@ -334,6 +361,11 @@ function buildSidebar() {
   av.textContent=mode==='teacher'?'V':appData.student.name.charAt(0).toUpperCase();
   document.getElementById('sb-name').textContent=mode==='teacher'?'Vítor':appData.student.name;
   document.getElementById('sb-sub').textContent=mode==='teacher'?'Teacher Dashboard':'Ready to begin';
+  renderSidebarAvatar();
+
+  var bn=document.getElementById('bottom-nav');
+  bn.className='bottom-nav '+(mode==='teacher'?'teacher-nav':'');
+
   if (mode==='student') {
     document.getElementById('sb-nav').innerHTML=
       '<div class="nav-sec">Main</div>'+
@@ -342,6 +374,12 @@ function buildSidebar() {
       '<div class="nav-item" id="nav-s-progress" onclick="showPanel(\'s-progress\')">◎ Progress</div>'+
       '<div class="nav-sec">Resources</div>'+
       '<div class="nav-item" id="nav-s-vocab" onclick="showPanel(\'s-vocab\')">◈ Vocabulary</div>';
+    document.getElementById('bottom-nav-inner').innerHTML=
+      '<button class="bn-item" id="bn-s-dash" onclick="showPanel(\'s-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Home</span></button>'+
+      '<button class="bn-item" id="bn-s-course" onclick="showPanel(\'s-course\')"><span class="bn-icon">◫</span><span class="bn-label">Course</span></button>'+
+      '<button class="bn-item" id="bn-s-progress" onclick="showPanel(\'s-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Progress</span></button>'+
+      '<button class="bn-item" id="bn-s-vocab" onclick="showPanel(\'s-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>'+
+      '<button class="bn-item" onclick="doLogout()"><span class="bn-icon">↩</span><span class="bn-label">Logout</span></button>';
   } else {
     document.getElementById('sb-nav').innerHTML=
       '<div class="nav-sec">Dashboard</div>'+
@@ -351,14 +389,51 @@ function buildSidebar() {
       '<div class="nav-item" id="nav-t-progress" onclick="showPanel(\'t-progress\')">◎ Progress & Scores</div>'+
       '<div class="nav-item" id="nav-t-feedback" onclick="showPanel(\'t-feedback\')">✎ Feedback & Notes</div>'+
       '<div class="nav-item" id="nav-t-vocab" onclick="showPanel(\'t-vocab\')">◈ Vocabulary</div>';
+    document.getElementById('bottom-nav-inner').innerHTML=
+      '<button class="bn-item" id="bn-t-dash" onclick="showPanel(\'t-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Overview</span></button>'+
+      '<button class="bn-item" id="bn-t-course" onclick="showPanel(\'t-course\')"><span class="bn-icon">◫</span><span class="bn-label">Lessons</span></button>'+
+      '<button class="bn-item" id="bn-t-progress" onclick="showPanel(\'t-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Scores</span></button>'+
+      '<button class="bn-item" id="bn-t-feedback" onclick="showPanel(\'t-feedback\')"><span class="bn-icon">✎</span><span class="bn-label">Feedback</span></button>'+
+      '<button class="bn-item" id="bn-t-vocab" onclick="showPanel(\'t-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>';
   }
 }
 
-/* ── ROUTER ── */
+function renderSidebarAvatar() {
+  var av = document.getElementById('sb-av');
+  var photo = mode === 'teacher' ? appData.teacherPhoto : appData.student.photo;
+  var letter = mode === 'teacher' ? 'V' : appData.student.name.charAt(0).toUpperCase();
+  var cls = mode === 'teacher' ? 'av-t' : 'av-s';
+  av.className = 'sb-avatar ' + cls;
+  av.innerHTML = '<label class="avatar-upload-wrap" title="Change photo" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;">' +
+    '<input type="file" accept="image/*" onchange="uploadPhoto(this,\'' + (mode==='teacher'?'teacher':'student') + '\')">' +
+    (photo
+      ? '<img class="avatar-img" src="' + photo + '">'
+      : '<span style="font-size:13px;font-weight:600;color:white">' + letter + '</span>') +
+    '<div class="avatar-overlay">📷</div>' +
+    '</label>';
+}
+
+function uploadPhoto(input, who) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    if (who === 'teacher') appData.teacherPhoto = e.target.result;
+    else appData.student.photo = e.target.result;
+    saveData();
+    renderSidebarAvatar();
+    showToast('Photo updated!', true);
+  };
+  reader.readAsDataURL(file);
+}
+
 function showPanel(name) {
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  document.querySelectorAll('.bn-item').forEach(function(n){n.classList.remove('active');});
   var el=document.getElementById('nav-'+name);
   if(el) el.classList.add('active');
+  var bn=document.getElementById('bn-'+name);
+  if(bn) bn.classList.add('active');
   var mc=document.getElementById('main');
   if(name==='s-dash') mc.innerHTML=sDash();
   else if(name==='s-course') mc.innerHTML=sCourse();
@@ -376,18 +451,24 @@ function showPanel(name) {
 ══════════════════════════ */
 function sDash() {
   var s=appData.student;
+  var teacherAvHtml = appData.teacherPhoto
+    ? '<img src="' + appData.teacherPhoto + '" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">'
+    : '<span style="font-size:12px;color:white;font-weight:600;">V</span>';
   var noteHtml=appData.note ?
     '<div style="background:linear-gradient(135deg,#F5E0D6,#F5EDD3);border:1px solid rgba(184,92,56,.15);border-radius:13px;padding:22px 26px;margin-bottom:18px;">'+
     '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">'+
-    '<div style="width:30px;height:30px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:600;">V</div>'+
+    '<div style="width:30px;height:30px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;overflow:hidden;">'+teacherAvHtml+'</div>'+
     '<div><div style="font-size:13px;font-weight:600;color:var(--dark-brown);">Vítor</div>'+
     '<div style="font-size:11px;color:var(--warm-gray);">Your Teacher · '+(appData.noteDate||'Recent')+'</div></div></div>'+
     '<div style="font-size:16px;font-weight:300;font-style:italic;color:var(--mid-brown);line-height:1.6;font-family:Georgia,serif;">"'+appData.note+'"</div></div>'
     :
-    '<div class="welcome-card"><div class="wc-icon">👋</div><div>'+
+    '<div class="welcome-card"><div class="wc-icon">'+
+    (appData.student.photo ? '<img src="'+appData.student.photo+'" style="width:52px;height:52px;border-radius:50%;object-fit:cover;">' : '👋')+
+    '</div><div>'+
     '<div class="wc-title">Hello, <em>'+s.name+'</em>!</div>'+
     '<div class="wc-body">I\'m looking forward to our first lesson together. This is your personal learning space.</div>'+
-    '<div class="wc-teacher"><div class="wct-av">V</div><div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div>'+
+    '<div class="wc-teacher"><div class="wct-av" style="overflow:hidden;display:flex;align-items:center;justify-content:center;">'+teacherAvHtml+'</div>'+
+    '<div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div>'+
     '</div></div>';
   var lastFb='';
   if(appData.feedback.length>0){
