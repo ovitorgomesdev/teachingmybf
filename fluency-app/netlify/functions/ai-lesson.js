@@ -30,7 +30,7 @@ exports.handler = async function(event) {
     };
   }
 
-  const GEMINI_MODEL = 'gemini-3-flash-preview';
+  const GEMINI_MODEL = 'gemini-2.0-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
   const fullPrompt = systemPrompt + '\n\nAnalyze the image above. Return ONLY a raw JSON object — no markdown, no code fences, no explanation.';
