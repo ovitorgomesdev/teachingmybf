@@ -34,6 +34,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .btn-s{background:var(--accent);} .btn-s:hover{background:var(--accent-light);}
 .btn-t{background:var(--teacher);} .btn-t:hover{background:var(--teacher-light);}
 .login-hint{font-size:11px;color:rgba(255,255,255,.2);text-align:center;margin-top:14px;}
+.login-error{font-size:12px;color:#FF8A80;text-align:center;margin-bottom:10px;display:none;}
 
 #app-screen{flex-direction:row;}
 .sidebar{width:252px;min-width:252px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
@@ -167,13 +168,11 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .tip-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:2px;}
 .tip-text{font-size:12px;color:var(--mid-brown);line-height:1.5;}
 
-/* avatar upload */
 .av-upload{position:relative;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;}
 .av-upload input{display:none;}
 .av-upload-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;font-size:11px;color:white;}
 .av-upload:hover .av-upload-overlay{display:flex;}
 
-/* bottom nav */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark-brown);border-top:1px solid rgba(255,255,255,.1);z-index:1000;padding:0 4px 4px;}
 .bottom-nav.teacher-nav{background:var(--teacher);}
 .bottom-nav-inner{display:flex;justify-content:space-around;}
@@ -208,15 +207,17 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
     </div>
     <div id="form-student">
       <label class="fl">Your Name</label>
-      <input class="fi-login" type="text" id="s-name" placeholder="Lucas" value="Lucas">
+      <input class="fi-login" type="text" id="s-name" placeholder="Lucas" autocomplete="off">
       <label class="fl">Access Code</label>
-      <input class="fi-login" type="password" id="s-pass" placeholder="••••••••" value="english2026">
+      <input class="fi-login" type="password" id="s-pass" placeholder="••••••••" autocomplete="off">
+      <div class="login-error" id="err-s">Incorrect access code.</div>
       <button class="btn-login btn-s" onclick="doLogin('student')">Start Learning →</button>
       <div class="login-hint">Code provided by your teacher, Vítor</div>
     </div>
     <div id="form-teacher" style="display:none">
       <label class="fl">Password</label>
-      <input class="fi-login" type="password" id="t-pass" placeholder="••••••••" value="teacher2026">
+      <input class="fi-login" type="password" id="t-pass" placeholder="••••••••" autocomplete="off">
+      <div class="login-error" id="err-t">Incorrect password.</div>
       <button class="btn-login btn-t" onclick="doLogin('teacher')">Enter Dashboard →</button>
       <div class="login-hint">Teacher access only</div>
     </div>
@@ -248,12 +249,13 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 <div class="toast" id="toast"></div>
 
 <script>
+/* ── STATE ── */
 var mode = '';
 var editingMod = -1;
 var editingLes = -1;
 var editingContent = -1;
 
-var appData = {
+var defaultData = {
   student: { name:'Lucas', lessons:0, vocab:0, streak:0, fluency:null, photo:null },
   teacherPhoto: null,
   note:'', noteDate:'',
@@ -287,41 +289,65 @@ var appData = {
   ]
 };
 
-/* STORAGE */
+var appData = JSON.parse(JSON.stringify(defaultData));
+
+/* ── STORAGE ── */
 function saveData() {
-  try { window.storage.set('fluency-v3', JSON.stringify(appData)); } catch(e) {}
-}
-function loadData(cb) {
   try {
-    window.storage.get('fluency-v3').then(function(r) {
-      if (r && r.value) { try { appData = JSON.parse(r.value); } catch(e) {} }
-      cb();
-    }).catch(function() { cb(); });
-  } catch(e) { cb(); }
+    localStorage.setItem('fluency-v3', JSON.stringify(appData));
+  } catch(e) {
+    console.error('Save error:', e);
+  }
 }
 
-/* LOGIN */
+function loadData() {
+  try {
+    var saved = localStorage.getItem('fluency-v3');
+    if (saved) {
+      appData = JSON.parse(saved);
+    }
+  } catch(e) {
+    appData = JSON.parse(JSON.stringify(defaultData));
+  }
+}
+
+/* ── LOGIN ── */
 function switchTab(t) {
   document.getElementById('tab-s').classList.toggle('active', t === 'student');
   document.getElementById('tab-t').classList.toggle('active', t === 'teacher');
   document.getElementById('form-student').style.display = t === 'student' ? 'block' : 'none';
   document.getElementById('form-teacher').style.display = t === 'teacher' ? 'block' : 'none';
+  document.getElementById('err-s').style.display = 'none';
+  document.getElementById('err-t').style.display = 'none';
 }
 
 function doLogin(m) {
-  var pass = m === 'student' ? document.getElementById('s-pass').value : document.getElementById('t-pass').value;
-  if (pass !== (m === 'student' ? 'english2026' : 'teacher2026')) { showToast('Incorrect password.'); return; }
-  loadData(function() {
-    mode = m;
-    if (m === 'student') {
-      var n = document.getElementById('s-name').value.trim() || 'Lucas';
-      appData.student.name = n;
-    }
-    document.getElementById('login-screen').classList.remove('active');
-    document.getElementById('app-screen').classList.add('active');
-    buildSidebar();
-    showPanel(m === 'student' ? 's-dash' : 't-dash');
-  });
+  var pass = m === 'student'
+    ? document.getElementById('s-pass').value
+    : document.getElementById('t-pass').value;
+  var correct = m === 'student' ? 'english2026' : 'teacher2026';
+  if (pass !== correct) {
+    document.getElementById(m === 'student' ? 'err-s' : 'err-t').style.display = 'block';
+    return;
+  }
+  loadData();
+  mode = m;
+  if (m === 'student') {
+    var n = document.getElementById('s-name').value.trim() || 'Lucas';
+    appData.student.name = n;
+    saveData();
+  }
+  /* clear fields */
+  document.getElementById('s-name').value = '';
+  document.getElementById('s-pass').value = '';
+  document.getElementById('t-pass').value = '';
+  document.getElementById('err-s').style.display = 'none';
+  document.getElementById('err-t').style.display = 'none';
+
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  buildSidebar();
+  showPanel(m === 'student' ? 's-dash' : 't-dash');
 }
 
 function doLogout() {
@@ -329,9 +355,10 @@ function doLogout() {
   document.getElementById('login-screen').classList.add('active');
   document.getElementById('main').innerHTML = '';
   mode = '';
+  editingMod = -1; editingLes = -1; editingContent = -1;
 }
 
-/* SIDEBAR + BOTTOM NAV */
+/* ── SIDEBAR + BOTTOM NAV ── */
 function buildSidebar() {
   var sb = document.getElementById('sidebar');
   sb.className = 'sidebar ' + (mode === 'teacher' ? 'sb-teacher' : 'sb-student');
@@ -404,7 +431,7 @@ function uploadPhoto(input, who) {
   reader.readAsDataURL(file);
 }
 
-/* ROUTER */
+/* ── ROUTER ── */
 function showPanel(name) {
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
   document.querySelectorAll('.bn-item').forEach(function(n) { n.classList.remove('active'); });
@@ -424,7 +451,7 @@ function showPanel(name) {
   else if (name === 't-vocab') mc.innerHTML = tVocab();
 }
 
-/* ── STUDENT ── */
+/* ══ STUDENT PANELS ══ */
 function sDash() {
   var s = appData.student;
   var tAvHtml = appData.teacherPhoto
@@ -556,7 +583,7 @@ function sVocab() {
     '</div>';
 }
 
-/* ── TEACHER ── */
+/* ══ TEACHER PANELS ══ */
 function tDash() {
   var s = appData.student;
   var uRows = appData.modules.map(function(m) {
@@ -665,7 +692,7 @@ function tLessonEditor(mi, li) {
     '</div>';
 }
 
-/* MODULE / LESSON ACTIONS */
+/* ── MODULE / LESSON ACTIONS ── */
 function openModuleEditor(mi) { editingMod = mi; editingLes = -1; editingContent = -1; document.getElementById('main').innerHTML = tCourse(); }
 function openLessonEditor(mi, li) { editingMod = mi; editingLes = li; editingContent = -1; document.getElementById('main').innerHTML = tCourse(); }
 function openContentEditor(mi, li, ci) { editingContent = ci; document.getElementById('main').innerHTML = tCourse(); }
@@ -754,7 +781,7 @@ function toggleLesson(mi, li) {
   showToast(appData.modules[mi].lessons[li].unlocked ? 'Lesson unlocked!' : 'Lesson locked.', true);
 }
 
-/* TEACHER: PROGRESS */
+/* ── TEACHER: PROGRESS ── */
 function tProgress() {
   var s = appData.student;
   var sk = appData.skills;
@@ -793,7 +820,7 @@ function saveSkills() {
   saveData(); showToast('Skills updated!', true);
 }
 
-/* TEACHER: FEEDBACK */
+/* ── TEACHER: FEEDBACK ── */
 function tFeedback() {
   var fbCards = appData.feedback.map(function(f, i) {
     return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">' + f.title + '</div>' +
@@ -829,7 +856,7 @@ function addFeedback() {
 }
 function delFeedback(i) { appData.feedback.splice(i, 1); saveData(); showPanel('t-feedback'); showToast('Deleted.', true); }
 
-/* TEACHER: VOCAB */
+/* ── TEACHER: VOCAB ── */
 function tVocab() {
   var tags = appData.vocabulary.map(function(v, i) {
     return '<span class="vtag">' + v.word + '<span class="vtag-x" onclick="removeVocab(' + i + ')">×</span></span>';
@@ -860,7 +887,7 @@ function addVocab() {
 
 function removeVocab(i) { appData.vocabulary.splice(i, 1); appData.student.vocab = appData.vocabulary.length; saveData(); showPanel('t-vocab'); showToast('Word removed.', true); }
 
-/* UTILS */
+/* ── UTILS ── */
 function showToast(msg, isT) {
   var t = document.getElementById('toast');
   t.textContent = msg;
