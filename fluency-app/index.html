@@ -386,6 +386,85 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .toast-d{background:var(--dark-brown);}.toast-t{background:var(--teacher);}
 .toast-f{background:linear-gradient(135deg,#7c2d00,#92400e);border:1px solid rgba(255,107,26,.4);}
 
+
+/* ══ FLYING LEAVE ══ */
+.fl-badge{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:14px;font-size:13px;font-weight:600;margin-bottom:16px;}
+.fl-available{background:linear-gradient(135deg,rgba(79,195,247,.15),rgba(79,195,247,.05));border:1px solid rgba(79,195,247,.35);color:#4fc3f7;}
+.fl-used{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(240,234,255,.35);}
+.btn-flying{width:100%;padding:13px;background:linear-gradient(135deg,#0d47a1,#1565c0);border:1px solid rgba(79,195,247,.3);border-radius:12px;color:white;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;}
+.btn-flying:hover{background:linear-gradient(135deg,#1565c0,#1976d2);transform:translateY(-1px);}
+.btn-flying:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+.fl-confirm{background:rgba(79,195,247,.08);border:1px solid rgba(79,195,247,.2);border-radius:12px;padding:16px;margin-bottom:12px;font-size:13px;color:rgba(240,234,255,.8);line-height:1.7;display:none;}
+.fl-confirm.show{display:block;}
+.weekly-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0;}
+.wday{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;}
+.wday-done{background:linear-gradient(135deg,var(--f-hot),var(--f-gold));color:white;}
+.wday-fl{background:linear-gradient(135deg,#0d47a1,#4fc3f7);color:white;}
+.wday-miss{background:rgba(255,255,255,.04);color:rgba(240,234,255,.2);}
+.wday-today{border:1.5px solid rgba(240,234,255,.3);color:rgba(240,234,255,.5);background:rgba(255,255,255,.03);}
+.wday-future{background:transparent;color:rgba(240,234,255,.1);}
+
+/* ══ TEACHER CHALLENGES ══ */
+.chal-block{background:white;border:1px solid var(--stone);border-radius:12px;padding:16px;margin-bottom:10px;}
+.chal-date-badge{display:inline-block;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;font-weight:600;margin-bottom:8px;}
+.chal-today{background:var(--accent-pale);color:var(--accent);}
+.chal-future{background:var(--teacher-pale);color:var(--teacher);}
+.chal-past{background:var(--stone);color:var(--warm-gray);}
+.chal-title-t{font-size:14px;font-weight:600;color:var(--dark-brown);margin-bottom:4px;}
+.chal-desc{font-size:12px;color:var(--mid-brown);line-height:1.6;margin-bottom:10px;}
+.chal-steps-list{margin-bottom:10px;}
+.chal-step-item{font-size:12px;color:var(--mid-brown);padding:4px 0;border-bottom:1px solid var(--stone);display:flex;align-items:center;gap:8px;}
+.chal-step-item:last-child{border-bottom:none;}
+
+/* Student challenge card */
+.fp-chal-card{background:var(--f-surface);border:1px solid var(--f-border);border-radius:14px;padding:20px;margin-bottom:14px;}
+.fp-chal-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--f-text);margin-bottom:6px;}
+.fp-chal-desc{font-size:13px;color:var(--f-muted);line-height:1.6;margin-bottom:14px;}
+.fp-chal-step{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:9px;margin-bottom:7px;cursor:pointer;transition:all .2s;color:var(--f-muted);font-size:13px;border:1px solid transparent;}
+.fp-chal-step:hover{background:rgba(255,255,255,.06);color:var(--f-text);}
+.fp-chal-step.done{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.05);color:rgba(240,234,255,.7);}
+.fp-chal-step-num{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;transition:all .2s;}
+.fp-chal-step.done .fp-chal-step-num{background:#34d399;color:#0d1a13;}
+.no-challenge{text-align:center;padding:32px 20px;background:var(--f-surface);border:1px solid var(--f-border);border-radius:14px;margin-bottom:14px;}
+.no-chal-icon{font-size:36px;margin-bottom:10px;}
+.no-chal-text{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--f-muted);}
+.no-chal-sub{font-size:12px;color:rgba(240,234,255,.25);margin-top:4px;}
+
+/* ══ RESPONSIVE / MOBILE ══ */
+@media(max-width:480px){
+  .panel,.flame-panel{padding:16px 12px;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .two-col{grid-template-columns:1fr;}
+  .fp-rewards{grid-template-columns:1fr 1fr 1fr;}
+  .fp-canvas-wrap{width:120px;height:150px;}
+  #flameCanvas{width:120px;height:150px;}
+  .ai-analysis-grid{grid-template-columns:1fr 1fr;}
+  .vbank-stats{grid-template-columns:repeat(2,1fr);}
+  .fc-stats-row{grid-template-columns:repeat(3,1fr);}
+  .flashcard-wrap{max-width:100%;}
+  .fc-face-word{font-size:26px;}
+  .fc-buttons{gap:6px;}
+  .fc-btn{padding:9px 14px;font-size:12px;}
+  .login-card{padding:28px 20px;}
+  .pg{font-size:28px;}
+  .aib-title{font-size:20px;}
+}
+@media(max-width:380px){
+  .stat-grid{grid-template-columns:1fr 1fr;}
+  .fp-rewards{grid-template-columns:1fr 1fr 1fr;}
+  .vbank-stats{grid-template-columns:1fr 1fr;}
+}
+/* Touch targets */
+@media(hover:none){
+  .nav-item,.fp-step,.fp-chal-step,.fc-btn,.btn-flame,.btn-save{min-height:44px;}
+  .fp-badge-slot{min-height:48px;}
+}
+/* Safe area for iPhone notch */
+@supports(padding:max(0px)){
+  .main-content{padding-bottom:max(68px,calc(68px + env(safe-area-inset-bottom)));}
+  .bottom-nav{padding-bottom:max(4px,env(safe-area-inset-bottom));}
+}
+
 /* ── BOTTOM NAV ── */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark-brown);border-top:1px solid rgba(255,255,255,.1);z-index:1000;padding:0 4px 4px;}
 .bottom-nav.teacher-nav{background:var(--teacher);}
@@ -505,21 +584,24 @@ var defaultFlame = {
   points:0, streak:0, totalDays:0, badges:0,
   lastCompleted:null, todayDone:false,
   stepsCompleted:[false,false,false,false],
-  reigniteSelected:false, _streakReset:false
+  reigniteSelected:false, _streakReset:false,
+  flyingLeave:{used:false, weekStart:null},
+  weeklyDone:[], // array of date strings 'YYYY-MM-DD'
 };
 
 var defaultData = {
   student:{name:'Lucas',lessons:0,vocab:0,streak:0,fluency:null,photo:null},
   teacherPhoto:null, note:'', noteDate:'',
-  welcomeMsg:"I'm looking forward to our first lesson together. This is your personal learning space.",
+  welcomeMsg:"I\'m looking forward to our first lesson together. This is your personal learning space.",
   skills:{Speaking:0,Vocabulary:0,Grammar:0,Pronunciation:0,Writing:0},
   feedback:[], vocabulary:[],
   flame: JSON.parse(JSON.stringify(defaultFlame)),
+  challenges:[], // [{id, title, description, steps, date:'YYYY-MM-DD', done:false}]
   modules:[
     {id:1,title:'Starting the Journey',sub:'Breaking the ice · Self-expression',lessons:[
       {title:'Lesson 1 — Starting the Journey',meta:'Module 1 · 50 min',unlocked:false,contents:[
         {type:'text',label:'Introduction',body:'Welcome to your first English lesson! Today we focus on introducing yourself naturally.'},
-        {type:'dialogue',label:'Sample Dialogue',body:"A: Hi, I'm Sarah. Nice to meet you!\nB: Nice to meet you too! I'm Lucas. Where are you from?"},
+        {type:'dialogue',label:'Sample Dialogue',body:"A: Hi, I\'m Sarah. Nice to meet you!\nB: Nice to meet you too! I\'m Lucas. Where are you from?"},
         {type:'exercise',label:'Exercise',body:'Practice introducing yourself. Say your name, where you\'re from, and one thing you like.'}
       ]},
       {title:'Lesson 2 — Describing Yourself',meta:'Module 1 · 50 min',unlocked:false,contents:[]}
@@ -545,7 +627,7 @@ var STEP_DATA = [
    body:"Answer these 5 quick questions. Don't overthink — go with your first instinct.",
    task:'1. What was the main topic?\n2. Name one adjective used positively.\n3. What emotion did the speaker express?\n4. Was the tone formal or informal?\n5. One phrase you\'d like to use yourself?'},
   {title:'Speaking or Writing Task',dur:'3 minutes',
-   body:"Now it's your turn! Use the vocabulary and expressions from today's listening.",
+   body:"Now it\'s your turn! Use the vocabulary and expressions from today's listening.",
    task:'Write a short paragraph (or speak aloud) about someone you admire deeply. Use at least 3 new expressions from the lesson.'},
   {title:'Creative Challenge',dur:'2 minutes',
    body:'A tiny creative spark to close the lesson beautifully.',
@@ -589,6 +671,9 @@ onValue(dataRef, function(snapshot){
     if(!appData.modules) appData.modules=defaultData.modules;
     if(!appData.flame) appData.flame=JSON.parse(JSON.stringify(defaultFlame));
     if(!appData.flame.stepsCompleted) appData.flame.stepsCompleted=[false,false,false,false];
+    if(!appData.flame.flyingLeave) appData.flame.flyingLeave={used:false,weekStart:null};
+    if(!appData.flame.weeklyDone) appData.flame.weeklyDone=[];
+    if(!appData.challenges) appData.challenges=[];
     appData.modules.forEach(function(m){
       if(!m.lessons) m.lessons=[];
       m.lessons.forEach(function(l){if(!l.contents) l.contents=[];});
@@ -679,6 +764,7 @@ function buildSidebar(){
       '<div class="nav-item" id="nav-t-dash" onclick="showPanel(\'t-dash\')">⊞ Overview</div>'+
       '<div class="nav-sec">Edit</div>'+
       '<div class="nav-item" id="nav-t-course" onclick="showPanel(\'t-course\')">◫ Modules & Lessons</div>'+
+      '<div class="nav-item" id="nav-t-challenges" onclick="showPanel(\'t-challenges\')">🔥 Daily Challenges</div>'+
       '<div class="nav-item" id="nav-t-aibuilder" style="background:linear-gradient(135deg,rgba(74,48,128,.18),rgba(74,48,128,.05));border:1px solid rgba(74,48,128,.2);" onclick="showPanel(\'t-aibuilder\')">✦ AI Lesson Builder</div>'+
       '<div class="nav-item" id="nav-t-progress" onclick="showPanel(\'t-progress\')">◎ Progress & Scores</div>'+
       '<div class="nav-item" id="nav-t-feedback" onclick="showPanel(\'t-feedback\')">✎ Feedback & Notes</div>'+
@@ -734,19 +820,71 @@ function renderPanel(name){
   else if(name==='t-progress') mc.innerHTML=tProgress();
   else if(name==='t-feedback') mc.innerHTML=tFeedback();
   else if(name==='t-vocab') mc.innerHTML=tVocab();
+  else if(name==='t-challenges') mc.innerHTML=tChallenges();
   else if(name==='t-aibuilder') mc.innerHTML=tAIBuilder();
   else if(name==='s-flashcards'){mc.innerHTML=sFlashcards();initFlashcards();}
 }
 
 /* ══ FLAME ENGINE ══ */
+/* ══ HELPERS ══ */
+function todayStr(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function weekStart(dateStr){
+  var d=dateStr?new Date(dateStr+'T12:00:00'):new Date();
+  var day=d.getDay(); // 0=Sun
+  d.setDate(d.getDate()-day);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function isSameWeek(a,b){return weekStart(a)===weekStart(b);}
+function getTodayChallenge(){
+  var today=todayStr();
+  return (appData.challenges||[]).find(function(c){return c.date===today;})||null;
+}
+function flyingLeaveAvailable(){
+  var fl=appData.flame.flyingLeave||{};
+  if(!fl.weekStart) return true;
+  if(!isSameWeek(fl.weekStart,todayStr())) return true; // new week
+  return !fl.used;
+}
+function flyingLeaveUsedThisWeek(){
+  var fl=appData.flame.flyingLeave||{};
+  if(!fl.weekStart||!fl.used) return false;
+  return isSameWeek(fl.weekStart,todayStr());
+}
+function resetFLIfNewWeek(){
+  var fl=appData.flame.flyingLeave||{};
+  if(fl.weekStart&&!isSameWeek(fl.weekStart,todayStr())){
+    appData.flame.flyingLeave={used:false,weekStart:null};
+  }
+}
+function weeklyCompletionPct(){
+  var wd=appData.flame.weeklyDone||[];
+  var ws=weekStart(todayStr());
+  // count days from Mon to today
+  var today=new Date();
+  var dayOfWeek=today.getDay()||7; // Mon=1..Sun=7
+  var daysThisWeek=dayOfWeek; // days elapsed incl today
+  var done=wd.filter(function(d){return weekStart(d)===ws;}).length;
+  return Math.round(Math.min(done,daysThisWeek)/Math.max(daysThisWeek,1)*100);
+}
+
 function flameStrength(){
   var f=appData.flame;
+  var today=todayStr();
+  // Did student complete today\'s challenge?
+  var wd=f.weeklyDone||[];
+  if(wd.indexOf(today)!==-1) return 100; // done today
+  // Flying leave used today?
+  if(flyingLeaveUsedThisWeek()&&f.flyingLeave&&f.flyingLeave.usedDate===today) return 80;
   if(!f.lastCompleted) return 0;
   var hrs=(Date.now()-f.lastCompleted)/3600000;
   return Math.max(0,100-hrs*4);
 }
 
-function drawFlame(canvas,strength,t){
+function drawFlame(canvas,strength,t,tiltX,tiltY){
+  tiltX=tiltX||0;tiltY=tiltY||0;
   var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
   ctx.clearRect(0,0,w,h);
   if(strength<=0){drawColdFlame(ctx,w,h);return;}
@@ -760,7 +898,7 @@ function drawFlame(canvas,strength,t){
     gr.addColorStop(0,blueish>0?'rgba(79,195,247,'+(0.07*intensity)+')':'rgba(255,107,26,'+(0.09*intensity)+')');
     gr.addColorStop(1,'transparent');ctx.fillStyle=gr;ctx.fillRect(0,0,w,h);
   }
-  ctx.save();ctx.translate(cx,baseY);
+  ctx.save();ctx.translate(cx+tiltX*22,baseY+tiltY*8);ctx.rotate(tiltX*0.18);
   for(var i=4;i>=0;i--){
     var tt=i/4,lH=fH*(1-tt*0.12),bw=38*(1-tt*0.45);
     var fk=Math.sin(t*0.1+i*0.5)*4*intensity;
@@ -782,6 +920,16 @@ function drawFlame(canvas,strength,t){
     cg.addColorStop(1,'transparent');ctx.fillStyle=cg;ctx.fill();
   }
   ctx.restore();
+  // Glow for high streak
+  var streak=appData&&appData.flame?appData.flame.streak||0:0;
+  if(streak>=7&&intensity>0.5){
+    var glowR=50+streak*2;
+    var glow=ctx.createRadialGradient(cx+tiltX*22,baseY-fH*0.4+tiltY*8,0,cx+tiltX*22,baseY-fH*0.4+tiltY*8,glowR);
+    var glowAlpha=Math.min(0.18,0.08+streak*0.008)*intensity;
+    glow.addColorStop(0,'rgba(255,180,50,'+glowAlpha+')');
+    glow.addColorStop(1,'transparent');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+  }
 }
 function drawColdFlame(ctx,w,h){
   ctx.save();ctx.translate(w/2,h-8);
@@ -792,21 +940,64 @@ function drawColdFlame(ctx,w,h){
   ctx.fillStyle=g;ctx.fill();ctx.restore();
 }
 
+/* Interactive flame tilt state */
+var flameTiltX=0,flameTiltY=0,flameTiltTargetX=0,flameTiltTargetY=0;
+var flameGyroEnabled=false;
+
 function startFlameLoop(){
   var canvas=document.getElementById('flameCanvas');if(!canvas)return;
-  function tick(){var s=flameStrength();drawFlame(canvas,s,flameTime);flameTime++;flameRAF=requestAnimationFrame(tick);}
+  // Mouse interaction (desktop)
+  function onMouseMove(e){
+    var rect=canvas.getBoundingClientRect();
+    var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+    flameTiltTargetX=Math.max(-1,Math.min(1,(e.clientX-cx)/200));
+    flameTiltTargetY=Math.max(-0.5,Math.min(0.5,(e.clientY-cy)/300));
+  }
+  document.addEventListener('mousemove',onMouseMove);
+  canvas._mouseMoveHandler=onMouseMove;
+  // Gyroscope (iPhone/iPad)
+  function startGyro(){
+    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(function(r){
+        if(r==='granted') attachGyro();
+      }).catch(function(){});
+    } else if(window.DeviceOrientationEvent){
+      attachGyro();
+    }
+  }
+  function attachGyro(){
+    flameGyroEnabled=true;
+    window.addEventListener('deviceorientation',function(e){
+      var g=e.gamma||0,b=e.beta||0;
+      flameTiltTargetX=Math.max(-1,Math.min(1,g/30));
+      flameTiltTargetY=Math.max(-0.5,Math.min(0.5,(b-45)/60));
+    },{passive:true});
+  }
+  // Try gyro on touch devices
+  if('ontouchstart' in window) startGyro();
+  function tick(){
+    // Smooth interpolation
+    flameTiltX+=(flameTiltTargetX-flameTiltX)*0.06;
+    flameTiltY+=(flameTiltTargetY-flameTiltY)*0.06;
+    var s=flameStrength();
+    drawFlame(canvas,s,flameTime,flameTiltX,flameTiltY);
+    flameTime++;
+    flameRAF=requestAnimationFrame(tick);
+  }
   tick();
 }
-function stopFlameLoop(){if(flameRAF){cancelAnimationFrame(flameRAF);flameRAF=null;}}
+function stopFlameLoop(){
+  if(flameRAF){cancelAnimationFrame(flameRAF);flameRAF=null;}
+  var canvas=document.getElementById('flameCanvas');
+  if(canvas&&canvas._mouseMoveHandler) document.removeEventListener('mousemove',canvas._mouseMoveHandler);
+  flameTiltX=0;flameTiltY=0;flameTiltTargetX=0;flameTiltTargetY=0;
+}
 
 function updateFlameBarUI(){
   var s=flameStrength();
   var bar=document.getElementById('fpBarFill');
   var pct=document.getElementById('fpPct');
   var title=document.getElementById('fpTitle');
-  var sub=document.getElementById('fpSubtitle');
-  var rw=document.getElementById('fpReignite');
-  var la=document.getElementById('fpLessonArea');
   if(!bar)return;
   bar.style.width=s+'%';
   if(pct) pct.innerHTML='Flame strength: <span>'+Math.round(s)+'%</span>';
@@ -814,18 +1005,21 @@ function updateFlameBarUI(){
   else if(s<50) bar.style.background='linear-gradient(90deg,var(--f-pink),var(--f-gold))';
   else bar.style.background='linear-gradient(90deg,var(--f-hot),var(--f-gold),var(--f-pink))';
   var f=appData.flame;
-  if(s<=0){
+  var today=todayStr();
+  var todayDone=(f.weeklyDone||[]).indexOf(today)!==-1;
+  var flUsed=flyingLeaveUsedThisWeek();
+  if(s<=0&&!todayDone&&!flUsed){
     if(title) title.innerHTML='The Flame <em>Went Out</em>';
-    if(sub) sub.textContent='Complete a bonus challenge to reignite it';
-    if(rw) rw.classList.add('show');
-    if(la) la.style.display='none';
-    if(!f._streakReset&&f.streak>0){f._streakReset=true;f.streak=0;saveData();renderFSteps();showToast('Streak reset — come back stronger 🤍','d');}
+    if(!f._streakReset&&f.streak>0){
+      f._streakReset=true;f.streak=0;saveData();
+      showToast('Streak reset. Come back stronger 🤍','d');
+    }
+  } else if(todayDone||flUsed){
+    if(title) title.innerHTML='The <em>Pride Flame</em>';
   } else if(s<20){
     if(title) title.innerHTML='Flame <em>Almost Out…</em>';
-    if(sub) sub.textContent="Hurry — complete today's lesson!";
   } else {
     if(title) title.innerHTML='The <em>Pride Flame</em>';
-    if(sub) sub.textContent=f.todayDone?'Burning bright today ✦':"Complete today's lesson to keep it alive";
   }
   updateFlameNavDot();
 }
@@ -837,32 +1031,8 @@ function updateFlameNavDot(){
 }
 
 function renderFSteps(){
-  var f=appData.flame;
-  var doneCount=(f.stepsCompleted||[]).filter(Boolean).length;
-  f.stepsCompleted.forEach(function(done,i){
-    var el=document.getElementById('fpStep'+i);if(!el)return;
-    el.className='fp-step'+(done?' done':'');
-    el.querySelector('.fp-step-num').textContent=done?'✓':(i+1);
-  });
-  var bar=document.getElementById('fpLessonFill');
-  if(bar) bar.style.width=(doneCount/4*100)+'%';
-  var btn=document.getElementById('fpCompleteBtn');
-  if(btn){
-    if(f.todayDone){btn.disabled=true;btn.textContent='✓ Lesson Complete!';}
-    else{btn.disabled=doneCount<4;btn.textContent='Complete Lesson · Earn 10 🔥';}
-  }
-  if(f.todayDone){
-    var msg=document.getElementById('fpAliveMsg');
-    if(msg) msg.classList.add('show');
-    document.querySelectorAll('.fp-step').forEach(function(s){s.classList.add('done');s.querySelector('.fp-step-num').textContent='✓';});
-    if(bar) bar.style.width='100%';
-  }
-  // Reignite/lesson area visibility
-  var s=flameStrength();
-  var rw=document.getElementById('fpReignite');
-  var la=document.getElementById('fpLessonArea');
-  if(s<=0){if(rw)rw.classList.add('show');if(la)la.style.display='none';}
-  else{if(rw)rw.classList.remove('show');if(la)la.style.display='block';}
+  // Steps are rendered inline in sFlame; this keeps compat
+  updateFlameBarUI();
 }
 
 function buildFStars(){
@@ -892,130 +1062,331 @@ function fpSpawnParticles(){
 /* ══ FLAME PANEL HTML ══ */
 function sFlame(){
   var f=appData.flame||defaultFlame;
-  var steps=STEP_DATA.map(function(sd,i){
-    return '<div class="fp-step" id="fpStep'+i+'" onclick="fpOpenStep('+i+')">'+
-      '<div class="fp-step-num">'+(i+1)+'</div>'+
-      '<span>'+sd.title+'</span>'+
-      '<span class="fp-step-dur">'+sd.dur+'</span></div>';
+  resetFLIfNewWeek();
+  var today=todayStr();
+  var challenge=getTodayChallenge();
+  var chalDone=challenge&&challenge.done;
+  var flUsed=flyingLeaveUsedThisWeek();
+  var flAvail=flyingLeaveAvailable();
+  var wPct=weeklyCompletionPct();
+  var wd=f.weeklyDone||[];
+  var todayDone=wd.indexOf(today)!==-1||chalDone;
+
+  // Weekly grid — show Mon–Sun
+  var weekdays=['Mo','Tu','We','Th','Fr','Sa','Su'];
+  var ws=new Date();
+  var dow=ws.getDay()||7; // Mon=1
+  ws.setDate(ws.getDate()-(dow-1));
+  var weekGridHtml=weekdays.map(function(_,i){
+    var d=new Date(ws);d.setDate(ws.getDate()+i);
+    var ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    var isToday=ds===today;
+    var isFuture=ds>today;
+    var isDone=wd.indexOf(ds)!==-1||(appData.challenges||[]).some(function(c){return c.date===ds&&c.done;});
+    var isFl=(f.flyingLeave&&f.flyingLeave.usedDate===ds);
+    var cls=isFuture?'wday-future':isFl?'wday-fl':isDone?'wday-done':isToday?'wday-today':'wday-miss';
+    var label=isFl?'✈':isDone?'✓':weekdays[i];
+    return '<div class="wday '+cls+'">'+label+'</div>';
   }).join('');
+
+  // Motivational message
+  var msgs={
+    high:['✦ You are on fire! Keep going!','The flame burns strong today ✦','Incredible consistency! ✦'],
+    mid:['Every day counts ✦','You\'re building something beautiful ✦','Steady and strong ✦'],
+    low:['Every step matters ✦','Come back and keep the flame alive ✦','You can do this ✦']
+  };
+  var msgArr=f.streak>=7?msgs.high:f.streak>=3?msgs.mid:msgs.low;
+  var motivMsg=msgArr[Math.floor(Date.now()/86400000)%msgArr.length];
+
+  // Challenge section
+  var chalHtml='';
+  if(!challenge){
+    chalHtml='<div class="no-challenge"><div class="no-chal-icon">📅</div>'+
+      '<div class="no-chal-text">No challenge today</div>'+
+      '<div class="no-chal-sub">Vítor will schedule your next challenge</div></div>';
+  } else if(chalDone||todayDone){
+    chalHtml='<div class="fp-chal-card" style="border-color:rgba(52,211,153,.3)">'+
+      '<div style="font-size:28px;margin-bottom:8px">✅</div>'+
+      '<div class="fp-chal-title">'+challenge.title+'</div>'+
+      '<div class="fp-chal-desc" style="color:rgba(52,211,153,.8)">Challenge completed today! The Pride Flame is alive ✦</div>'+
+    '</div>';
+  } else {
+    var stepsHtml=(challenge.steps||[]).map(function(st,i){
+      var done=(f.stepsCompleted||[])[i];
+      return '<div class="fp-chal-step'+(done?' done':'')+'" id="fpChalStep'+i+'" onclick="fpOpenChalStep('+i+')">'+
+        '<div class="fp-chal-step-num">'+(done?'✓':(i+1))+'</div>'+
+        '<span>'+st+'</span></div>';
+    }).join('');
+    var allDone=(challenge.steps||[]).every(function(_,i){return (f.stepsCompleted||[])[i];});
+    chalHtml='<div class="fp-chal-card">'+
+      '<div class="fcard-sec">Today\'s Challenge</div>'+
+      '<div class="fp-chal-title">'+challenge.title+'</div>'+
+      '<div class="fp-chal-desc">'+challenge.description+'</div>'+
+      '<div class="fp-lesson-bar"><div class="fp-lesson-fill" id="fpLessonFill" style="width:'+
+        Math.round((f.stepsCompleted||[]).filter(Boolean).length/Math.max((challenge.steps||[]).length,1)*100)+'%"></div></div>'+
+      stepsHtml+
+      '<button class="btn-flame" id="fpCompleteBtn" onclick="fpCompleteLesson()" '+(allDone?'':'disabled')+'>'+
+        (allDone?'Complete Challenge · Earn 10 🔥':'Complete all steps first')+'</button>'+
+    '</div>';
+  }
+
+  // Flying Leave section
+  var flHtml='<div class="fcard" style="background:rgba(13,71,161,.12);border-color:rgba(79,195,247,.2)">'+
+    '<div class="fcard-sec">✈ Flying Leave</div>'+
+    '<div style="font-size:13px;color:var(--f-text);margin-bottom:6px;font-weight:500;">For days when duty calls</div>'+
+    '<div style="font-size:12px;color:var(--f-muted);line-height:1.6;margin-bottom:12px;">As a flight attendant, you get 1 Flying Leave per week. Activate it to skip today\'s challenge without breaking your streak.</div>'+
+    '<div class="fl-badge '+(flUsed?'fl-used':'fl-available')+'">'+(flUsed?'✈ Flying Leave used this week':'✈ Flying Leave available')+'</div>'+
+    ((!todayDone&&!flUsed&&flAvail)?
+      '<div class="fl-confirm" id="flConfirm">'+
+        '<strong style="color:#4fc3f7">Activate Flying Leave?</strong><br>'+
+        'This will protect your streak for today. You only get 1 per week and it won\'t carry over.<br><br>'+
+        '<button class="btn-flying" onclick="activateFlyingLeave()">✈ Yes, Activate Flying Leave</button>'+
+        '<button style="width:100%;padding:10px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--f-muted);font-size:13px;cursor:pointer;margin-top:8px;font-family:inherit" onclick="document.getElementById(&apos;flConfirm&apos;).classList.remove(&apos;show&apos;)">Cancel</button>'+
+      '</div>'+
+      '<button class="btn-flying" onclick="document.getElementById(&apos;flConfirm&apos;).classList.toggle(&apos;show&apos;)" '+(todayDone?'disabled':'')+'>'+
+        '✈ Use Flying Leave Today</button>'
+    : flUsed?
+      '<div style="font-size:12px;color:rgba(79,195,247,.5);text-align:center;padding:8px">Resets next Monday</div>'
+    : todayDone?
+      '<div style="font-size:12px;color:rgba(52,211,153,.6);text-align:center;padding:8px">Challenge completed — no need for Flying Leave ✓</div>'
+    : '')+
+  '</div>';
+
   var badges=[0,1,2,3].map(function(i){
-    return '<div class="fp-badge-slot'+(i<f.badges?' earned':'')+'" id="fpBadge'+i+'">'+(i<f.badges?'':'🔒')+'</div>';
+    return '<div class="fp-badge-slot'+(i<f.badges?' earned':'')+'" id="fpBadge'+i+'">'+(i<f.badges?'🏆':'🔒')+'</div>';
   }).join('');
+
   return '<div class="flame-panel active">'+
     '<div class="f-stars" id="fpStars"></div>'+
     '<div class="fp-inner">'+
-    /* Hero */
     '<div class="fp-hero">'+
-    '<div class="fp-canvas-wrap"><canvas id="flameCanvas" width="160" height="200"></canvas><div class="fp-particles" id="fpParticles"></div></div>'+
-    '<div class="fp-title" id="fpTitle">The <em>Pride Flame</em></div>'+
-    '<div class="fp-subtitle" id="fpSubtitle">Complete today\'s lesson to keep it alive</div>'+
-    '<div class="fp-bar-track"><div class="fp-bar-fill" id="fpBarFill" style="width:100%"></div></div>'+
-    '<div class="fp-pct" id="fpPct">Flame strength: <span>100%</span></div>'+
-    '<div class="fp-alive-msg" id="fpAliveMsg">✦ You kept the Pride Flame alive today ✦</div>'+
+      '<div class="fp-canvas-wrap"><canvas id="flameCanvas" width="160" height="200"></canvas>'+
+      '<div class="fp-particles" id="fpParticles"></div></div>'+
+      '<div class="fp-title" id="fpTitle">The <em>Pride Flame</em></div>'+
+      '<div class="fp-subtitle" id="fpSubtitle">'+motivMsg+'</div>'+
+      '<div class="fp-bar-track"><div class="fp-bar-fill" id="fpBarFill" style="width:0%"></div></div>'+
+      '<div class="fp-pct" id="fpPct">Flame strength: <span>0%</span></div>'+
+      '<div class="fp-alive-msg" id="fpAliveMsg">✦ You kept the Pride Flame alive today ✦</div>'+
     '</div>'+
-    /* Reignite */
-    '<div class="fp-reignite" id="fpReignite">'+
-    '<div class="fp-reignite-title">🌫 The Flame Went Out</div>'+
-    '<div class="fp-reignite-sub">Don\'t give up — complete a bonus challenge<br>to reignite your Pride Flame.</div>'+
-    ['🎙 Record a short audio expressing admiration in English',
-     '🎬 Describe a movie scene in English (5 sentences)',
-     '✍️ Write 5 sentences using this week\'s grammar',
-     '⚡ Complete a 5-minute lightning challenge',
-     '💌 Write a full English message from a prompt'].map(function(o){
-      return '<div class="fp-ropt" onclick="fpPickReignite(this)">'+o+'</div>';
-    }).join('')+
-    '<button class="btn-reignite" onclick="fpDoReignite()">🔥 Reignite the Flame</button>'+
-    '</div>'+
-    /* Lesson */
-    '<div id="fpLessonArea"><div class="fcard">'+
-    '<div class="fcard-sec">Today\'s Lesson · 10 min</div>'+
-    '<div class="fcard-title">Expressing Admiration</div>'+
-    '<div style="font-size:12px;color:var(--f-muted);margin-bottom:14px;">Complete all 4 steps · one by one</div>'+
-    '<div class="fp-lesson-bar"><div class="fp-lesson-fill" id="fpLessonFill" style="width:0%"></div></div>'+
-    steps+
-    '<button class="btn-flame" id="fpCompleteBtn" onclick="fpCompleteLesson()" disabled>Complete Lesson · Earn 10 🔥</button>'+
-    '</div></div>'+
-    /* Rewards */
-    '<div class="fcard-sec" style="margin-top:4px;color:var(--f-muted);">Your Progress</div>'+
+    /* Stats row */
     '<div class="fp-rewards">'+
-    '<div class="fp-rcard"><div class="fp-rcard-icon">🔥</div><div class="fp-rcard-label">Streak</div><div class="fp-rcard-val" id="fpStreakVal">'+f.streak+'</div></div>'+
-    '<div class="fp-rcard"><div class="fp-rcard-icon">✨</div><div class="fp-rcard-label">Points</div><div class="fp-rcard-val" id="fpPointsVal">'+f.points+'</div></div>'+
-    '<div class="fp-rcard"><div class="fp-rcard-icon">📅</div><div class="fp-rcard-label">Days</div><div class="fp-rcard-val" id="fpDaysVal">'+f.totalDays+'</div></div>'+
+      '<div class="fp-rcard"><div class="fp-rcard-icon">🔥</div><div class="fp-rcard-label">Streak</div><div class="fp-rcard-val" id="fpStreakVal">'+f.streak+'</div></div>'+
+      '<div class="fp-rcard"><div class="fp-rcard-icon">📅</div><div class="fp-rcard-label">This week</div><div class="fp-rcard-val">'+wPct+'%</div></div>'+
+      '<div class="fp-rcard"><div class="fp-rcard-icon">✨</div><div class="fp-rcard-label">Points</div><div class="fp-rcard-val" id="fpPointsVal">'+f.points+'</div></div>'+
     '</div>'+
+    /* Weekly grid */
+    '<div class="fcard">'+
+      '<div class="fcard-sec">This Week</div>'+
+      '<div class="weekly-grid">'+weekGridHtml+'</div>'+
+    '</div>'+
+    /* Today challenge */
+    chalHtml+
+    /* Flying Leave */
+    flHtml+
     /* Badges */
     '<div class="fcard">'+
-    '<div class="fcard-sec">Dedicated Boyfriend Badge 🏆</div>'+
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">'+
-    '<div style="font-size:13px;color:var(--f-muted);">Complete 7 days in a row to earn each badge</div>'+
-    '<div style="font-size:12px;color:var(--f-muted);"><span id="fpBadgeCount">'+f.badges+'</span>/4 this month</div></div>'+
-    '<div class="fp-badge-row">'+badges+'</div>'+
-    (f.badges===4?'<div style="text-align:center;margin-top:16px;font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--f-gold);">🎉 Monthly reward unlocked! Perfect month!</div>':'')+
+      '<div class="fcard-sec">Dedicated Boyfriend Badge 🏆</div>'+
+      '<div style="font-size:12px;color:var(--f-muted);margin-bottom:10px;">Earn a badge every 7-day streak</div>'+
+      '<div class="fp-badge-row">'+badges+'</div>'+
+      (f.badges===4?'<div style="text-align:center;margin-top:12px;font-family:Cormorant Garamond,serif;font-size:17px;font-style:italic;color:var(--f-gold);">🎉 Perfect month!</div>':'')+
     '</div>'+
     '</div></div>';
 }
-
-/* Flame step actions */
-window.fpOpenStep=function(idx){
-  if((appData.flame.todayDone)) return;
+/* ══ FLAME STEP ACTIONS ══ */
+window.fpOpenChalStep=function(idx){
+  var f=appData.flame;
+  if(f.stepsCompleted&&f.stepsCompleted[idx]) return;
+  var challenge=getTodayChallenge();if(!challenge) return;
+  var stepText=(challenge.steps||[])[idx]||'Complete this step';
   fpCurrentStep=idx;
-  var d=STEP_DATA[idx];
-  document.getElementById('fpModalTitle').textContent=(idx+1)+'. '+d.title;
-  document.getElementById('fpModalDur').textContent=d.dur;
-  document.getElementById('fpModalBody').textContent=d.body;
-  document.getElementById('fpModalTask').innerHTML='<strong>Your Task</strong>'+d.task.replace(/\n/g,'<br>');
+  document.getElementById('fpModalTitle').textContent=(idx+1)+'. Step '+(idx+1);
+  document.getElementById('fpModalDur').textContent='Take your time';
+  document.getElementById('fpModalBody').textContent=stepText;
+  document.getElementById('fpModalTask').innerHTML='<strong>Your Task</strong>'+stepText;
   document.getElementById('fpModalBg').classList.add('open');
 };
+// Keep old fpOpenStep for compatibility
+window.fpOpenStep=function(idx){window.fpOpenChalStep(idx);};
+
 window.fpCompleteStep=function(){
   if(fpCurrentStep<0) return;
+  if(!appData.flame.stepsCompleted) appData.flame.stepsCompleted=[false,false,false,false];
   appData.flame.stepsCompleted[fpCurrentStep]=true;
-  fpCloseModal();
-  saveData();
-  renderFSteps();
-  var done=appData.flame.stepsCompleted.filter(Boolean).length;
-  if(done===4) showToast('All steps done! Complete the lesson 🔥','f');
+  fpCloseModal();saveData();
+  // Update step UI inline
+  var el=document.getElementById('fpChalStep'+fpCurrentStep);
+  if(el){el.classList.add('done');var n=el.querySelector('.fp-chal-step-num');if(n)n.textContent='✓';}
+  var challenge=getTodayChallenge();
+  var total=(challenge&&challenge.steps)?challenge.steps.length:4;
+  var done=(appData.flame.stepsCompleted||[]).filter(Boolean).length;
+  var bar=document.getElementById('fpLessonFill');if(bar) bar.style.width=(done/total*100)+'%';
+  var btn=document.getElementById('fpCompleteBtn');
+  if(btn&&done>=total){btn.disabled=false;btn.textContent='Complete Challenge · Earn 10 🔥';}
+  if(done>=total) showToast('All steps done! Complete the challenge 🔥','f');
 };
 window.fpCloseModal=function(){document.getElementById('fpModalBg').classList.remove('open');fpCurrentStep=-1;};
 window.fpCloseModalOutside=function(e){if(e.target===document.getElementById('fpModalBg')) window.fpCloseModal();};
 
 window.fpCompleteLesson=function(){
   var f=appData.flame;
-  if(f.todayDone) return;
-  f.todayDone=true;f.lastCompleted=Date.now();f._streakReset=false;
+  var today=todayStr();
+  if(!f.weeklyDone) f.weeklyDone=[];
+  if(f.weeklyDone.indexOf(today)!==-1) return;
+  // Mark challenge done
+  var challenge=getTodayChallenge();
+  if(challenge) challenge.done=true;
+  f.weeklyDone.push(today);
+  f.lastCompleted=Date.now();f._streakReset=false;
   f.points+=10;f.totalDays+=1;f.streak+=1;
+  f.stepsCompleted=[false,false,false,false]; // reset for next challenge
   if(f.streak>0&&f.streak%7===0&&f.badges<4){
     f.badges+=1;
     setTimeout(function(){showToast('🏆 "Dedicated Boyfriend" badge earned!','f');},700);
-    if(f.badges===4) setTimeout(function(){showToast('🎉 Monthly reward unlocked! Perfect month!','f');},1600);
+    if(f.badges===4) setTimeout(function(){showToast('🎉 Perfect month!','f');},1600);
   }
-  saveData();renderFSteps();updateFlameBarUI();
-  // Update reward vals inline
-  var sv=document.getElementById('fpStreakVal');if(sv)sv.textContent=f.streak;
-  var pv=document.getElementById('fpPointsVal');if(pv)pv.textContent=f.points;
-  var dv=document.getElementById('fpDaysVal');if(dv)dv.textContent=f.totalDays;
-  var bc=document.getElementById('fpBadgeCount');if(bc)bc.textContent=f.badges;
-  [0,1,2,3].forEach(function(i){var sl=document.getElementById('fpBadge'+i);if(sl){if(i<f.badges){sl.classList.add('earned');sl.textContent='';}else{sl.classList.remove('earned');sl.textContent='🔒';}}});
+  saveData();
+  updateFlameBarUI();
   fpSpawnParticles();
-  showToast('✦ You kept the Pride Flame alive today ✦','f');
+  showToast('✦ Pride Flame alive! +10 points ✦','f');
   updateFlameNavDot();
+  // Refresh panel
+  setTimeout(function(){showPanel('s-flame');},800);
+};
+
+window.activateFlyingLeave=function(){
+  var today=todayStr();
+  if(!flyingLeaveAvailable()){showToast('Flying Leave already used this week.','d');return;}
+  var f=appData.flame;
+  f.flyingLeave={used:true,weekStart:weekStart(today),usedDate:today};
+  // Protect streak
+  if(!f.weeklyDone) f.weeklyDone=[];
+  f.lastCompleted=Date.now();f._streakReset=false;
+  saveData();
+  showToast('✈ Flying Leave activated — streak protected!','f');
+  setTimeout(function(){showPanel('s-flame');},600);
 };
 
 window.fpPickReignite=function(el){
   document.querySelectorAll('.fp-ropt').forEach(function(o){o.classList.remove('picked');});
-  el.classList.add('picked');
-  appData.flame.reigniteSelected=true;
+  el.classList.add('picked');appData.flame.reigniteSelected=true;
 };
 window.fpDoReignite=function(){
   var f=appData.flame;
   if(!f.reigniteSelected){showToast('Choose a challenge first ✦','f');return;}
+  var today=todayStr();
+  if(!f.weeklyDone) f.weeklyDone=[];
+  f.weeklyDone.push(today);
   f.lastCompleted=Date.now();f.todayDone=true;f._streakReset=false;
-  f.points+=10;f.totalDays+=1;f.streak=1;
-  f.stepsCompleted=[true,true,true,true];
-  saveData();renderFSteps();updateFlameBarUI();
-  fpSpawnParticles();
+  f.points+=10;f.totalDays+=1;f.streak=Math.max(1,f.streak);
+  saveData();updateFlameBarUI();fpSpawnParticles();
   showToast('🔥 The Pride Flame burns again!','f');
   updateFlameNavDot();
+  setTimeout(function(){showPanel('s-flame');},800);
 };
 
+/* ══ TEACHER CHALLENGES PANEL ══ */
+function tChallenges(){
+  var chals=(appData.challenges||[]).slice().sort(function(a,b){return a.date<b.date?-1:1;});
+  var today=todayStr();
+  var chalCards=chals.length===0?
+    '<div class="empty-state"><div class="ei">📅</div><div class="et">No challenges yet</div><div class="eb">Create your first daily challenge below.</div></div>'
+    :chals.map(function(c,i){
+      var isPast=c.date<today,isToday=c.date===today,isFut=c.date>today;
+      var badgeCls=isToday?'chal-today':isFut?'chal-future':'chal-past';
+      var badgeTxt=isToday?'Today':isFut?c.date:'Past · '+c.date;
+      var stepsHtml=(c.steps||[]).map(function(s,si){
+        return '<div class="chal-step-item"><span style="color:var(--teacher);font-weight:600">'+(si+1)+'.</span>'+s+'</div>';
+      }).join('');
+      return '<div class="chal-block">'+
+        '<span class="chal-date-badge '+badgeCls+'">'+badgeTxt+'</span>'+
+        (c.done?'<span style="float:right;font-size:11px;color:var(--success);font-weight:600">✓ Completed</span>':'')+
+        '<div class="chal-title-t">'+c.title+'</div>'+
+        '<div class="chal-desc">'+c.description+'</div>'+
+        '<div class="chal-steps-list">'+stepsHtml+'</div>'+
+        '<div class="btn-row">'+
+          '<button class="btn-sm btn-sm-t" onclick="editChallenge('+i+')">✎ Edit</button>'+
+          '<button class="btn-sm btn-sm-danger" onclick="deleteChallenge('+i+')">✕ Delete</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+
+  return '<div class="panel active">'+
+    '<div class="pg pg-t">Daily <em>Challenges</em></div>'+
+    '<div class="psub">Create and schedule challenges for '+appData.student.name+'. Only visible on the assigned date.</div>'+
+    '<div class="tip-box"><div class="tip-icon">✈</div><div><div class="tip-title">Flying Leave System</div>'+
+    '<div class="tip-text">'+appData.student.name+' gets 1 Flying Leave per week. If used, their streak is protected even without completing a challenge.</div></div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--accent)"></div>Create New Challenge</div>'+
+      '<div class="fg"><label class="flab">Challenge Title</label><input class="fi" id="ch-title" placeholder="e.g. Expressing Emotions"></div>'+
+      '<div class="fg"><label class="flab">Description / Instructions</label><textarea class="fta" id="ch-desc" placeholder="What should the student do today?"></textarea></div>'+
+      '<div class="fg"><label class="flab">Scheduled Date</label><input class="fi" type="date" id="ch-date" value="'+today+'"></div>'+
+      '<div class="card-title" style="margin-top:8px"><div class="dot" style="background:var(--gold)"></div>Steps (up to 4)</div>'+
+      '<div class="fg"><input class="fi" id="ch-s1" placeholder="Step 1 — e.g. Listen to the audio clip"></div>'+
+      '<div class="fg"><input class="fi" id="ch-s2" placeholder="Step 2 — e.g. Answer comprehension questions"></div>'+
+      '<div class="fg"><input class="fi" id="ch-s3" placeholder="Step 3 — e.g. Speaking or writing task"></div>'+
+      '<div class="fg"><input class="fi" id="ch-s4" placeholder="Step 4 — e.g. Creative challenge (optional)"></div>'+
+      '<div class="btn-row"><button class="btn-save" onclick="saveChallenge()">Save Challenge</button></div>'+
+    '</div>'+
+    (chals.length>0?'<div class="card"><div class="card-title"><div class="dot"></div>Scheduled Challenges ('+chals.length+')</div>'+chalCards+'</div>':chalCards)+
+  '</div>';
+}
+
+window.saveChallenge=function(){
+  var title=document.getElementById('ch-title'),
+      desc=document.getElementById('ch-desc'),
+      date=document.getElementById('ch-date'),
+      s1=document.getElementById('ch-s1'),
+      s2=document.getElementById('ch-s2'),
+      s3=document.getElementById('ch-s3'),
+      s4=document.getElementById('ch-s4');
+  if(!title||!title.value.trim()){showToast('Title required.','d');return;}
+  if(!date||!date.value){showToast('Date required.','d');return;}
+  var steps=[s1,s2,s3,s4].map(function(el){return el?el.value.trim():'';}).filter(Boolean);
+  if(steps.length===0){showToast('Add at least one step.','d');return;}
+  if(!appData.challenges) appData.challenges=[];
+  // Check if editing
+  var editIdx=window._editChalIdx!=null?window._editChalIdx:-1;
+  var obj={
+    id:editIdx>=0?appData.challenges[editIdx].id:Date.now(),
+    title:title.value.trim(),
+    description:desc?desc.value.trim():'',
+    date:date.value,
+    steps:steps,
+    done:editIdx>=0?appData.challenges[editIdx].done:false
+  };
+  if(editIdx>=0) appData.challenges[editIdx]=obj;
+  else appData.challenges.push(obj);
+  window._editChalIdx=null;
+  saveData();showPanel('t-challenges');
+  showToast(editIdx>=0?'Challenge updated!':'Challenge saved!','t');
+};
+
+window.deleteChallenge=function(i){
+  if(!confirm('Delete this challenge?')) return;
+  appData.challenges.splice(i,1);
+  saveData();showPanel('t-challenges');
+  showToast('Challenge deleted.','t');
+};
+
+window.editChallenge=function(i){
+  var c=appData.challenges[i];if(!c)return;
+  window._editChalIdx=i;
+  showPanel('t-challenges');
+  setTimeout(function(){
+    var t=document.getElementById('ch-title'),
+        d=document.getElementById('ch-desc'),
+        dt=document.getElementById('ch-date'),
+        s1=document.getElementById('ch-s1'),
+        s2=document.getElementById('ch-s2'),
+        s3=document.getElementById('ch-s3'),
+        s4=document.getElementById('ch-s4');
+    if(t) t.value=c.title;
+    if(d) d.value=c.description;
+    if(dt) dt.value=c.date;
+    [s1,s2,s3,s4].forEach(function(el,si){if(el) el.value=c.steps[si]||'';});
+    t&&t.scrollIntoView({behavior:'smooth',block:'center'});
+    showToast('Editing — make changes and save.','t');
+  },120);
+};
 /* ══ STUDENT PANELS ══ */
 function sDash(){
   var s=appData.student,f=appData.flame||defaultFlame;
@@ -1031,7 +1402,7 @@ function sDash(){
       :'<div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;color:white;font-weight:300;">'+s.name.charAt(0).toUpperCase()+'</div>';
     noteHtml='<div class="welcome-card"><div style="flex-shrink:0;">'+sAv+'</div>'+
       '<div><div class="wc-title">Hello, <em>'+s.name+'</em>!</div>'+
-      '<div class="wc-body">'+(appData.welcomeMsg||"I'm looking forward to our first lesson together.")+'</div>'+
+      '<div class="wc-body">'+(appData.welcomeMsg||"I\'m looking forward to our first lesson together.")+'</div>'+
       '<div class="wc-teacher"><div class="wct-av">'+tAvHtml+'</div><div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div></div></div>';
   }
   // Flame teaser strip
@@ -1289,7 +1660,7 @@ function tFeedback(){
     (appData.feedback&&appData.feedback.length>0?'<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Saved Feedback ('+appData.feedback.length+')</div>'+fbCards+'</div>':'')+
     '</div>';
 }
-window.saveWelcomeMsg=function(){var el=document.getElementById('f-welcome');if(!el)return;appData.welcomeMsg=el.value.trim()||"I'm looking forward to our first lesson together.";saveData();showToast('Welcome message saved!','t');};
+window.saveWelcomeMsg=function(){var el=document.getElementById('f-welcome');if(!el)return;appData.welcomeMsg=el.value.trim()||"I\'m looking forward to our first lesson together.";saveData();showToast('Welcome message saved!','t');};
 window.saveNote=function(){var el=document.getElementById('f-note');if(!el)return;appData.note=el.value.trim();appData.noteDate=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});saveData();showPanel('t-feedback');showToast('Note saved!','t');};
 window.clearNote=function(){appData.note='';appData.noteDate='';saveData();showPanel('t-feedback');showToast('Note cleared.','t');};
 window.updateStars=function(v){var el=document.getElementById('fb-sv');if(el)el.textContent='★'.repeat(v)+'☆'.repeat(5-v);};
@@ -1501,17 +1872,33 @@ window.aiDrop=function(e){
 window.aiFileSelected=function(input){var file=input.files[0];if(file)processAIFile(file);};
 
 function processAIFile(file){
-  var reader=new FileReader();
-  reader.onload=function(e){
-    aiImageData=e.target.result;
-    document.getElementById('aiPreviewArea').innerHTML='<img class="ai-preview-img" src="'+aiImageData+'" alt="Preview">';
+  // Compress image via canvas before storing — keeps base64 under 1MB
+  var img=new Image();
+  var objectUrl=URL.createObjectURL(file);
+  img.onload=function(){
+    var MAX=1200; // max width/height px
+    var w=img.width, h=img.height;
+    if(w>MAX||h>MAX){
+      var ratio=Math.min(MAX/w,MAX/h);
+      w=Math.round(w*ratio); h=Math.round(h*ratio);
+    }
+    var canvas=document.createElement('canvas');
+    canvas.width=w; canvas.height=h;
+    canvas.getContext('2d').drawImage(img,0,0,w,h);
+    var compressed=canvas.toDataURL('image/jpeg',0.82);
+    aiImageData=compressed;
+    var kb=Math.round(compressed.length*0.75/1024);
+    URL.revokeObjectURL(objectUrl);
+    document.getElementById('aiPreviewArea').innerHTML=
+      '<img class="ai-preview-img" src="'+compressed+'" alt="Preview">'+
+      '<div style="font-size:11px;color:var(--warm-gray);margin-top:4px;text-align:center">Imagem comprimida: ~'+kb+'KB</div>';
     document.getElementById('aiControls').style.display='flex';
     document.getElementById('aiButtons').style.display='block';
     document.getElementById('aiDropZone').style.display='none';
     var slider=document.getElementById('aiDiffSlider');
     if(slider) slider.oninput=function(){document.getElementById('aiDiffLabel').textContent=aiDiffMap[this.value]||'B1';};
   };
-  reader.readAsDataURL(file);
+  img.src=objectUrl;
 }
 
 window.setAIToggle=function(mode){
@@ -1573,9 +1960,15 @@ window.runAILesson=function(){
     })
   })
   .then(function(r){
-    return r.json().then(function(data){
+    return r.text().then(function(txt){
+      if(!txt||!txt.trim()){
+        throw new Error('Resposta vazia do servidor (status '+r.status+'). Tente uma imagem menor (menos de 1MB).');
+      }
+      var data;
+      try{ data=JSON.parse(txt); }
+      catch(e){ throw new Error('Resposta inválida do servidor: '+txt.slice(0,200)); }
       if(!r.ok){
-        var detail=data.detail||data.error||'Unknown error ('+r.status+')';
+        var detail=data.detail||data.error||'Erro desconhecido ('+r.status+')';
         throw new Error('Status '+r.status+': '+detail);
       }
       return data;
