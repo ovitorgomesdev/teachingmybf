@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluency</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FAF8F4;--warm-white:#F5F2EC;--stone:#E8E2D9;--sand:#D4C9B8;
+  --warm-gray:#9E9080;--dark-brown:#2C2416;--mid-brown:#5C4E38;
+  --accent:#B85C38;--accent-light:#E8855F;--accent-pale:#F5E0D6;
+  --gold:#C9972A;--gold-pale:#F5EDD3;--teal:#2D6B6B;--teal-pale:#D4ECEC;
+  --success:#3D7A5C;--success-pale:#D4EDE1;
+  --teacher:#4A3080;--teacher-pale:#EDE4F5;--teacher-light:#7B5FC0;
+  /* Pride Flame palette */
+  --f-hot:#ff6b1a;--f-mid:#ffb347;--f-gold:#ffd700;--f-pink:#ff8fab;
+  --f-blue:#4fc3f7;--f-cold:#607d8b;--f-accent:#c084fc;--f-accent2:#f472b6;
+  --f-text:#f0eaff;--f-muted:rgba(240,234,255,0.45);
+  --f-border:rgba(255,255,255,0.08);--f-surface:rgba(255,255,255,0.04);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(--dark-brown);min-height:100vh;}
+.screen{display:none;min-height:100vh;}.screen.active{display:flex;}
+
+/* ── LOADING ── */
+#loading-screen{background:var(--dark-brown);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.loading-logo{font-size:34px;font-weight:300;color:white;letter-spacing:-1px;}
+.loading-logo span{color:var(--accent-light);font-style:italic;}
+.loading-spinner{width:28px;height:28px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--accent-light);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── LOGIN ── */
+#login-screen{background:var(--dark-brown);align-items:center;justify-content:center;}
+.login-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:48px;width:420px;max-width:calc(100vw - 32px);}
+.login-logo{font-size:34px;font-weight:300;color:white;margin-bottom:4px;letter-spacing:-1px;}
+.login-logo span{color:var(--accent-light);font-style:italic;}
+.login-tagline{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;}
+.login-tabs{display:flex;gap:4px;background:rgba(255,255,255,.07);border-radius:10px;padding:4px;margin-bottom:24px;}
+.login-tab{flex:1;padding:9px;border:none;border-radius:7px;background:transparent;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);transition:all .2s;font-family:inherit;}
+.login-tab.active{background:rgba(255,255,255,.13);color:white;}
+.login-tab.t-tab.active{background:var(--teacher);color:white;}
+.fl{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:7px;font-weight:500;}
+.fi-login{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:12px 15px;color:white;font-size:14px;outline:none;margin-bottom:16px;font-family:inherit;}
+.fi-login:focus{border-color:var(--accent-light);}
+.fi-login::placeholder{color:rgba(255,255,255,.2);}
+.btn-login{width:100%;padding:13px;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;color:white;font-family:inherit;}
+.btn-s{background:var(--accent);}.btn-s:hover{background:var(--accent-light);}
+.btn-t{background:var(--teacher);}.btn-t:hover{background:var(--teacher-light);}
+.login-hint{font-size:11px;color:rgba(255,255,255,.2);text-align:center;margin-top:14px;}
+.login-error{font-size:12px;color:#FF8A80;text-align:center;margin-bottom:10px;display:none;}
+
+/* ── APP SHELL ── */
+#app-screen{flex-direction:row;}
+.sidebar{width:252px;min-width:252px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-student{background:var(--dark-brown);}.sb-teacher{background:var(--teacher);}
+.sb-logo{padding:24px 22px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sb-logo-text{font-size:24px;font-weight:300;color:white;letter-spacing:-.5px;}
+.sb-logo-text span{color:var(--accent-light);font-style:italic;}
+.sb-badge{display:inline-block;margin-top:5px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 9px;border-radius:20px;font-weight:500;}
+.sb-badge-s{color:var(--gold);background:rgba(201,151,42,.18);}
+.sb-badge-t{color:#C9B8F0;background:rgba(255,255,255,.15);}
+.sb-nav{padding:14px 11px;flex:1;}
+.nav-sec{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:0 10px;margin:14px 0 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;color:rgba(255,255,255,.5);font-size:13px;margin-bottom:2px;transition:all .15s;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:white;}
+.nav-item.active{color:white;}
+.sb-student .nav-item.active{background:var(--accent);}
+.sb-teacher .nav-item.active{background:rgba(255,255,255,.2);}
+/* Flame nav dot */
+.flame-nav-dot{width:7px;height:7px;border-radius:50%;background:var(--f-hot);box-shadow:0 0 7px var(--f-hot);animation:fndPulse 2s ease-in-out infinite;flex-shrink:0;}
+.flame-nav-dot.cold{background:var(--f-cold);box-shadow:none;animation:none;}
+@keyframes fndPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
+.sb-user{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+.sb-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:white;flex-shrink:0;overflow:hidden;}
+.av-s{background:linear-gradient(135deg,var(--accent),var(--gold));}
+.av-t{background:linear-gradient(135deg,var(--teacher),var(--teacher-light));}
+.sb-uname{font-size:13px;font-weight:600;color:white;}
+.sb-usub{font-size:11px;color:rgba(255,255,255,.35);}
+.sb-logout{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:15px;margin-left:auto;}
+.sb-logout:hover{color:rgba(255,255,255,.7);}
+.main-content{flex:1;overflow-y:auto;height:100vh;}
+
+/* ── REGULAR PANELS ── */
+.panel{display:none;padding:40px 48px;max-width:980px;}
+.panel.active{display:block;}
+.pg{font-size:36px;font-weight:300;color:var(--dark-brown);line-height:1.1;margin-bottom:6px;font-family:Georgia,serif;}
+.pg em{font-style:italic;color:var(--accent);}
+.pg-t em{color:var(--teacher);}
+.psub{font-size:13px;color:var(--warm-gray);margin-bottom:28px;}
+.card{background:white;border-radius:14px;padding:22px;border:1px solid var(--stone);margin-bottom:18px;}
+.card-title{font-size:13px;font-weight:600;color:var(--dark-brown);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px;}
+.stat-card{background:white;border-radius:12px;padding:16px;border:1px solid var(--stone);}
+.stat-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:8px;font-weight:500;}
+.stat-val{font-size:32px;font-weight:300;color:var(--dark-brown);line-height:1;margin-bottom:2px;font-family:Georgia,serif;}
+.stat-det{font-size:11px;color:var(--warm-gray);}
+.stat-bar-wrap{margin-top:7px;background:var(--stone);border-radius:4px;height:3px;overflow:hidden;}
+.stat-bar{height:100%;border-radius:4px;}
+.fg{margin-bottom:13px;}
+.flab{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:6px;font-weight:600;}
+.fi{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;}
+.fi:focus{border-color:var(--teacher);background:white;}
+.fta{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;resize:vertical;min-height:76px;line-height:1.6;}
+.fta:focus{border-color:var(--teacher);background:white;}
+.fsel{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;cursor:pointer;}
+.btn-save{padding:9px 20px;background:var(--teacher);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-save:hover{background:var(--teacher-light);}
+.btn-cancel{padding:9px 15px;background:white;color:var(--mid-brown);border:1px solid var(--stone);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;}
+.btn-sm{padding:6px 12px;font-size:12px;font-weight:600;border:none;border-radius:7px;cursor:pointer;font-family:inherit;}
+.btn-sm-t{background:var(--teacher-pale);color:var(--teacher);}
+.btn-sm-t:hover{background:var(--teacher);color:white;}
+.btn-sm-danger{background:#FEE;color:#C0392B;}
+.btn-sm-danger:hover{background:#C0392B;color:white;}
+.btn-sm-success{background:var(--success-pale);color:var(--success);}
+.btn-sm-success:hover{background:var(--success);color:white;}
+.btn-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
+.mod-block{border:1px solid var(--stone);border-radius:13px;margin-bottom:14px;overflow:hidden;background:white;}
+.mod-header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:white;flex-wrap:wrap;}
+.mod-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0;}
+.mod-info{flex:1;}
+.mod-title-text{font-size:14px;font-weight:600;color:var(--dark-brown);}
+.mod-sub-text{font-size:11px;color:var(--warm-gray);margin-top:1px;}
+.mod-lessons{border-top:1px solid var(--stone);}
+.les-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--stone);flex-wrap:wrap;}
+.les-row:last-child{border-bottom:none;}
+.les-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.les-info{flex:1;min-width:120px;}
+.les-title{font-size:13px;font-weight:500;color:var(--dark-brown);}
+.les-meta{font-size:11px;color:var(--warm-gray);margin-top:1px;}
+.pill{font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap;}
+.pill-locked{background:var(--stone);color:var(--warm-gray);}
+.pill-open{background:var(--accent-pale);color:var(--accent);}
+.tog{width:38px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;flex-shrink:0;}
+.tog-on{background:var(--success);}.tog-off{background:var(--sand);}
+.tok{position:absolute;top:3px;width:14px;height:14px;border-radius:50%;background:white;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tog-on .tok{left:21px;}.tog-off .tok{left:3px;}
+.edit-form{background:var(--teacher-pale);border:1px solid rgba(74,48,128,.15);border-radius:11px;padding:18px;}
+.edit-form .fi,.edit-form .fta{background:white;}
+.content-block{border:1px solid var(--stone);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--warm-white);}
+.ct-badge{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.ct-text{background:var(--teal-pale);color:var(--teal);}
+.ct-dialogue{background:var(--accent-pale);color:var(--accent);}
+.ct-exercise{background:var(--gold-pale);color:var(--gold);}
+.vtag{display:inline-flex;align-items:center;gap:5px;background:var(--teacher-pale);color:var(--teacher);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:500;margin:3px;}
+.vtag-x{cursor:pointer;font-size:12px;color:var(--teacher-light);}
+.vtag-x:hover{color:var(--teacher);}
+.fb-card{background:white;border:1px solid var(--stone);border-radius:11px;padding:16px;margin-bottom:10px;}
+.fb-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.fb-title-t{font-size:13px;font-weight:600;color:var(--dark-brown);}
+.fb-date{font-size:11px;color:var(--warm-gray);}
+.fb-text{font-size:13px;color:var(--mid-brown);line-height:1.6;}
+.fb-stars{color:var(--gold);font-size:12px;margin-top:5px;}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--warm-gray);font-size:13px;padding:2px 4px;}
+.del-btn:hover{color:var(--accent);}
+.skill-row{margin-bottom:11px;}
+.skill-h{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;color:var(--mid-brown);}
+.skill-track{background:var(--stone);border-radius:6px;height:6px;overflow:hidden;}
+.skill-fill{height:100%;border-radius:6px;}
+.welcome-card{background:linear-gradient(135deg,var(--dark-brown),#3a2e1a);border-radius:14px;padding:28px 32px;margin-bottom:20px;display:flex;align-items:center;gap:22px;}
+.wc-title{font-size:22px;font-weight:300;color:white;margin-bottom:4px;font-family:Georgia,serif;}
+.wc-title em{font-style:italic;color:var(--accent-light);}
+.wc-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6;}
+.wc-teacher{margin-top:11px;display:flex;align-items:center;gap:8px;}
+.wct-av{width:26px;height:26px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600;overflow:hidden;flex-shrink:0;}
+.wct-name{font-size:12px;font-weight:600;color:white;}
+.wct-role{font-size:10px;color:rgba(255,255,255,.4);}
+.empty-state{text-align:center;padding:44px 32px;background:white;border-radius:14px;border:1px solid var(--stone);margin-bottom:16px;}
+.ei{font-size:42px;margin-bottom:11px;}
+.et{font-size:22px;font-weight:300;color:var(--dark-brown);margin-bottom:5px;font-family:Georgia,serif;}
+.eb{font-size:13px;color:var(--warm-gray);line-height:1.6;max-width:340px;margin:0 auto;}
+.tip-box{background:var(--teal-pale);border:1px solid rgba(45,107,107,.2);border-radius:11px;padding:14px 18px;display:flex;gap:11px;margin-bottom:16px;}
+.tip-icon{font-size:17px;flex-shrink:0;}
+.tip-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:2px;}
+.tip-text{font-size:12px;color:var(--mid-brown);line-height:1.5;}
+.av-upload{position:relative;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;}
+.av-upload input{display:none;}
+.av-upload-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;font-size:11px;color:white;}
+.av-upload:hover .av-upload-overlay{display:flex;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block;margin-right:5px;}
+.sync-dot.syncing{background:var(--gold);animation:sdPulse 1s ease-in-out infinite;}
+@keyframes sdPulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ══ PRIDE FLAME PANEL ══ */
+.flame-panel{display:none;background:#0d0b1a;min-height:100vh;padding:40px 48px;max-width:980px;position:relative;overflow:hidden;}
+.flame-panel.active{display:block;}
+/* Starfield */
+.f-stars{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.f-star{position:absolute;border-radius:50%;background:white;animation:fStarTwinkle var(--fd,3s) ease-in-out infinite var(--fdel,0s);opacity:0;}
+@keyframes fStarTwinkle{0%,100%{opacity:0}50%{opacity:var(--fop,.4)}}
+/* Inner content wrapper above stars */
+.fp-inner{position:relative;z-index:1;}
+
+/* Hero */
+.fp-hero{text-align:center;margin-bottom:36px;}
+.fp-canvas-wrap{position:relative;display:inline-block;width:160px;height:200px;margin-bottom:16px;}
+#flameCanvas{width:160px;height:200px;display:block;margin:0 auto;}
+.fp-particles{position:absolute;inset:0;pointer-events:none;overflow:visible;}
+.fp-particle{position:absolute;border-radius:50%;pointer-events:none;animation:fpUp 1.6s ease-out forwards;}
+@keyframes fpUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(.2)}}
+.fp-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--f-text);margin-bottom:4px;}
+.fp-title em{color:var(--f-gold);font-style:italic;}
+.fp-subtitle{font-size:13px;color:var(--f-muted);margin-bottom:18px;}
+.fp-bar-track{background:rgba(255,255,255,.06);border-radius:20px;height:8px;overflow:hidden;max-width:320px;margin:0 auto 8px;}
+.fp-bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--f-hot),var(--f-gold),var(--f-pink));transition:width 1s ease,background 2s ease;}
+.fp-pct{font-size:12px;color:var(--f-muted);}
+.fp-pct span{color:var(--f-gold);font-weight:600;}
+.fp-alive-msg{display:none;margin-top:14px;background:linear-gradient(135deg,rgba(255,183,71,.12),rgba(255,143,171,.12));border:1px solid rgba(255,183,71,.25);border-radius:14px;padding:14px 20px;font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--f-gold);}
+.fp-alive-msg.show{display:block;animation:fpFade .5s ease;}
+@keyframes fpFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Dark cards */
+.fcard{background:var(--f-surface);border:1px solid var(--f-border);border-radius:14px;padding:22px;margin-bottom:14px;}
+.fcard-sec{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--f-muted);margin-bottom:12px;font-weight:400;}
+.fcard-title{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;color:var(--f-text);margin-bottom:4px;}
+
+/* Lesson steps */
+.fp-step{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid transparent;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .2s;color:var(--f-muted);font-size:13px;}
+.fp-step:hover{background:rgba(255,255,255,.06);color:var(--f-text);}
+.fp-step.done{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.05);color:rgba(240,234,255,.7);}
+.fp-step-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;transition:all .2s;}
+.fp-step.done .fp-step-num{background:#34d399;color:#0d1a13;}
+.fp-step-dur{margin-left:auto;font-size:11px;opacity:.4;flex-shrink:0;}
+.fp-lesson-bar{height:3px;background:rgba(255,255,255,.06);border-radius:3px;margin-bottom:14px;overflow:hidden;}
+.fp-lesson-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--f-accent),var(--f-accent2));transition:width .5s ease;}
+
+/* Buttons */
+.btn-flame{width:100%;padding:14px;background:linear-gradient(135deg,var(--f-hot),var(--f-mid),var(--f-pink));border:none;border-radius:12px;color:white;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;position:relative;overflow:hidden;}
+.btn-flame:hover{opacity:.9;transform:translateY(-1px);}
+.btn-flame:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.btn-flame::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.15),transparent);}
+
+/* Reignite */
+.fp-reignite{display:none;background:linear-gradient(135deg,rgba(96,125,139,.1),rgba(13,11,26,.6));border:1px solid rgba(96,125,139,.25);border-radius:14px;padding:22px;margin-bottom:14px;text-align:center;}
+.fp-reignite.show{display:block;}
+.fp-reignite-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:#b0bec5;margin-bottom:6px;}
+.fp-reignite-sub{font-size:13px;color:var(--f-muted);line-height:1.6;margin-bottom:18px;}
+.fp-ropt{display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(96,125,139,.2);border-radius:10px;font-size:13px;color:var(--f-muted);cursor:pointer;transition:all .2s;margin-bottom:8px;text-align:left;}
+.fp-ropt:hover,.fp-ropt.picked{border-color:rgba(255,107,26,.5);background:rgba(255,107,26,.07);color:var(--f-text);}
+.btn-reignite{width:100%;padding:13px;background:linear-gradient(135deg,#37474f,#546e7a);border:1px solid rgba(96,125,139,.4);border-radius:12px;color:#b0bec5;font-size:14px;font-weight:600;cursor:pointer;transition:all .35s;font-family:'Segoe UI',Arial,sans-serif;margin-top:8px;}
+.btn-reignite:hover{background:linear-gradient(135deg,var(--f-hot),var(--f-mid));color:white;border-color:transparent;}
+
+/* Rewards */
+.fp-rewards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.fp-rcard{background:var(--f-surface);border:1px solid var(--f-border);border-radius:14px;padding:18px 14px;text-align:center;}
+.fp-rcard-icon{font-size:26px;margin-bottom:8px;}
+.fp-rcard-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--f-muted);margin-bottom:4px;}
+.fp-rcard-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--f-gold);}
+
+/* Badge slots */
+.fp-badge-row{display:flex;gap:10px;margin-top:14px;}
+.fp-badge-slot{flex:1;aspect-ratio:1;border-radius:12px;border:1.5px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:24px;transition:all .4s;}
+.fp-badge-slot.earned{border-color:rgba(251,191,36,.45);background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(255,107,26,.08));animation:fpBadgeGlow 3s ease-in-out infinite;}
+@keyframes fpBadgeGlow{0%,100%{box-shadow:0 0 12px rgba(251,191,36,.15)}50%{box-shadow:0 0 28px rgba(251,191,36,.45)}}
+
+/* Step modal */
+.fp-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:300;align-items:flex-end;padding:20px;}
+.fp-modal-bg.open{display:flex;}
+.fp-modal{background:#1a1730;border:1px solid var(--f-border);border-radius:20px;padding:28px 24px;width:100%;max-width:520px;margin:0 auto;animation:fpSlideUp .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes fpSlideUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.fp-modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--f-text);margin-bottom:4px;}
+.fp-modal-dur{font-size:12px;color:var(--f-muted);margin-bottom:14px;}
+.fp-modal-body{font-size:14px;color:rgba(240,234,255,.7);line-height:1.7;margin-bottom:14px;}
+.fp-modal-task{background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.2);border-radius:12px;padding:14px;font-size:13px;color:var(--f-text);line-height:1.6;margin-bottom:18px;}
+.fp-modal-task strong{color:var(--f-accent);display:block;margin-bottom:5px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;}
+.btn-modal-done{width:100%;padding:13px;background:linear-gradient(135deg,var(--f-accent),var(--f-accent2));border:none;border-radius:12px;color:white;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;font-family:'Segoe UI',Arial,sans-serif;}
+.btn-modal-close{width:100%;padding:11px;background:transparent;border:1px solid var(--f-border);border-radius:12px;color:var(--f-muted);font-size:13px;cursor:pointer;font-family:'Segoe UI',Arial,sans-serif;}
+
+/* ── AI LESSON BUILDER ── */
+.ai-builder-hero{background:linear-gradient(135deg,var(--teacher) 0%,#2d1a6e 100%);border-radius:16px;padding:28px 32px;margin-bottom:20px;color:white;position:relative;overflow:hidden;}
+.ai-builder-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06);}
+.ai-builder-hero::after{content:'';position:absolute;bottom:-30px;right:60px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.04);}
+.aib-title{font-size:26px;font-weight:300;font-family:Georgia,serif;margin-bottom:4px;position:relative;z-index:1;}
+.aib-title em{font-style:italic;color:#C9B8F0;}
+.aib-sub{font-size:12px;color:rgba(255,255,255,.55);position:relative;z-index:1;}
+.aib-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 12px;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.8);margin-top:10px;position:relative;z-index:1;}
+.aib-badge::before{content:'●';color:#34d399;font-size:7px;}
+
+.ai-drop-zone{border:2px dashed rgba(74,48,128,.35);border-radius:14px;padding:40px 24px;text-align:center;background:var(--teacher-pale);cursor:pointer;transition:all .2s;margin-bottom:16px;}
+.ai-drop-zone:hover,.ai-drop-zone.drag-over{border-color:var(--teacher);background:rgba(74,48,128,.1);}
+.ai-drop-icon{font-size:36px;margin-bottom:10px;}
+.ai-drop-text{font-size:14px;font-weight:600;color:var(--teacher);margin-bottom:4px;}
+.ai-drop-sub{font-size:12px;color:var(--warm-gray);}
+.ai-drop-zone input[type=file]{display:none;}
+
+.ai-preview-img{width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px;}
+.ai-controls{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.ai-slider-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:200px;}
+.ai-slider-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--warm-gray);font-weight:600;white-space:nowrap;}
+.ai-toggle{display:flex;background:var(--stone);border-radius:8px;padding:3px;gap:2px;}
+.ai-toggle-btn{padding:6px 12px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--warm-gray);font-family:inherit;transition:all .2s;}
+.ai-toggle-btn.active{background:white;color:var(--teacher);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+
+.ai-analysis-card{background:linear-gradient(135deg,rgba(74,48,128,.06),rgba(74,48,128,.02));border:1px solid rgba(74,48,128,.15);border-radius:13px;padding:18px;margin-bottom:16px;}
+.ai-analysis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.ai-tag-group{background:white;border-radius:9px;padding:10px 12px;border:1px solid var(--stone);}
+.ai-tag-label{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--warm-gray);font-weight:600;margin-bottom:5px;}
+.ai-tag-val{font-size:12px;font-weight:600;color:var(--dark-brown);}
+.ai-skills-row{display:flex;gap:6px;flex-wrap:wrap;}
+.ai-skill-pill{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:600;background:var(--teacher-pale);color:var(--teacher);}
+
+.lesson-plan-output{border:1px solid var(--stone);border-radius:13px;overflow:hidden;margin-bottom:16px;}
+.lp-header{background:var(--teacher);padding:16px 20px;color:white;}
+.lp-title{font-size:16px;font-weight:600;margin-bottom:2px;}
+.lp-meta{font-size:11px;color:rgba(255,255,255,.6);}
+.lp-section{padding:14px 20px;border-bottom:1px solid var(--stone);}
+.lp-section:last-child{border-bottom:none;}
+.lp-sec-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--teacher);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.lp-sec-time{background:var(--teacher-pale);color:var(--teacher);padding:2px 8px;border-radius:10px;font-size:9px;}
+.lp-sec-body{font-size:13px;color:var(--dark-brown);line-height:1.7;}
+.lp-actions{padding:14px 20px;background:var(--warm-white);display:flex;gap:8px;flex-wrap:wrap;}
+
+.ai-loading{display:none;text-align:center;padding:32px;background:var(--teacher-pale);border-radius:13px;margin-bottom:16px;}
+.ai-loading.show{display:block;}
+.ai-spinner{width:36px;height:36px;border:3px solid rgba(74,48,128,.15);border-top-color:var(--teacher);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+.ai-loading-text{font-size:13px;color:var(--teacher);font-weight:500;}
+.ai-loading-step{font-size:11px;color:var(--warm-gray);margin-top:4px;}
+
+/* ── VOCABULARY BANK (Student) ── */
+.vbank-header{background:linear-gradient(135deg,var(--teal),#1a4a4a);border-radius:16px;padding:24px 28px;margin-bottom:20px;color:white;}
+.vbank-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;}
+.vbs{background:rgba(255,255,255,.1);border-radius:10px;padding:12px;text-align:center;}
+.vbs-val{font-size:26px;font-weight:300;font-family:Georgia,serif;color:white;}
+.vbs-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.vbank-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.vbf-btn{padding:6px 14px;border:1px solid var(--stone);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:white;color:var(--warm-gray);font-family:inherit;transition:all .2s;}
+.vbf-btn.active{background:var(--teal);color:white;border-color:var(--teal);}
+.vocab-entry{background:white;border:1px solid var(--stone);border-radius:12px;padding:16px;margin-bottom:10px;transition:all .2s;}
+.vocab-entry:hover{border-color:var(--teal);box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.ve-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.ve-word{font-size:18px;font-weight:600;color:var(--dark-brown);font-family:Georgia,serif;}
+.ve-ipa{font-size:12px;color:var(--warm-gray);margin-top:2px;font-style:italic;}
+.ve-type{font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:2px 9px;border-radius:20px;background:var(--teal-pale);color:var(--teal);font-weight:600;}
+.ve-def{font-size:13px;color:var(--mid-brown);line-height:1.6;margin-bottom:6px;}
+.ve-ex{font-size:12px;color:var(--warm-gray);font-style:italic;line-height:1.5;border-left:2px solid var(--teal);padding-left:10px;margin-bottom:8px;}
+.ve-actions{display:flex;gap:6px;align-items:center;}
+.ve-diff-btn{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--stone);cursor:pointer;background:white;color:var(--warm-gray);font-family:inherit;transition:all .2s;}
+.ve-diff-btn.marked{background:#FEE;color:#c0392b;border-color:#ffbdbd;}
+.ve-note-input{flex:1;border:1px solid var(--stone);border-radius:7px;padding:5px 9px;font-size:11px;color:var(--dark-brown);outline:none;font-family:inherit;background:var(--warm-white);}
+
+/* ── FLASHCARD SYSTEM ── */
+.fc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.fc-mode-tabs{display:flex;gap:4px;background:var(--stone);border-radius:10px;padding:3px;}
+.fc-mode-tab{padding:7px 14px;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--warm-gray);font-family:inherit;transition:all .2s;}
+.fc-mode-tab.active{background:white;color:var(--teal);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.fc-progress-bar{background:var(--stone);border-radius:4px;height:4px;overflow:hidden;margin-bottom:20px;}
+.fc-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--success));transition:width .4s ease;}
+.fc-counter{font-size:12px;color:var(--warm-gray);margin-bottom:8px;text-align:center;}
+
+.flashcard-wrap{perspective:1000px;width:100%;max-width:480px;margin:0 auto 20px;cursor:pointer;}
+.flashcard{position:relative;width:100%;padding-top:60%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);}
+.flashcard.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;}
+.fc-front{background:linear-gradient(135deg,var(--teal),#1a4a4a);color:white;}
+.fc-back{background:white;border:2px solid var(--teal);transform:rotateY(180deg);}
+.fc-face-hint{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px;}
+.fc-back .fc-face-hint{color:var(--warm-gray);}
+.fc-face-word{font-size:32px;font-weight:300;font-family:Georgia,serif;color:white;margin-bottom:6px;}
+.fc-back .fc-face-word{color:var(--dark-brown);font-size:22px;font-weight:600;}
+.fc-face-ipa{font-size:13px;color:rgba(255,255,255,.5);font-style:italic;}
+.fc-face-def{font-size:14px;color:var(--mid-brown);line-height:1.6;margin-bottom:8px;}
+.fc-face-ex{font-size:12px;color:var(--warm-gray);font-style:italic;line-height:1.5;}
+.fc-flip-hint{font-size:11px;color:rgba(255,255,255,.3);margin-top:12px;}
+
+.fc-buttons{display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
+.fc-btn{padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;font-family:inherit;transition:all .15s;}
+.fc-btn-know{background:var(--success-pale);color:var(--success);}
+.fc-btn-know:hover{background:var(--success);color:white;}
+.fc-btn-hard{background:#FEE;color:#c0392b;}
+.fc-btn-hard:hover{background:#c0392b;color:white;}
+.fc-btn-skip{background:var(--stone);color:var(--warm-gray);}
+.fc-btn-skip:hover{background:var(--sand);color:var(--mid-brown);}
+
+.fc-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.fc-stat{background:white;border:1px solid var(--stone);border-radius:10px;padding:12px;text-align:center;}
+.fc-stat-val{font-size:22px;font-weight:300;font-family:Georgia,serif;color:var(--dark-brown);}
+.fc-stat-lbl{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--warm-gray);}
+.fc-complete{text-align:center;padding:40px 24px;background:white;border:1px solid var(--stone);border-radius:14px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:9px;font-size:13px;box-shadow:0 6px 22px rgba(0,0,0,.2);z-index:9999;display:none;color:white;}
+.toast.show{display:block;}
+.toast-d{background:var(--dark-brown);}.toast-t{background:var(--teacher);}
+.toast-f{background:linear-gradient(135deg,#7c2d00,#92400e);border:1px solid rgba(255,107,26,.4);}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark-brown);border-top:1px solid rgba(255,255,255,.1);z-index:1000;padding:0 4px 4px;}
+.bottom-nav.teacher-nav{background:var(--teacher);}
+.bottom-nav-inner{display:flex;justify-content:space-around;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;cursor:pointer;color:rgba(255,255,255,.45);flex:1;border:none;background:none;font-family:inherit;transition:color .15s;}
+.bn-item.active{color:white;}
+.bn-icon{font-size:18px;line-height:1;}
+.bn-label{font-size:9px;letter-spacing:.5px;text-transform:uppercase;font-weight:500;}
+
+@media(max-width:800px){
+  .sidebar{display:none;}
+  .bottom-nav{display:block;}
+  .main-content{padding-bottom:68px;}
+  .panel,.flame-panel{padding:22px 16px;}
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+  .fp-rewards{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="loading-screen">
+  <div class="loading-logo">flu<span>ency</span></div>
+  <div class="loading-spinner"></div>
+</div>
+
+<div class="screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">flu<span>ency</span></div>
+    <div class="login-tagline">English Learning Platform</div>
+    <div class="login-tabs">
+      <button class="login-tab active" id="tab-s" onclick="switchTab('student')">Student</button>
+      <button class="login-tab t-tab" id="tab-t" onclick="switchTab('teacher')">Teacher</button>
+    </div>
+    <div id="form-student">
+      <label class="fl">Your Name</label>
+      <input class="fi-login" type="text" id="s-name" placeholder="Lucas" autocomplete="off">
+      <label class="fl">Access Code</label>
+      <input class="fi-login" type="password" id="s-pass" placeholder="••••••••" autocomplete="off">
+      <div class="login-error" id="err-s">Incorrect access code.</div>
+      <button class="btn-login btn-s" onclick="doLogin('student')">Start Learning →</button>
+      <div class="login-hint">Code provided by your teacher, Vítor</div>
+    </div>
+    <div id="form-teacher" style="display:none">
+      <label class="fl">Password</label>
+      <input class="fi-login" type="password" id="t-pass" placeholder="••••••••" autocomplete="off">
+      <div class="login-error" id="err-t">Incorrect password.</div>
+      <button class="btn-login btn-t" onclick="doLogin('teacher')">Enter Dashboard →</button>
+      <div class="login-hint">Teacher access only</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="app-screen">
+  <aside class="sidebar sb-student" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-text">flu<span>ency</span></div>
+      <div class="sb-badge sb-badge-s" id="sb-badge">Starting Soon</div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-user">
+      <div class="sb-avatar av-s" id="sb-av">L</div>
+      <div>
+        <div class="sb-uname" id="sb-name">Lucas</div>
+        <div class="sb-usub" id="sb-sub">Ready to begin</div>
+      </div>
+      <button class="sb-logout" onclick="doLogout()">↩</button>
+    </div>
+  </aside>
+  <main class="main-content" id="main"></main>
+  <nav class="bottom-nav" id="bottom-nav">
+    <div class="bottom-nav-inner" id="bn-inner"></div>
+  </nav>
+</div>
+
+<!-- Flame step modal -->
+<div class="fp-modal-bg" id="fpModalBg" onclick="fpCloseModalOutside(event)">
+  <div class="fp-modal">
+    <div class="fp-modal-title" id="fpModalTitle"></div>
+    <div class="fp-modal-dur" id="fpModalDur"></div>
+    <div class="fp-modal-body" id="fpModalBody"></div>
+    <div class="fp-modal-task" id="fpModalTask"></div>
+    <button class="btn-modal-done" onclick="fpCompleteStep()">Mark as Done ✓</button>
+    <button class="btn-modal-close" onclick="fpCloseModal()">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjWMZjzWYH45N1tHXny3c7Rmcp6ZC8AVk",
+  authDomain: "fluency-a2738.firebaseapp.com",
+  databaseURL: "https://fluency-a2738-default-rtdb.firebaseio.com",
+  projectId: "fluency-a2738",
+  storageBucket: "fluency-a2738.firebasestorage.app",
+  messagingSenderId: "376949137311",
+  appId: "1:376949137311:web:01c13747f4f4da897b27aa"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getDatabase(firebaseApp);
+const dataRef = ref(db, 'fluency/data');
+
+/* ══ STATE ══ */
+var appData = null;
+var mode = '';
+var editingMod = -1, editingLes = -1, editingContent = -1;
+var loginShown = false;
+var flameRAF = null, flameTime = 0;
+var fpCurrentStep = -1;
+
+var defaultFlame = {
+  points:0, streak:0, totalDays:0, badges:0,
+  lastCompleted:null, todayDone:false,
+  stepsCompleted:[false,false,false,false],
+  reigniteSelected:false, _streakReset:false
+};
+
+var defaultData = {
+  student:{name:'Lucas',lessons:0,vocab:0,streak:0,fluency:null,photo:null},
+  teacherPhoto:null, note:'', noteDate:'',
+  welcomeMsg:"I'm looking forward to our first lesson together. This is your personal learning space.",
+  skills:{Speaking:0,Vocabulary:0,Grammar:0,Pronunciation:0,Writing:0},
+  feedback:[], vocabulary:[],
+  flame: JSON.parse(JSON.stringify(defaultFlame)),
+  modules:[
+    {id:1,title:'Starting the Journey',sub:'Breaking the ice · Self-expression',lessons:[
+      {title:'Lesson 1 — Starting the Journey',meta:'Module 1 · 50 min',unlocked:false,contents:[
+        {type:'text',label:'Introduction',body:'Welcome to your first English lesson! Today we focus on introducing yourself naturally.'},
+        {type:'dialogue',label:'Sample Dialogue',body:"A: Hi, I'm Sarah. Nice to meet you!\nB: Nice to meet you too! I'm Lucas. Where are you from?"},
+        {type:'exercise',label:'Exercise',body:'Practice introducing yourself. Say your name, where you\'re from, and one thing you like.'}
+      ]},
+      {title:'Lesson 2 — Describing Yourself',meta:'Module 1 · 50 min',unlocked:false,contents:[]}
+    ]},
+    {id:2,title:'Travel Ready',sub:'Airports, hotels, restaurants',lessons:[
+      {title:'Lesson 1 — At the Airport',meta:'Module 2 · 50 min',unlocked:false,contents:[]},
+      {title:'Lesson 2 — Booking a Hotel',meta:'Module 2 · 50 min',unlocked:false,contents:[]}
+    ]},
+    {id:3,title:'Speaking Your Mind',sub:'Opinions · Debates · Storytelling',lessons:[
+      {title:'Lesson 1 — Expressing Opinions',meta:'Module 3 · 50 min',unlocked:false,contents:[]}
+    ]},
+    {id:4,title:'Real-Life Conversations',sub:'Shopping, relationships, culture',lessons:[]},
+    {id:5,title:'Professional English',sub:'Emails, presentations, social media',lessons:[]},
+    {id:6,title:'Advanced Fluency',sub:'Idioms, humour, nuance, B2',lessons:[]}
+  ]
+};
+
+var STEP_DATA = [
+  {title:'Short Listening',dur:'2 minutes',
+   body:'Listen carefully to the audio or short clip. Pay attention to admiration expressions, tone, and vocabulary.',
+   task:'Write down 3 words or phrases you heard that express admiration or compliments.'},
+  {title:'Comprehension Questions',dur:'3 minutes',
+   body:"Answer these 5 quick questions. Don't overthink — go with your first instinct.",
+   task:'1. What was the main topic?\n2. Name one adjective used positively.\n3. What emotion did the speaker express?\n4. Was the tone formal or informal?\n5. One phrase you\'d like to use yourself?'},
+  {title:'Speaking or Writing Task',dur:'3 minutes',
+   body:"Now it's your turn! Use the vocabulary and expressions from today's listening.",
+   task:'Write a short paragraph (or speak aloud) about someone you admire deeply. Use at least 3 new expressions from the lesson.'},
+  {title:'Creative Challenge',dur:'2 minutes',
+   body:'A tiny creative spark to close the lesson beautifully.',
+   task:'Write one romantic sentence in English using today\'s grammar focus.\n\nExample: "The way you look at me makes me feel like the only person in the world."\n\nNow write your own — make it personal. 💛'}
+];
+
+/* ══ FIREBASE ══ */
+function saveData() {
+  setSyncDot('syncing');
+  set(dataRef, JSON.parse(JSON.stringify(appData)))
+    .then(function(){setSyncDot('ok');})
+    .catch(function(e){console.error(e);setSyncDot('ok');});
+}
+function setSyncDot(state){
+  var d=document.getElementById('syncDot');
+  if(d) d.className='sync-dot'+(state==='syncing'?' syncing':'');
+}
+
+function showLogin(){
+  if(loginShown) return;
+  loginShown=true;
+  document.getElementById('loading-screen').classList.remove('active');
+  document.getElementById('login-screen').classList.add('active');
+}
+
+/* Safety timeout — show login after 4 s even if Firebase is slow */
+setTimeout(function(){
+  if(!loginShown){
+    appData=JSON.parse(JSON.stringify(defaultData));
+    showLogin();
+    setTimeout(function(){showToast('☁ Cloud sync unavailable — check Firebase rules','d');},500);
+  }
+},4000);
+
+onValue(dataRef, function(snapshot){
+  var val=snapshot.val();
+  if(val){
+    appData=val;
+    if(!appData.feedback) appData.feedback=[];
+    if(!appData.vocabulary) appData.vocabulary=[];
+    if(!appData.modules) appData.modules=defaultData.modules;
+    if(!appData.flame) appData.flame=JSON.parse(JSON.stringify(defaultFlame));
+    if(!appData.flame.stepsCompleted) appData.flame.stepsCompleted=[false,false,false,false];
+    appData.modules.forEach(function(m){
+      if(!m.lessons) m.lessons=[];
+      m.lessons.forEach(function(l){if(!l.contents) l.contents=[];});
+    });
+  } else {
+    appData=JSON.parse(JSON.stringify(defaultData));
+    saveData();
+  }
+  /* Live refresh if already logged in */
+  if(mode){
+    var active=document.querySelector('.nav-item.active,.bn-item.active');
+    if(active){var nm=(active.id||'').replace('nav-','').replace('bn-','');if(nm) renderPanel(nm);}
+    renderSidebarAvatar();
+    updateFlameNavDot();
+  }
+  setSyncDot('ok');
+  showLogin();
+}, function(err){
+  console.error('Firebase error:',err);
+  if(!appData) appData=JSON.parse(JSON.stringify(defaultData));
+  showLogin();
+  setTimeout(function(){showToast('☁ Cloud sync unavailable — check Firebase rules','d');},500);
+});
+
+/* ══ LOGIN ══ */
+window.switchTab=function(t){
+  document.getElementById('tab-s').classList.toggle('active',t==='student');
+  document.getElementById('tab-t').classList.toggle('active',t==='teacher');
+  document.getElementById('form-student').style.display=t==='student'?'block':'none';
+  document.getElementById('form-teacher').style.display=t==='teacher'?'block':'none';
+  document.getElementById('err-s').style.display='none';
+  document.getElementById('err-t').style.display='none';
+};
+window.doLogin=function(m){
+  var pass=m==='student'?document.getElementById('s-pass').value:document.getElementById('t-pass').value;
+  if(pass!==(m==='student'?'english2026':'teacher2026')){
+    document.getElementById(m==='student'?'err-s':'err-t').style.display='block';return;
+  }
+  mode=m;
+  if(m==='student'){var n=document.getElementById('s-name').value.trim()||'Lucas';appData.student.name=n;saveData();}
+  document.getElementById('s-name').value='';document.getElementById('s-pass').value='';document.getElementById('t-pass').value='';
+  document.getElementById('err-s').style.display='none';document.getElementById('err-t').style.display='none';
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  buildSidebar();
+  showPanel(m==='student'?'s-dash':'t-dash');
+  if(m==='student') setInterval(function(){updateFlameBarUI();updateFlameNavDot();},6000);
+};
+window.doLogout=function(){
+  stopFlameLoop();
+  document.getElementById('app-screen').classList.remove('active');
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('main').innerHTML='';
+  mode='';editingMod=-1;editingLes=-1;editingContent=-1;
+};
+
+/* ══ SIDEBAR ══ */
+function buildSidebar(){
+  var sb=document.getElementById('sidebar');
+  sb.className='sidebar '+(mode==='teacher'?'sb-teacher':'sb-student');
+  var b=document.getElementById('sb-badge');
+  b.className='sb-badge '+(mode==='teacher'?'sb-badge-t':'sb-badge-s');
+  b.textContent=mode==='teacher'?'✎ Teacher':'Starting Soon';
+  document.getElementById('sb-name').textContent=mode==='teacher'?'Vítor':appData.student.name;
+  document.getElementById('sb-sub').textContent=mode==='teacher'?'Teacher Dashboard':'Ready to begin';
+  renderSidebarAvatar();
+  var bn=document.getElementById('bottom-nav');
+  bn.className='bottom-nav'+(mode==='teacher'?' teacher-nav':'');
+  if(mode==='student'){
+    document.getElementById('sb-nav').innerHTML=
+      '<div class="nav-sec">Main</div>'+
+      '<div class="nav-item" id="nav-s-dash" onclick="showPanel(\'s-dash\')">⊞ Dashboard</div>'+
+      '<div class="nav-item" id="nav-s-course" onclick="showPanel(\'s-course\')">◫ My Course</div>'+
+      '<div class="nav-item" id="nav-s-flame" onclick="showPanel(\'s-flame\')" style="display:flex;align-items:center;gap:10px;"><div class="flame-nav-dot" id="flameNavDot"></div>Pride Flame</div>'+
+      '<div class="nav-item" id="nav-s-progress" onclick="showPanel(\'s-progress\')">◎ Progress</div>'+
+      '<div class="nav-sec">Resources</div>'+
+      '<div class="nav-item" id="nav-s-vocab" onclick="showPanel(\'s-vocab\')">◈ Vocabulary</div>'+
+      '<div class="nav-item" id="nav-s-flashcards" onclick="showPanel(\'s-flashcards\')">🃏 Flashcards</div>';
+    document.getElementById('bn-inner').innerHTML=
+      '<button class="bn-item" id="bn-s-dash" onclick="showPanel(\'s-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Home</span></button>'+
+      '<button class="bn-item" id="bn-s-course" onclick="showPanel(\'s-course\')"><span class="bn-icon">◫</span><span class="bn-label">Course</span></button>'+
+      '<button class="bn-item" id="bn-s-flame" onclick="showPanel(\'s-flame\')"><span class="bn-icon">🔥</span><span class="bn-label">Flame</span></button>'+
+      '<button class="bn-item" id="bn-s-vocab" onclick="showPanel(\'s-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>'+
+      '<button class="bn-item" id="bn-s-flashcards" onclick="showPanel(\'s-flashcards\')"><span class="bn-icon">🃏</span><span class="bn-label">Cards</span></button>';
+  } else {
+    document.getElementById('sb-nav').innerHTML=
+      '<div class="nav-sec">Dashboard</div>'+
+      '<div class="nav-item" id="nav-t-dash" onclick="showPanel(\'t-dash\')">⊞ Overview</div>'+
+      '<div class="nav-sec">Edit</div>'+
+      '<div class="nav-item" id="nav-t-course" onclick="showPanel(\'t-course\')">◫ Modules & Lessons</div>'+
+      '<div class="nav-item" id="nav-t-aibuilder" style="background:linear-gradient(135deg,rgba(74,48,128,.18),rgba(74,48,128,.05));border:1px solid rgba(74,48,128,.2);" onclick="showPanel(\'t-aibuilder\')">✦ AI Lesson Builder</div>'+
+      '<div class="nav-item" id="nav-t-progress" onclick="showPanel(\'t-progress\')">◎ Progress & Scores</div>'+
+      '<div class="nav-item" id="nav-t-feedback" onclick="showPanel(\'t-feedback\')">✎ Feedback & Notes</div>'+
+      '<div class="nav-item" id="nav-t-vocab" onclick="showPanel(\'t-vocab\')">◈ Vocabulary</div>';
+    document.getElementById('bn-inner').innerHTML=
+      '<button class="bn-item" id="bn-t-dash" onclick="showPanel(\'t-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Overview</span></button>'+
+      '<button class="bn-item" id="bn-t-course" onclick="showPanel(\'t-course\')"><span class="bn-icon">◫</span><span class="bn-label">Lessons</span></button>'+
+      '<button class="bn-item" id="bn-t-progress" onclick="showPanel(\'t-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Scores</span></button>'+
+      '<button class="bn-item" id="bn-t-feedback" onclick="showPanel(\'t-feedback\')"><span class="bn-icon">✎</span><span class="bn-label">Feedback</span></button>'+
+      '<button class="bn-item" id="bn-t-vocab" onclick="showPanel(\'t-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>';
+  }
+  updateFlameNavDot();
+}
+
+function renderSidebarAvatar(){
+  var av=document.getElementById('sb-av');if(!av)return;
+  var photo=mode==='teacher'?appData.teacherPhoto:appData.student.photo;
+  var letter=mode==='teacher'?'V':appData.student.name.charAt(0).toUpperCase();
+  av.className='sb-avatar '+(mode==='teacher'?'av-t':'av-s');
+  av.innerHTML='<label class="av-upload" style="width:34px;height:34px;"><input type="file" accept="image/*" onchange="uploadPhoto(this,\''+(mode==='teacher'?'teacher':'student')+'\')">'+
+    (photo?'<img src="'+photo+'" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">':'<span style="font-size:13px;font-weight:600;color:white">'+letter+'</span>')+
+    '<div class="av-upload-overlay">📷</div></label>';
+}
+window.uploadPhoto=function(input,who){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    if(who==='teacher')appData.teacherPhoto=e.target.result;
+    else appData.student.photo=e.target.result;
+    saveData();renderSidebarAvatar();showToast('Photo updated!','t');
+  };reader.readAsDataURL(file);
+};
+
+/* ══ ROUTER ══ */
+window.showPanel=function(name){
+  stopFlameLoop();
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  document.querySelectorAll('.bn-item').forEach(function(n){n.classList.remove('active');});
+  var el=document.getElementById('nav-'+name);if(el)el.classList.add('active');
+  var bn=document.getElementById('bn-'+name);if(bn)bn.classList.add('active');
+  if(name==='t-course'){editingMod=-1;editingLes=-1;editingContent=-1;}
+  renderPanel(name);
+};
+function renderPanel(name){
+  var mc=document.getElementById('main');if(!mc)return;
+  if(name==='s-dash') mc.innerHTML=sDash();
+  else if(name==='s-course') mc.innerHTML=sCourse();
+  else if(name==='s-flame'){mc.innerHTML=sFlame();setTimeout(function(){buildFStars();updateFlameBarUI();renderFSteps();startFlameLoop();},60);}
+  else if(name==='s-progress') mc.innerHTML=sProgress();
+  else if(name==='s-vocab') mc.innerHTML=sVocab();
+  else if(name==='t-dash') mc.innerHTML=tDash();
+  else if(name==='t-course') mc.innerHTML=tCourse();
+  else if(name==='t-progress') mc.innerHTML=tProgress();
+  else if(name==='t-feedback') mc.innerHTML=tFeedback();
+  else if(name==='t-vocab') mc.innerHTML=tVocab();
+  else if(name==='t-aibuilder') mc.innerHTML=tAIBuilder();
+  else if(name==='s-flashcards'){mc.innerHTML=sFlashcards();initFlashcards();}
+}
+
+/* ══ FLAME ENGINE ══ */
+function flameStrength(){
+  var f=appData.flame;
+  if(!f.lastCompleted) return 0;
+  var hrs=(Date.now()-f.lastCompleted)/3600000;
+  return Math.max(0,100-hrs*4);
+}
+
+function drawFlame(canvas,strength,t){
+  var ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  if(strength<=0){drawColdFlame(ctx,w,h);return;}
+  var intensity=strength/100;
+  var flicker=Math.sin(t*0.08)*0.06+Math.sin(t*0.13)*0.04;
+  var scale=0.4+intensity*0.6+flicker;
+  var blueish=strength<25?(25-strength)/25:0;
+  var cx=w/2,baseY=h-8,fH=h*0.85*scale;
+  if(intensity>0.1){
+    var gr=ctx.createRadialGradient(cx,baseY-fH*0.3,0,cx,baseY-fH*0.3,60*intensity+30);
+    gr.addColorStop(0,blueish>0?'rgba(79,195,247,'+(0.07*intensity)+')':'rgba(255,107,26,'+(0.09*intensity)+')');
+    gr.addColorStop(1,'transparent');ctx.fillStyle=gr;ctx.fillRect(0,0,w,h);
+  }
+  ctx.save();ctx.translate(cx,baseY);
+  for(var i=4;i>=0;i--){
+    var tt=i/4,lH=fH*(1-tt*0.12),bw=38*(1-tt*0.45);
+    var fk=Math.sin(t*0.1+i*0.5)*4*intensity;
+    var alpha=(0.55+tt*0.4)*intensity;
+    ctx.beginPath();ctx.moveTo(0,0);
+    ctx.bezierCurveTo(-bw*1.1+fk,-lH*0.3,-bw*0.8-fk*0.5,fk*0.3-lH*0.65,fk*0.5,-lH);
+    ctx.bezierCurveTo(bw*0.8+fk*0.5,-lH*0.65,bw*1.1-fk,-lH*0.3,0,0);
+    var g=ctx.createLinearGradient(0,0,0,-lH);
+    if(blueish>0){g.addColorStop(0,'rgba(80,100,110,'+alpha+')');g.addColorStop(0.5,'rgba(79,195,247,'+(alpha*.8)+')');g.addColorStop(1,'rgba(150,220,247,'+(alpha*.35)+')');}
+    else{g.addColorStop(0,'rgba(255,'+(80+Math.round(tt*55))+',20,'+alpha+')');g.addColorStop(0.4,'rgba(255,'+(140+Math.round(tt*55))+',40,'+(alpha*.9)+')');g.addColorStop(0.75,'rgba(255,210,0,'+(alpha*.7)+')');g.addColorStop(1,'rgba(255,235,160,'+(alpha*.25)+')');}
+    ctx.fillStyle=g;ctx.fill();
+  }
+  if(intensity>0.2){
+    var cH=fH*0.42*intensity,cW=14*intensity;
+    ctx.beginPath();ctx.ellipse(0,-cH*0.4,cW,cH,0,0,Math.PI*2);
+    var cg=ctx.createRadialGradient(0,-cH*0.4,0,0,-cH*0.4,cH);
+    cg.addColorStop(0,'rgba(255,255,220,'+(0.9*intensity)+')');
+    cg.addColorStop(0.4,'rgba(255,220,100,'+(0.5*intensity)+')');
+    cg.addColorStop(1,'transparent');ctx.fillStyle=cg;ctx.fill();
+  }
+  ctx.restore();
+}
+function drawColdFlame(ctx,w,h){
+  ctx.save();ctx.translate(w/2,h-8);
+  ctx.beginPath();ctx.moveTo(0,0);
+  ctx.bezierCurveTo(-28,-48,-22,-88,0,-108);ctx.bezierCurveTo(22,-88,28,-48,0,0);
+  var g=ctx.createLinearGradient(0,0,0,-108);
+  g.addColorStop(0,'rgba(75,85,95,.9)');g.addColorStop(1,'rgba(55,65,75,.3)');
+  ctx.fillStyle=g;ctx.fill();ctx.restore();
+}
+
+function startFlameLoop(){
+  var canvas=document.getElementById('flameCanvas');if(!canvas)return;
+  function tick(){var s=flameStrength();drawFlame(canvas,s,flameTime);flameTime++;flameRAF=requestAnimationFrame(tick);}
+  tick();
+}
+function stopFlameLoop(){if(flameRAF){cancelAnimationFrame(flameRAF);flameRAF=null;}}
+
+function updateFlameBarUI(){
+  var s=flameStrength();
+  var bar=document.getElementById('fpBarFill');
+  var pct=document.getElementById('fpPct');
+  var title=document.getElementById('fpTitle');
+  var sub=document.getElementById('fpSubtitle');
+  var rw=document.getElementById('fpReignite');
+  var la=document.getElementById('fpLessonArea');
+  if(!bar)return;
+  bar.style.width=s+'%';
+  if(pct) pct.innerHTML='Flame strength: <span>'+Math.round(s)+'%</span>';
+  if(s<20) bar.style.background='linear-gradient(90deg,var(--f-blue),var(--f-cold))';
+  else if(s<50) bar.style.background='linear-gradient(90deg,var(--f-pink),var(--f-gold))';
+  else bar.style.background='linear-gradient(90deg,var(--f-hot),var(--f-gold),var(--f-pink))';
+  var f=appData.flame;
+  if(s<=0){
+    if(title) title.innerHTML='The Flame <em>Went Out</em>';
+    if(sub) sub.textContent='Complete a bonus challenge to reignite it';
+    if(rw) rw.classList.add('show');
+    if(la) la.style.display='none';
+    if(!f._streakReset&&f.streak>0){f._streakReset=true;f.streak=0;saveData();renderFSteps();showToast('Streak reset — come back stronger 🤍','d');}
+  } else if(s<20){
+    if(title) title.innerHTML='Flame <em>Almost Out…</em>';
+    if(sub) sub.textContent="Hurry — complete today's lesson!";
+  } else {
+    if(title) title.innerHTML='The <em>Pride Flame</em>';
+    if(sub) sub.textContent=f.todayDone?'Burning bright today ✦':"Complete today's lesson to keep it alive";
+  }
+  updateFlameNavDot();
+}
+
+function updateFlameNavDot(){
+  var dot=document.getElementById('flameNavDot');if(!dot)return;
+  var s=flameStrength();
+  dot.className='flame-nav-dot'+(s<=0?' cold':'');
+}
+
+function renderFSteps(){
+  var f=appData.flame;
+  var doneCount=(f.stepsCompleted||[]).filter(Boolean).length;
+  f.stepsCompleted.forEach(function(done,i){
+    var el=document.getElementById('fpStep'+i);if(!el)return;
+    el.className='fp-step'+(done?' done':'');
+    el.querySelector('.fp-step-num').textContent=done?'✓':(i+1);
+  });
+  var bar=document.getElementById('fpLessonFill');
+  if(bar) bar.style.width=(doneCount/4*100)+'%';
+  var btn=document.getElementById('fpCompleteBtn');
+  if(btn){
+    if(f.todayDone){btn.disabled=true;btn.textContent='✓ Lesson Complete!';}
+    else{btn.disabled=doneCount<4;btn.textContent='Complete Lesson · Earn 10 🔥';}
+  }
+  if(f.todayDone){
+    var msg=document.getElementById('fpAliveMsg');
+    if(msg) msg.classList.add('show');
+    document.querySelectorAll('.fp-step').forEach(function(s){s.classList.add('done');s.querySelector('.fp-step-num').textContent='✓';});
+    if(bar) bar.style.width='100%';
+  }
+  // Reignite/lesson area visibility
+  var s=flameStrength();
+  var rw=document.getElementById('fpReignite');
+  var la=document.getElementById('fpLessonArea');
+  if(s<=0){if(rw)rw.classList.add('show');if(la)la.style.display='none';}
+  else{if(rw)rw.classList.remove('show');if(la)la.style.display='block';}
+}
+
+function buildFStars(){
+  var c=document.getElementById('fpStars');if(!c)return;
+  c.innerHTML='';
+  for(var i=0;i<70;i++){
+    var s=document.createElement('div');s.className='f-star';
+    var sz=Math.random()*2+0.5;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--fd:'+(2+Math.random()*4)+'s;--fdel:'+(Math.random()*-4)+'s;--fop:'+(0.2+Math.random()*0.5)+';';
+    c.appendChild(s);
+  }
+}
+
+function fpSpawnParticles(){
+  var container=document.getElementById('fpParticles');if(!container)return;
+  var colors=['#ff6b1a','#ffd700','#ff8fab','#ffb347','#fff'];
+  for(var i=0;i<18;i++){
+    (function(idx){setTimeout(function(){
+      var p=document.createElement('div');p.className='fp-particle';
+      var sz=4+Math.random()*6;
+      p.style.cssText='width:'+sz+'px;height:'+sz+'px;background:'+colors[Math.floor(Math.random()*5)]+';left:'+(20+Math.random()*120)+'px;bottom:'+(30+Math.random()*70)+'px;';
+      container.appendChild(p);setTimeout(function(){p.remove();},2000);
+    },idx*55);})(i);
+  }
+}
+
+/* ══ FLAME PANEL HTML ══ */
+function sFlame(){
+  var f=appData.flame||defaultFlame;
+  var steps=STEP_DATA.map(function(sd,i){
+    return '<div class="fp-step" id="fpStep'+i+'" onclick="fpOpenStep('+i+')">'+
+      '<div class="fp-step-num">'+(i+1)+'</div>'+
+      '<span>'+sd.title+'</span>'+
+      '<span class="fp-step-dur">'+sd.dur+'</span></div>';
+  }).join('');
+  var badges=[0,1,2,3].map(function(i){
+    return '<div class="fp-badge-slot'+(i<f.badges?' earned':'')+'" id="fpBadge'+i+'">'+(i<f.badges?'':'🔒')+'</div>';
+  }).join('');
+  return '<div class="flame-panel active">'+
+    '<div class="f-stars" id="fpStars"></div>'+
+    '<div class="fp-inner">'+
+    /* Hero */
+    '<div class="fp-hero">'+
+    '<div class="fp-canvas-wrap"><canvas id="flameCanvas" width="160" height="200"></canvas><div class="fp-particles" id="fpParticles"></div></div>'+
+    '<div class="fp-title" id="fpTitle">The <em>Pride Flame</em></div>'+
+    '<div class="fp-subtitle" id="fpSubtitle">Complete today\'s lesson to keep it alive</div>'+
+    '<div class="fp-bar-track"><div class="fp-bar-fill" id="fpBarFill" style="width:100%"></div></div>'+
+    '<div class="fp-pct" id="fpPct">Flame strength: <span>100%</span></div>'+
+    '<div class="fp-alive-msg" id="fpAliveMsg">✦ You kept the Pride Flame alive today ✦</div>'+
+    '</div>'+
+    /* Reignite */
+    '<div class="fp-reignite" id="fpReignite">'+
+    '<div class="fp-reignite-title">🌫 The Flame Went Out</div>'+
+    '<div class="fp-reignite-sub">Don\'t give up — complete a bonus challenge<br>to reignite your Pride Flame.</div>'+
+    ['🎙 Record a short audio expressing admiration in English',
+     '🎬 Describe a movie scene in English (5 sentences)',
+     '✍️ Write 5 sentences using this week\'s grammar',
+     '⚡ Complete a 5-minute lightning challenge',
+     '💌 Write a full English message from a prompt'].map(function(o){
+      return '<div class="fp-ropt" onclick="fpPickReignite(this)">'+o+'</div>';
+    }).join('')+
+    '<button class="btn-reignite" onclick="fpDoReignite()">🔥 Reignite the Flame</button>'+
+    '</div>'+
+    /* Lesson */
+    '<div id="fpLessonArea"><div class="fcard">'+
+    '<div class="fcard-sec">Today\'s Lesson · 10 min</div>'+
+    '<div class="fcard-title">Expressing Admiration</div>'+
+    '<div style="font-size:12px;color:var(--f-muted);margin-bottom:14px;">Complete all 4 steps · one by one</div>'+
+    '<div class="fp-lesson-bar"><div class="fp-lesson-fill" id="fpLessonFill" style="width:0%"></div></div>'+
+    steps+
+    '<button class="btn-flame" id="fpCompleteBtn" onclick="fpCompleteLesson()" disabled>Complete Lesson · Earn 10 🔥</button>'+
+    '</div></div>'+
+    /* Rewards */
+    '<div class="fcard-sec" style="margin-top:4px;color:var(--f-muted);">Your Progress</div>'+
+    '<div class="fp-rewards">'+
+    '<div class="fp-rcard"><div class="fp-rcard-icon">🔥</div><div class="fp-rcard-label">Streak</div><div class="fp-rcard-val" id="fpStreakVal">'+f.streak+'</div></div>'+
+    '<div class="fp-rcard"><div class="fp-rcard-icon">✨</div><div class="fp-rcard-label">Points</div><div class="fp-rcard-val" id="fpPointsVal">'+f.points+'</div></div>'+
+    '<div class="fp-rcard"><div class="fp-rcard-icon">📅</div><div class="fp-rcard-label">Days</div><div class="fp-rcard-val" id="fpDaysVal">'+f.totalDays+'</div></div>'+
+    '</div>'+
+    /* Badges */
+    '<div class="fcard">'+
+    '<div class="fcard-sec">Dedicated Boyfriend Badge 🏆</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">'+
+    '<div style="font-size:13px;color:var(--f-muted);">Complete 7 days in a row to earn each badge</div>'+
+    '<div style="font-size:12px;color:var(--f-muted);"><span id="fpBadgeCount">'+f.badges+'</span>/4 this month</div></div>'+
+    '<div class="fp-badge-row">'+badges+'</div>'+
+    (f.badges===4?'<div style="text-align:center;margin-top:16px;font-family:Cormorant Garamond,serif;font-size:18px;font-style:italic;color:var(--f-gold);">🎉 Monthly reward unlocked! Perfect month!</div>':'')+
+    '</div>'+
+    '</div></div>';
+}
+
+/* Flame step actions */
+window.fpOpenStep=function(idx){
+  if((appData.flame.todayDone)) return;
+  fpCurrentStep=idx;
+  var d=STEP_DATA[idx];
+  document.getElementById('fpModalTitle').textContent=(idx+1)+'. '+d.title;
+  document.getElementById('fpModalDur').textContent=d.dur;
+  document.getElementById('fpModalBody').textContent=d.body;
+  document.getElementById('fpModalTask').innerHTML='<strong>Your Task</strong>'+d.task.replace(/\n/g,'<br>');
+  document.getElementById('fpModalBg').classList.add('open');
+};
+window.fpCompleteStep=function(){
+  if(fpCurrentStep<0) return;
+  appData.flame.stepsCompleted[fpCurrentStep]=true;
+  fpCloseModal();
+  saveData();
+  renderFSteps();
+  var done=appData.flame.stepsCompleted.filter(Boolean).length;
+  if(done===4) showToast('All steps done! Complete the lesson 🔥','f');
+};
+window.fpCloseModal=function(){document.getElementById('fpModalBg').classList.remove('open');fpCurrentStep=-1;};
+window.fpCloseModalOutside=function(e){if(e.target===document.getElementById('fpModalBg')) window.fpCloseModal();};
+
+window.fpCompleteLesson=function(){
+  var f=appData.flame;
+  if(f.todayDone) return;
+  f.todayDone=true;f.lastCompleted=Date.now();f._streakReset=false;
+  f.points+=10;f.totalDays+=1;f.streak+=1;
+  if(f.streak>0&&f.streak%7===0&&f.badges<4){
+    f.badges+=1;
+    setTimeout(function(){showToast('🏆 "Dedicated Boyfriend" badge earned!','f');},700);
+    if(f.badges===4) setTimeout(function(){showToast('🎉 Monthly reward unlocked! Perfect month!','f');},1600);
+  }
+  saveData();renderFSteps();updateFlameBarUI();
+  // Update reward vals inline
+  var sv=document.getElementById('fpStreakVal');if(sv)sv.textContent=f.streak;
+  var pv=document.getElementById('fpPointsVal');if(pv)pv.textContent=f.points;
+  var dv=document.getElementById('fpDaysVal');if(dv)dv.textContent=f.totalDays;
+  var bc=document.getElementById('fpBadgeCount');if(bc)bc.textContent=f.badges;
+  [0,1,2,3].forEach(function(i){var sl=document.getElementById('fpBadge'+i);if(sl){if(i<f.badges){sl.classList.add('earned');sl.textContent='';}else{sl.classList.remove('earned');sl.textContent='🔒';}}});
+  fpSpawnParticles();
+  showToast('✦ You kept the Pride Flame alive today ✦','f');
+  updateFlameNavDot();
+};
+
+window.fpPickReignite=function(el){
+  document.querySelectorAll('.fp-ropt').forEach(function(o){o.classList.remove('picked');});
+  el.classList.add('picked');
+  appData.flame.reigniteSelected=true;
+};
+window.fpDoReignite=function(){
+  var f=appData.flame;
+  if(!f.reigniteSelected){showToast('Choose a challenge first ✦','f');return;}
+  f.lastCompleted=Date.now();f.todayDone=true;f._streakReset=false;
+  f.points+=10;f.totalDays+=1;f.streak=1;
+  f.stepsCompleted=[true,true,true,true];
+  saveData();renderFSteps();updateFlameBarUI();
+  fpSpawnParticles();
+  showToast('🔥 The Pride Flame burns again!','f');
+  updateFlameNavDot();
+};
+
+/* ══ STUDENT PANELS ══ */
+function sDash(){
+  var s=appData.student,f=appData.flame||defaultFlame;
+  var tAvHtml=appData.teacherPhoto?'<img src="'+appData.teacherPhoto+'" style="width:26px;height:26px;border-radius:50%;object-fit:cover;">':'<span style="font-size:11px;color:white;font-weight:600;">V</span>';
+  var noteHtml;
+  if(appData.note){
+    noteHtml='<div style="background:linear-gradient(135deg,#F5E0D6,#F5EDD3);border:1px solid rgba(184,92,56,.15);border-radius:13px;padding:22px 26px;margin-bottom:18px;">'+
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;"><div style="width:30px;height:30px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;overflow:hidden;">'+tAvHtml+'</div>'+
+      '<div><div style="font-size:13px;font-weight:600;color:var(--dark-brown);">Vítor</div><div style="font-size:11px;color:var(--warm-gray);">Your Teacher · '+(appData.noteDate||'Recent')+'</div></div></div>'+
+      '<div style="font-size:16px;font-weight:300;font-style:italic;color:var(--mid-brown);line-height:1.6;font-family:Georgia,serif;">"'+appData.note+'"</div></div>';
+  } else {
+    var sAv=s.photo?'<img src="'+s.photo+'" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.2);">'
+      :'<div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;color:white;font-weight:300;">'+s.name.charAt(0).toUpperCase()+'</div>';
+    noteHtml='<div class="welcome-card"><div style="flex-shrink:0;">'+sAv+'</div>'+
+      '<div><div class="wc-title">Hello, <em>'+s.name+'</em>!</div>'+
+      '<div class="wc-body">'+(appData.welcomeMsg||"I'm looking forward to our first lesson together.")+'</div>'+
+      '<div class="wc-teacher"><div class="wct-av">'+tAvHtml+'</div><div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div></div></div>';
+  }
+  // Flame teaser strip
+  var fStr=flameStrength();
+  var flameBadge='<div onclick="showPanel(\'s-flame\')" style="cursor:pointer;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,107,26,.12),rgba(255,215,0,.08));border:1px solid rgba(255,107,26,.22);border-radius:13px;padding:14px 18px;margin-bottom:20px;transition:border-color .2s;" onmouseover="this.style.borderColor=\'rgba(255,107,26,.45)\'" onmouseout="this.style.borderColor=\'rgba(255,107,26,.22)\'">'+
+    '<div style="font-size:28px;">🔥</div>'+
+    '<div style="flex:1"><div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,107,26,.8);font-weight:600;margin-bottom:3px">Pride Flame</div>'+
+    '<div style="font-size:13px;color:rgba(240,234,255,.8);">'+(fStr<=0?'Flame went out — reignite it!':fStr<25?'Almost out — do today\'s lesson!':f.todayDone?'Burning bright today ✦':'Keep it alive — tap to open')+'</div></div>'+
+    '<div style="text-align:right"><div style="font-family:Cormorant Garamond,serif;font-size:22px;color:#ffd700;line-height:1">'+Math.round(fStr)+'%</div>'+
+    (f.streak>0?'<div style="font-size:11px;color:rgba(255,183,71,.7)">🔥 '+f.streak+' day streak</div>':'')+
+    '</div></div>';
+  var lastFb='';
+  if(appData.feedback&&appData.feedback.length>0){
+    var fb=appData.feedback[appData.feedback.length-1];
+    lastFb='<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Latest Feedback</div>'+
+      '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+fb.title+'</div><div class="fb-date">'+fb.date+'</div></div>'+
+      '<div class="fb-text">'+fb.text+'</div><div class="fb-stars">'+'★'.repeat(fb.stars)+'☆'.repeat(5-fb.stars)+'</div></div></div>';
+  }
+  return '<div class="panel active">'+
+    '<div class="pg">Welcome,<br><em>'+s.name+'.</em></div>'+
+    '<div class="psub">'+(f.streak>0?'You\'re on a '+f.streak+'-day streak! 🔥':'Your English journey starts here!')+'</div>'+
+    '<div style="display:flex;align-items:center;margin-bottom:20px;font-size:11px;color:var(--warm-gray);"><span class="sync-dot" id="syncDot"></span>Synced with cloud</div>'+
+    flameBadge+noteHtml+
+    '<div class="stat-grid">'+
+    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">'+s.lessons+'</div><div class="stat-det">of 48 total</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.round(s.lessons/48*100)+'%;background:var(--accent)"></div></div></div>'+
+    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">'+(appData.vocabulary?appData.vocabulary.length:0)+'</div><div class="stat-det">words learned</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.min(appData.vocabulary?appData.vocabulary.length:0,100)+'%;background:var(--gold)"></div></div></div>'+
+    '<div class="stat-card"><div class="stat-label">Flame Points</div><div class="stat-val">'+f.points+'</div><div class="stat-det">total earned</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.min(f.points,100)+'%;background:var(--f-hot)"></div></div></div>'+
+    '<div class="stat-card"><div class="stat-label">Fluency Score</div><div class="stat-val">'+(s.fluency!=null?s.fluency:'—')+'</div><div class="stat-det">'+(s.fluency!=null?'out of 100':'assessed in class')+'</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+(s.fluency||0)+'%;background:var(--success)"></div></div></div>'+
+    '</div>'+lastFb+'</div>';
+}
+
+function sCourse(){
+  var rows=appData.modules.map(function(m){
+    var anyOpen=(m.lessons||[]).some(function(l){return l.unlocked;});
+    var lesRows=(m.lessons||[]).map(function(l){
+      var mi=appData.modules.indexOf(m),li=m.lessons.indexOf(l);
+      return '<div class="les-row" style="'+(l.unlocked?'':'opacity:.5')+'">'+
+        '<div class="les-dot" style="background:'+(l.unlocked?'var(--accent)':'var(--sand)')+'"></div>'+
+        '<div class="les-info"><div class="les-title">'+l.title+'</div><div class="les-meta">'+l.meta+'</div></div>'+
+        '<span class="pill '+(l.unlocked?'pill-open':'pill-locked')+'">'+(l.unlocked?'Available':'Locked')+'</span>'+
+        (l.unlocked&&l.contents&&l.contents.length?'<button class="btn-sm btn-sm-t" onclick="openStudentLesson('+mi+','+li+')">Open →</button>':'')+
+        '</div>';
+    }).join('');
+    return '<div class="mod-block" style="'+(anyOpen?'':'opacity:.55')+'">'+
+      '<div class="mod-header">'+
+      '<div class="mod-num" style="background:'+(anyOpen?'var(--accent-pale)':'var(--stone)')+';;color:'+(anyOpen?'var(--accent)':'var(--warm-gray)')+'">'+m.id+'</div>'+
+      '<div class="mod-info"><div class="mod-title-text">'+m.title+'</div><div class="mod-sub-text">'+m.sub+'</div></div>'+
+      '<span class="pill '+(anyOpen?'pill-open':'pill-locked')+'">'+(anyOpen?'In Progress':'🔒 Locked')+'</span>'+
+      '</div>'+(m.lessons&&m.lessons.length?'<div class="mod-lessons">'+lesRows+'</div>':'')+
+      '</div>';
+  }).join('');
+  return '<div class="panel active"><div class="pg">My <em>Course</em></div><div class="psub">Lessons unlock as you progress with Vítor.</div>'+rows+'</div>';
+}
+window.openStudentLesson=function(mi,li){
+  var l=appData.modules[mi].lessons[li];
+  var blocks=(l.contents||[]).map(function(c){
+    var cls=c.type==='dialogue'?'ct-dialogue':c.type==='exercise'?'ct-exercise':'ct-text';
+    return '<div class="content-block"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span class="ct-badge '+cls+'">'+c.type+'</span><span style="font-size:13px;font-weight:600;color:var(--dark-brown)">'+c.label+'</span></div>'+
+      '<div style="font-size:13px;color:var(--mid-brown);line-height:1.7;white-space:pre-line">'+c.body+'</div></div>';
+  }).join('');
+  document.getElementById('main').innerHTML='<div class="panel active">'+
+    '<div style="margin-bottom:16px"><button class="btn-sm btn-sm-t" onclick="showPanel(\'s-course\')">← Back</button></div>'+
+    '<div class="pg"><em>'+l.title+'</em></div><div class="psub">'+l.meta+'</div>'+
+    (blocks||'<div class="empty-state"><div class="ei">📖</div><div class="et">Content coming soon</div><div class="eb">Your teacher will add lesson content here.</div></div>')+
+    '</div>';
+};
+
+function sProgress(){
+  var sk=appData.skills||{};
+  var hasSk=Object.values(sk).some(function(v){return v>0;});
+  var skillHtml=hasSk?'<div class="card"><div class="card-title"><div class="dot"></div>Skill Progress</div>'+
+    Object.keys(sk).map(function(k){return '<div class="skill-row"><div class="skill-h"><span>'+k+'</span><span>'+sk[k]+'%</span></div><div class="skill-track"><div class="skill-fill" style="width:'+sk[k]+'%;background:var(--accent)"></div></div></div>';}).join('')+'</div>'
+    :'<div class="empty-state"><div class="ei">🌱</div><div class="et">Your story starts soon</div><div class="eb">Vítor will update your skills after each lesson.</div></div>';
+  var fbHtml='';
+  if(appData.feedback&&appData.feedback.length>0){
+    fbHtml='<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Teacher Feedback</div>'+
+      appData.feedback.map(function(f){return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div><div class="fb-date">'+f.date+'</div></div><div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div>';}).join('')+'</div>';
+  }
+  return '<div class="panel active"><div class="pg">Your <em>Progress</em></div><div class="psub">Updated by Vítor after each lesson.</div>'+skillHtml+fbHtml+'</div>';
+}
+
+function sVocab(){
+  var v=appData.vocabulary||[];
+  var difficult=(appData.studentDifficult||[]);
+  var mastered=v.length-difficult.length;
+  var totalNew=v.filter(function(w){var added=w.addedDate?new Date(w.addedDate):null;return added&&(Date.now()-added)<7*24*3600*1000;}).length;
+  var filterActive=window._vocabFilter||'all';
+  var filtered=v.filter(function(w,i){
+    if(filterActive==='difficult') return difficult.indexOf(i)!==-1;
+    if(filterActive==='new') return w.addedDate&&(Date.now()-new Date(w.addedDate))<7*24*3600*1000;
+    return true;
+  });
+  var entries=filtered.map(function(w){
+    var realIdx=v.indexOf(w);
+    var isDiff=difficult.indexOf(realIdx)!==-1;
+    var note=(appData.studentNotes||{})[realIdx]||'';
+    return '<div class="vocab-entry">'+
+      '<div class="ve-top">'+
+        '<div><div class="ve-word">'+w.word+'</div>'+
+        (w.ipa?'<div class="ve-ipa">/'+w.ipa+'/</div>':'')+
+      '</div>'+
+      '<span class="ve-type">'+w.type+'</span>'+
+      '</div>'+
+      '<div class="ve-def">'+w.def+'</div>'+
+      (w.ex?'<div class="ve-ex">'+w.ex+'</div>':'')+
+      (w.ex2?'<div class="ve-ex" style="border-left-color:var(--gold)">'+w.ex2+'</div>':'')+
+      '<div class="ve-actions">'+
+        '<button class="ve-diff-btn'+(isDiff?' marked':'')+'" onclick="toggleDifficult('+realIdx+')">'+(isDiff?'★ Difficult':'☆ Mark Difficult')+'</button>'+
+        '<input class="ve-note-input" placeholder="Personal note…" value="'+note.replace(/"/g,'&quot;')+'" oninput="saveVocabNote('+realIdx+',this.value)">'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  return '<div class="panel active">'+
+    '<div class="vbank-header">'+
+      '<div style="font-size:22px;font-weight:300;font-family:Georgia,serif;color:white;margin-bottom:2px;">Vocabulary <em style="font-style:italic;color:#a5f3eb">Bank</em></div>'+
+      '<div style="font-size:12px;color:rgba(255,255,255,.55);">Your personal word collection from all lessons.</div>'+
+      '<div class="vbank-stats">'+
+        '<div class="vbs"><div class="vbs-val">'+v.length+'</div><div class="vbs-lbl">Total</div></div>'+
+        '<div class="vbs"><div class="vbs-val">'+difficult.length+'</div><div class="vbs-lbl">Difficult</div></div>'+
+        '<div class="vbs"><div class="vbs-val">'+mastered+'</div><div class="vbs-lbl">Mastered</div></div>'+
+        '<div class="vbs"><div class="vbs-val">'+totalNew+'</div><div class="vbs-lbl">New this week</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="vbank-filters">'+
+      '<button class="vbf-btn'+(filterActive==='all'?' active':'')+'" onclick="setVocabFilter(&apos;all&apos;)">All words</button>'+
+      '<button class="vbf-btn'+(filterActive==='difficult'?' active':'')+'" onclick="setVocabFilter(&apos;difficult&apos;)">★ Difficult</button>'+
+      '<button class="vbf-btn'+(filterActive==='new'?' active':'')+'" onclick="setVocabFilter(&apos;new&apos;)">New this week</button>'+
+    '</div>'+
+    (filtered.length===0?'<div class="empty-state"><div class="ei">📚</div><div class="et">'+(v.length===0?'No words yet':'No words match this filter')+'</div><div class="eb">'+(v.length===0?'Vítor will add vocabulary after each lesson.':'Try another filter.')+'</div></div>'
+    :entries)+
+    '<div style="margin-top:16px;text-align:center"><button class="btn-save" style="background:var(--teal)" onclick="showPanel(&apos;s-flashcards&apos;)">🃏 Practice with Flashcards →</button></div>'+
+  '</div>';
+}
+/* ══ TEACHER PANELS ══ */
+function tDash(){
+  var s=appData.student;
+  var uRows=appData.modules.map(function(m){var u=(m.lessons||[]).filter(function(l){return l.unlocked;}).length;return u>0?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stone);font-size:13px;color:var(--mid-brown)"><span>'+m.title+'</span><span style="font-weight:600;color:var(--dark-brown)">'+u+'/'+m.lessons.length+'</span></div>':'';}).join('');
+  return '<div class="panel active"><div class="pg pg-t">Teacher <em>Overview</em></div><div class="psub">Hello Vítor — snapshot of '+s.name+'\'s platform.</div>'+
+    '<div class="tip-box"><div class="tip-icon">☁</div><div><div class="tip-title">Cloud sync active</div><div class="tip-text">All changes save automatically and sync to '+s.name+'\'s device in real time.</div></div></div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">'+s.lessons+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">'+(appData.vocabulary?appData.vocabulary.length:0)+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Flame Streak</div><div class="stat-val">'+(appData.flame?appData.flame.streak:0)+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Fluency</div><div class="stat-val">'+(s.fluency!=null?s.fluency:'—')+'</div></div>'+
+    '</div>'+
+    '<div class="two-col">'+
+    '<div class="card"><div class="card-title"><div class="dot"></div>Unlocked Lessons</div>'+(uRows||'<div style="font-size:13px;color:var(--warm-gray)">None yet.</div>')+'</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Recent Feedback</div>'+
+    (appData.feedback&&appData.feedback.length>0?appData.feedback.slice(-2).map(function(f){return '<div style="padding:7px 0;border-bottom:1px solid var(--stone)"><div style="font-size:13px;font-weight:500;color:var(--dark-brown)">'+f.title+'</div><div style="font-size:11px;color:var(--warm-gray)">'+f.date+'</div></div>';}).join(''):'<div style="font-size:13px;color:var(--warm-gray)">None added yet.</div>')+
+    '</div></div></div>';
+}
+
+function tCourse(){
+  var modBlocks=appData.modules.map(function(m,mi){
+    var isEM=editingMod===mi&&editingLes===-1;
+    var modForm=isEM?'<div class="edit-form" style="margin:0 14px 14px"><div class="fg"><label class="flab">Module Title</label><input class="fi" id="med-title" value="'+m.title+'"></div><div class="fg"><label class="flab">Subtitle</label><input class="fi" id="med-sub" value="'+m.sub+'"></div><div class="btn-row"><button class="btn-save" onclick="saveModuleEdit('+mi+')">Save</button><button class="btn-cancel" onclick="cancelEdit()">Cancel</button></div></div>':'';
+    var lesList=(m.lessons||[]).map(function(l,li){
+      var isEL=editingMod===mi&&editingLes===li;
+      return '<div class="les-row"><div class="les-dot" style="background:'+(l.unlocked?'var(--accent)':'var(--sand)')+'"></div>'+
+        '<div class="les-info"><div class="les-title">'+l.title+'</div><div class="les-meta">'+l.meta+'</div></div>'+
+        '<span class="pill '+(l.unlocked?'pill-open':'pill-locked')+'">'+(l.unlocked?'Unlocked':'Locked')+'</span>'+
+        '<button class="tog '+(l.unlocked?'tog-on':'tog-off')+'" onclick="toggleLesson('+mi+','+li+')"><div class="tok"></div></button>'+
+        '<button class="btn-sm btn-sm-t" onclick="openLessonEditor('+mi+','+li+')">✎</button>'+
+        '<button class="btn-sm btn-sm-danger" onclick="deleteLesson('+mi+','+li+')">✕</button></div>'+
+        (isEL?tLessonEditor(mi,li):'');
+    }).join('');
+    return '<div class="mod-block"><div class="mod-header">'+
+      '<div class="mod-num" style="background:var(--teacher-pale);color:var(--teacher)">'+m.id+'</div>'+
+      '<div class="mod-info"><div class="mod-title-text">'+m.title+'</div><div class="mod-sub-text">'+m.sub+'</div></div>'+
+      '<button class="btn-sm btn-sm-t" onclick="openModuleEditor('+mi+')">✎ Edit</button>'+
+      '<button class="btn-sm btn-sm-danger" onclick="deleteModule('+mi+')">✕ Delete</button></div>'+
+      modForm+(m.lessons&&m.lessons.length?'<div class="mod-lessons">'+lesList+'</div>':'')+
+      '<div style="padding:12px 18px;border-top:'+(m.lessons&&m.lessons.length?'1px solid var(--stone)':'none')+'">'+
+      '<button class="btn-sm btn-sm-success" onclick="addLesson('+mi+')">+ Add Lesson</button></div></div>';
+  }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Modules & <em>Lessons</em></div><div class="psub">Edit names, content and unlock status.</div>'+modBlocks+'<div style="margin-top:4px"><button class="btn-save" onclick="addModule()">+ Add Module</button></div></div>';
+}
+
+function tLessonEditor(mi,li){
+  var l=appData.modules[mi].lessons[li];
+  var cBlocks=(l.contents||[]).map(function(c,ci){
+    var cls=c.type==='dialogue'?'ct-dialogue':c.type==='exercise'?'ct-exercise':'ct-text';
+    var isEC=editingContent===ci;
+    return '<div class="content-block"><div style="display:flex;align-items:center;gap:8px;margin-bottom:'+(isEC?'12':'0')+'px">'+
+      '<span class="ct-badge '+cls+'">'+c.type+'</span>'+
+      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown);flex:1">'+c.label+'</span>'+
+      '<button class="btn-sm btn-sm-t" onclick="openContentEditor('+mi+','+li+','+ci+')">✎</button>'+
+      '<button class="btn-sm btn-sm-danger" onclick="deleteContent('+mi+','+li+','+ci+')">✕</button></div>'+
+      (isEC?'<div class="fg"><label class="flab">Label</label><input class="fi" id="ced-label" value="'+c.label+'"></div>'+
+        '<div class="fg"><label class="flab">Type</label><select class="fsel" id="ced-type">'+['text','dialogue','exercise'].map(function(t){return '<option'+(t===c.type?' selected':'')+'>'+t+'</option>';}).join('')+'</select></div>'+
+        '<div class="fg"><label class="flab">Content</label><textarea class="fta" id="ced-body" style="min-height:90px">'+c.body+'</textarea></div>'+
+        '<div class="btn-row"><button class="btn-save" onclick="saveContentEdit('+mi+','+li+','+ci+')">Save</button><button class="btn-cancel" onclick="cancelContentEdit()">Cancel</button></div>'
+        :'<div style="font-size:12px;color:var(--mid-brown);white-space:pre-line;line-height:1.5;margin-top:4px">'+(c.body?c.body.substring(0,80)+(c.body.length>80?'…':''):'<em style="color:var(--warm-gray)">No content yet</em>')+'</div>')+
+      '</div>';
+  }).join('');
+  return '<div class="edit-form" style="margin-left:20px;border-radius:0 0 11px 11px">'+
+    '<div class="fg"><label class="flab">Lesson Title</label><input class="fi" id="led-title-'+mi+'-'+li+'" value="'+l.title+'"></div>'+
+    '<div class="fg"><label class="flab">Description</label><input class="fi" id="led-meta-'+mi+'-'+li+'" value="'+l.meta+'"></div>'+
+    '<div class="btn-row" style="margin-bottom:16px"><button class="btn-save" onclick="saveLessonMeta('+mi+','+li+')">Save Title</button></div>'+
+    '<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--teacher);margin-bottom:8px">Content Blocks</div>'+
+    cBlocks+
+    '<div class="btn-row" style="margin-top:10px">'+
+    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'text\')">+ Text</button>'+
+    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'dialogue\')">+ Dialogue</button>'+
+    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'exercise\')">+ Exercise</button></div>'+
+    '<div class="btn-row" style="margin-top:8px"><button class="btn-cancel" onclick="cancelEdit()">Close Editor</button></div></div>';
+}
+
+window.openModuleEditor=function(mi){editingMod=mi;editingLes=-1;editingContent=-1;document.getElementById('main').innerHTML=tCourse();};
+window.openLessonEditor=function(mi,li){editingMod=mi;editingLes=li;editingContent=-1;document.getElementById('main').innerHTML=tCourse();};
+window.openContentEditor=function(mi,li,ci){editingContent=ci;document.getElementById('main').innerHTML=tCourse();};
+window.cancelEdit=function(){editingMod=-1;editingLes=-1;editingContent=-1;document.getElementById('main').innerHTML=tCourse();};
+window.cancelContentEdit=function(){editingContent=-1;document.getElementById('main').innerHTML=tCourse();};
+window.saveModuleEdit=function(mi){var t=document.getElementById('med-title'),s=document.getElementById('med-sub');if(t)appData.modules[mi].title=t.value.trim()||appData.modules[mi].title;if(s)appData.modules[mi].sub=s.value.trim()||appData.modules[mi].sub;saveData();editingMod=-1;editingLes=-1;document.getElementById('main').innerHTML=tCourse();showToast('Module updated!','t');};
+window.saveLessonMeta=function(mi,li){var t=document.getElementById('led-title-'+mi+'-'+li),m=document.getElementById('led-meta-'+mi+'-'+li);if(t)appData.modules[mi].lessons[li].title=t.value.trim()||appData.modules[mi].lessons[li].title;if(m)appData.modules[mi].lessons[li].meta=m.value.trim()||appData.modules[mi].lessons[li].meta;saveData();showToast('Lesson saved!','t');};
+window.saveContentEdit=function(mi,li,ci){var lab=document.getElementById('ced-label'),typ=document.getElementById('ced-type'),bod=document.getElementById('ced-body');if(lab)appData.modules[mi].lessons[li].contents[ci].label=lab.value.trim();if(typ)appData.modules[mi].lessons[li].contents[ci].type=typ.value;if(bod)appData.modules[mi].lessons[li].contents[ci].body=bod.value.trim();saveData();editingContent=-1;document.getElementById('main').innerHTML=tCourse();showToast('Content saved!','t');};
+window.addContent=function(mi,li,type){if(!appData.modules[mi].lessons[li].contents)appData.modules[mi].lessons[li].contents=[];appData.modules[mi].lessons[li].contents.push({type:type,label:'New '+type.charAt(0).toUpperCase()+type.slice(1),body:''});editingContent=appData.modules[mi].lessons[li].contents.length-1;saveData();document.getElementById('main').innerHTML=tCourse();};
+window.deleteContent=function(mi,li,ci){appData.modules[mi].lessons[li].contents.splice(ci,1);editingContent=-1;saveData();document.getElementById('main').innerHTML=tCourse();showToast('Block deleted.','t');};
+window.addLesson=function(mi){if(!appData.modules[mi].lessons)appData.modules[mi].lessons=[];appData.modules[mi].lessons.push({title:'New Lesson',meta:'Module '+(mi+1)+' · 50 min',unlocked:false,contents:[]});editingMod=mi;editingLes=appData.modules[mi].lessons.length-1;editingContent=-1;saveData();document.getElementById('main').innerHTML=tCourse();showToast('Lesson added!','t');};
+window.deleteLesson=function(mi,li){if(!confirm('Delete "'+appData.modules[mi].lessons[li].title+'"?'))return;appData.modules[mi].lessons.splice(li,1);editingMod=-1;editingLes=-1;editingContent=-1;saveData();document.getElementById('main').innerHTML=tCourse();showToast('Lesson deleted.','t');};
+window.addModule=function(){appData.modules.push({id:appData.modules.length+1,title:'New Module',sub:'Add a subtitle',lessons:[]});editingMod=appData.modules.length-1;editingLes=-1;editingContent=-1;saveData();document.getElementById('main').innerHTML=tCourse();showToast('Module added!','t');};
+window.deleteModule=function(mi){if(!confirm('Delete "'+appData.modules[mi].title+'" and all its lessons?'))return;appData.modules.splice(mi,1);appData.modules.forEach(function(m,i){m.id=i+1;});editingMod=-1;editingLes=-1;editingContent=-1;saveData();document.getElementById('main').innerHTML=tCourse();showToast('Module deleted.','t');};
+window.toggleLesson=function(mi,li){appData.modules[mi].lessons[li].unlocked=!appData.modules[mi].lessons[li].unlocked;saveData();document.getElementById('main').innerHTML=tCourse();showToast(appData.modules[mi].lessons[li].unlocked?'Lesson unlocked!':'Lesson locked.','t');};
+
+function tProgress(){
+  var s=appData.student,sk=appData.skills||{};
+  return '<div class="panel active"><div class="pg pg-t">Progress & <em>Scores</em></div><div class="psub">Update '+s.name+'\'s stats after each session.</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>General Stats</div>'+
+    '<div class="two-col"><div class="fg"><label class="flab">Lessons Completed</label><input class="fi" type="number" min="0" max="48" id="f-les" value="'+s.lessons+'"></div>'+
+    '<div class="fg"><label class="flab">Study Streak (days)</label><input class="fi" type="number" min="0" id="f-str" value="'+s.streak+'"></div></div>'+
+    '<div class="fg"><label class="flab">Fluency Score — <span id="fl-v">'+(s.fluency!=null?s.fluency:0)+'</span>/100</label>'+
+    '<input type="range" min="0" max="100" id="f-flu" value="'+(s.fluency||0)+'" oninput="document.getElementById(\'fl-v\').textContent=this.value"></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="saveStats()">Save Stats</button></div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--gold)"></div>Skill Levels</div>'+
+    Object.keys(sk).map(function(k){return '<div class="fg"><label class="flab">'+k+' — <span id="sk-'+k+'-v">'+sk[k]+'%</span></label><input type="range" min="0" max="100" id="sk-'+k+'" value="'+sk[k]+'" oninput="document.getElementById(\'sk-'+k+'-v\').textContent=this.value+\'%\'"></div>';}).join('')+
+    '<div class="btn-row"><button class="btn-save" onclick="saveSkills()">Save Skills</button></div></div></div>';
+}
+window.saveStats=function(){var les=document.getElementById('f-les'),str=document.getElementById('f-str'),flu=document.getElementById('f-flu');if(les)appData.student.lessons=parseInt(les.value)||0;if(str)appData.student.streak=parseInt(str.value)||0;if(flu)appData.student.fluency=parseInt(flu.value);saveData();showToast('Stats saved!','t');};
+window.saveSkills=function(){Object.keys(appData.skills).forEach(function(k){var el=document.getElementById('sk-'+k);if(el)appData.skills[k]=parseInt(el.value)||0;});saveData();showToast('Skills updated!','t');};
+
+function tFeedback(){
+  var fbCards=(appData.feedback||[]).map(function(f,i){return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div><div style="display:flex;align-items:center;gap:8px"><div class="fb-date">'+f.date+'</div><button class="del-btn" onclick="delFeedback('+i+')">✕</button></div></div><div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div>';}).join('');
+  return '<div class="panel active"><div class="pg pg-t">Feedback & <em>Notes</em></div><div class="psub">Leave notes and feedback for '+appData.student.name+'.</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--accent)"></div>Welcome Message</div>'+
+    '<div class="fg"><label class="flab">Shown on '+appData.student.name+'\'s dashboard when there\'s no note</label><textarea class="fta" id="f-welcome" placeholder="e.g. I\'m looking forward to our first lesson together!">'+(appData.welcomeMsg||'')+'</textarea></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="saveWelcomeMsg()">Save Message</button></div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Dashboard Note</div>'+
+    '<div class="fg"><label class="flab">Shown on '+appData.student.name+'\'s home screen</label><textarea class="fta" id="f-note" placeholder="Write a personal note…">'+(appData.note||'')+'</textarea></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="saveNote()">Save Note</button>'+(appData.note?'<button class="btn-cancel" onclick="clearNote()">Clear</button>':'')+'</div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot"></div>Add Lesson Feedback</div>'+
+    '<div class="fg"><label class="flab">Title</label><input class="fi" id="fb-ti" placeholder="e.g. Lesson Review — M1 L1"></div>'+
+    '<div class="fg" style="margin-top:10px"><label class="flab">Feedback</label><textarea class="fta" id="fb-tx" placeholder="Your feedback…"></textarea></div>'+
+    '<div class="fg" style="margin-top:10px"><label class="flab">Rating — <span id="fb-sv">★★★★☆</span></label><input type="range" min="1" max="5" id="fb-st" value="4" oninput="updateStars(this.value)"></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="addFeedback()">Add Feedback</button></div></div>'+
+    (appData.feedback&&appData.feedback.length>0?'<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Saved Feedback ('+appData.feedback.length+')</div>'+fbCards+'</div>':'')+
+    '</div>';
+}
+window.saveWelcomeMsg=function(){var el=document.getElementById('f-welcome');if(!el)return;appData.welcomeMsg=el.value.trim()||"I'm looking forward to our first lesson together.";saveData();showToast('Welcome message saved!','t');};
+window.saveNote=function(){var el=document.getElementById('f-note');if(!el)return;appData.note=el.value.trim();appData.noteDate=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});saveData();showPanel('t-feedback');showToast('Note saved!','t');};
+window.clearNote=function(){appData.note='';appData.noteDate='';saveData();showPanel('t-feedback');showToast('Note cleared.','t');};
+window.updateStars=function(v){var el=document.getElementById('fb-sv');if(el)el.textContent='★'.repeat(v)+'☆'.repeat(5-v);};
+window.addFeedback=function(){var ti=document.getElementById('fb-ti'),tx=document.getElementById('fb-tx'),st=document.getElementById('fb-st');if(!ti||!tx||!ti.value.trim()||!tx.value.trim()){showToast('Fill in title and feedback.','d');return;}if(!appData.feedback)appData.feedback=[];appData.feedback.push({title:ti.value.trim(),text:tx.value.trim(),stars:parseInt(st?st.value:4)||4,date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})});saveData();showPanel('t-feedback');showToast('Feedback added!','t');};
+window.delFeedback=function(i){appData.feedback.splice(i,1);saveData();showPanel('t-feedback');showToast('Deleted.','t');};
+
+
+
+
+/* ══ VOCABULARY BANK INTERACTIONS ══ */
+window.setVocabFilter=function(f){window._vocabFilter=f;showPanel('s-vocab');};
+window.toggleDifficult=function(idx){
+  if(!appData.studentDifficult)appData.studentDifficult=[];
+  var i=appData.studentDifficult.indexOf(idx);
+  if(i===-1)appData.studentDifficult.push(idx);
+  else appData.studentDifficult.splice(i,1);
+  saveData();showPanel('s-vocab');
+  showToast(i===-1?'Marked as difficult!':'Removed from difficult.','t');
+};
+window.saveVocabNote=function(idx,val){
+  if(!appData.studentNotes)appData.studentNotes={};
+  appData.studentNotes[idx]=val;
+  clearTimeout(window._noteTimer);
+  window._noteTimer=setTimeout(function(){saveData();},1200);
+};
+
+/* ══ FLASHCARD SYSTEM ══ */
+var fcState={cards:[],idx:0,known:0,hard:0,skipped:0,flipped:false,mode:'word'};
+
+function sFlashcards(){
+  var v=appData.vocabulary||[];
+  var difficult=appData.studentDifficult||[];
+  return '<div class="panel active">'+
+    '<div class="pg">Flash<em>cards</em></div>'+
+    '<div class="psub">Reinforce your vocabulary with smart review.</div>'+
+    '<div class="fc-header">'+
+      '<div>'+
+        '<div class="fc-mode-tabs">'+
+          '<button class="fc-mode-tab'+(true?' active':'')+'" id="fcm-all" onclick="startFC(&apos;all&apos;)">All Words</button>'+
+          '<button class="fc-mode-tab" id="fcm-diff" onclick="startFC(&apos;difficult&apos;)">★ Difficult</button>'+
+          '<button class="fc-mode-tab" id="fcm-new" onclick="startFC(&apos;new&apos;)">New</button>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:12px;color:var(--warm-gray)">'+(v.length)+' words available</div>'+
+    '</div>'+
+    '<div id="fc-area">'+
+      (v.length===0?
+        '<div class="empty-state"><div class="ei">🃏</div><div class="et">No vocabulary yet</div><div class="eb">Vítor will add words after each lesson, then you can practice here.</div></div>'
+        :'<div style="text-align:center;padding:40px 0"><button class="btn-save" style="background:var(--teal);padding:14px 32px;font-size:15px" onclick="startFC(&apos;all&apos;)">Start Flashcards →</button></div>'
+      )+
+    '</div>'+
+  '</div>';
+}
+
+function initFlashcards(){
+  // Called after render, no-op since startFC is button-triggered
+}
+
+window.startFC=function(mode){
+  var v=appData.vocabulary||[];
+  var difficult=appData.studentDifficult||[];
+  var cards=[];
+  if(mode==='difficult') cards=v.filter(function(_,i){return difficult.indexOf(i)!==-1;});
+  else if(mode==='new') cards=v.filter(function(w){return w.addedDate&&(Date.now()-new Date(w.addedDate))<7*24*3600*1000;});
+  else cards=v.slice();
+  // Shuffle
+  for(var i=cards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=cards[i];cards[i]=cards[j];cards[j]=t;}
+  fcState={cards:cards,idx:0,known:0,hard:0,skipped:0,flipped:false,mode:mode};
+  // update tab
+  document.querySelectorAll('.fc-mode-tab').forEach(function(b){b.classList.remove('active');});
+  var tb=document.getElementById('fcm-'+mode);if(tb)tb.classList.add('active');
+  renderFC();
+};
+
+function renderFC(){
+  var area=document.getElementById('fc-area');if(!area)return;
+  if(fcState.cards.length===0){area.innerHTML='<div class="empty-state"><div class="ei">🃏</div><div class="et">No cards in this set</div><div class="eb">Try a different filter.</div></div>';return;}
+  if(fcState.idx>=fcState.cards.length){renderFCComplete();return;}
+  var w=fcState.cards[fcState.idx];
+  var pct=Math.round(fcState.idx/fcState.cards.length*100);
+  area.innerHTML=
+    '<div class="fc-stats-row">'+
+      '<div class="fc-stat"><div class="fc-stat-val" style="color:var(--success)">'+fcState.known+'</div><div class="fc-stat-lbl">Known</div></div>'+
+      '<div class="fc-stat"><div class="fc-stat-val" style="color:#c0392b">'+fcState.hard+'</div><div class="fc-stat-lbl">Hard</div></div>'+
+      '<div class="fc-stat"><div class="fc-stat-val">'+fcState.skipped+'</div><div class="fc-stat-lbl">Skipped</div></div>'+
+    '</div>'+
+    '<div class="fc-counter">Card '+(fcState.idx+1)+' of '+fcState.cards.length+'</div>'+
+    '<div class="fc-progress-bar"><div class="fc-progress-fill" style="width:'+pct+'%"></div></div>'+
+    '<div class="flashcard-wrap" onclick="flipFC()" id="fcWrap">'+
+      '<div class="flashcard" id="fc">'+
+        '<div class="fc-face fc-front">'+
+          '<div class="fc-face-hint">Tap to reveal</div>'+
+          '<div class="fc-face-word">'+w.word+'</div>'+
+          (w.ipa?'<div class="fc-face-ipa">/'+w.ipa+'/</div>':'')+
+          '<div class="fc-flip-hint">tap to flip</div>'+
+        '</div>'+
+        '<div class="fc-face fc-back">'+
+          '<div class="fc-face-hint">Definition</div>'+
+          '<div class="fc-face-word">'+w.type+'</div>'+
+          '<div class="fc-face-def">'+w.def+'</div>'+
+          (w.ex?'<div class="fc-face-ex">'+w.ex+'</div>':'')+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="fc-buttons">'+
+      '<button class="fc-btn fc-btn-know" onclick="fcAnswer(&apos;known&apos;)">✓ Got it</button>'+
+      '<button class="fc-btn fc-btn-hard" onclick="fcAnswer(&apos;hard&apos;)">✕ Hard</button>'+
+      '<button class="fc-btn fc-btn-skip" onclick="fcAnswer(&apos;skip&apos;)">→ Skip</button>'+
+    '</div>'+
+    '<div style="text-align:center;margin-top:8px"><button class="btn-cancel" onclick="showPanel(&apos;s-vocab&apos;)" style="font-size:12px">Back to Vocabulary</button></div>';
+  fcState.flipped=false;
+}
+
+window.flipFC=function(){
+  var fc=document.getElementById('fc');if(!fc)return;
+  fcState.flipped=!fcState.flipped;
+  fc.classList.toggle('flipped',fcState.flipped);
+};
+
+window.fcAnswer=function(result){
+  if(result==='known') fcState.known++;
+  else if(result==='hard'){
+    fcState.hard++;
+    // Push hard card to end of deck for re-review
+    fcState.cards.push(fcState.cards[fcState.idx]);
+  }
+  else fcState.skipped++;
+  fcState.idx++;
+  fcState.flipped=false;
+  renderFC();
+};
+
+function renderFCComplete(){
+  var area=document.getElementById('fc-area');
+  var total=fcState.known+fcState.hard+fcState.skipped;
+  var pct=total>0?Math.round(fcState.known/total*100):0;
+  area.innerHTML='<div class="fc-complete">'+
+    '<div style="font-size:48px;margin-bottom:12px">'+(pct>=80?'🎉':pct>=50?'💪':'📖')+'</div>'+
+    '<div style="font-size:24px;font-weight:300;font-family:Georgia,serif;color:var(--dark-brown);margin-bottom:4px">Session Complete!</div>'+
+    '<div style="font-size:13px;color:var(--warm-gray);margin-bottom:20px">You scored '+pct+'% accuracy</div>'+
+    '<div class="fc-stats-row" style="max-width:320px;margin:0 auto 20px">'+
+      '<div class="fc-stat"><div class="fc-stat-val" style="color:var(--success)">'+fcState.known+'</div><div class="fc-stat-lbl">Known</div></div>'+
+      '<div class="fc-stat"><div class="fc-stat-val" style="color:#c0392b">'+fcState.hard+'</div><div class="fc-stat-lbl">Hard</div></div>'+
+      '<div class="fc-stat"><div class="fc-stat-val">'+fcState.skipped+'</div><div class="fc-stat-lbl">Skipped</div></div>'+
+    '</div>'+
+    '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
+      '<button class="btn-save" style="background:var(--teal)" onclick="startFC(&apos;'+fcState.mode+'&apos;)">Practice Again</button>'+
+      (fcState.hard>0?'<button class="btn-save" onclick="startFC(&apos;difficult&apos;)">Review Difficult Words</button>':'')+
+      '<button class="btn-cancel" onclick="showPanel(&apos;s-vocab&apos;)">Back to Vocab</button>'+
+    '</div>'+
+  '</div>';
+}
+
+/* ══ AI LESSON BUILDER ══ */
+function tAIBuilder(){
+  return '<div class="panel active">'+
+    '<div class="ai-builder-hero">'+
+      '<div class="aib-title">AI Lesson <em>Builder</em></div>'+
+      '<div class="aib-sub">Upload any textbook page, activity, or article — AI will generate a complete 50-minute lesson plan.</div>'+
+      '<div class="aib-badge">✦ Powered by Claude AI</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Upload Material</div>'+
+      '<div class="ai-drop-zone" id="aiDropZone" onclick="document.getElementById(&apos;aiFileInput&apos;).click()" ondragover="aiDragOver(event)" ondrop="aiDrop(event)">'+
+        '<input type="file" id="aiFileInput" accept="image/*" onchange="aiFileSelected(this)">'+
+        '<div class="ai-drop-icon">📄</div>'+
+        '<div class="ai-drop-text">Drop a screenshot or click to upload</div>'+
+        '<div class="ai-drop-sub">JPEG, PNG, WEBP — textbook pages, articles, worksheets</div>'+
+      '</div>'+
+      '<div id="aiPreviewArea"></div>'+
+      '<div class="ai-controls" id="aiControls" style="display:none">'+
+        '<div class="ai-toggle">'+
+          '<button class="ai-toggle-btn active" id="aib-comm" onclick="setAIToggle(&apos;communicative&apos;)">More Communicative</button>'+
+          '<button class="ai-toggle-btn" id="aib-struct" onclick="setAIToggle(&apos;structured&apos;)">More Structured</button>'+
+        '</div>'+
+        '<div class="ai-slider-wrap">'+
+          '<span class="ai-slider-label">Difficulty</span>'+
+          '<input type="range" min="1" max="5" value="3" id="aiDiffSlider" style="accent-color:var(--teacher)">'+
+          '<span id="aiDiffLabel" style="font-size:11px;color:var(--warm-gray);white-space:nowrap">B1 Intermediate</span>'+
+        '</div>'+
+      '</div>'+
+      '<div id="aiButtons" style="display:none">'+
+        '<div class="btn-row">'+
+          '<button class="btn-save" onclick="runAILesson()">✦ Generate Lesson Plan</button>'+
+          '<button class="btn-cancel" onclick="resetAIBuilder()">Reset</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="ai-loading" id="aiLoading">'+
+      '<div class="ai-spinner"></div>'+
+      '<div class="ai-loading-text">Analyzing material…</div>'+
+      '<div class="ai-loading-step" id="aiLoadStep">Detecting topic and grammar focus</div>'+
+    '</div>'+
+    '<div id="aiAnalysisArea"></div>'+
+    '<div id="aiLessonArea"></div>'+
+  '</div>';
+}
+
+var aiImageData=null;
+var aiToggleMode='communicative';
+var aiDiffMap={1:'A2 Elementary',2:'A2-B1 Pre-Intermediate',3:'B1 Intermediate',4:'B1-B2 Upper Intermediate',5:'B2 Advanced'};
+
+window.aiDragOver=function(e){e.preventDefault();document.getElementById('aiDropZone').classList.add('drag-over');};
+window.aiDrop=function(e){
+  e.preventDefault();
+  document.getElementById('aiDropZone').classList.remove('drag-over');
+  var file=e.dataTransfer.files[0];if(file)processAIFile(file);
+};
+window.aiFileSelected=function(input){var file=input.files[0];if(file)processAIFile(file);};
+
+function processAIFile(file){
+  var reader=new FileReader();
+  reader.onload=function(e){
+    aiImageData=e.target.result;
+    document.getElementById('aiPreviewArea').innerHTML='<img class="ai-preview-img" src="'+aiImageData+'" alt="Preview">';
+    document.getElementById('aiControls').style.display='flex';
+    document.getElementById('aiButtons').style.display='block';
+    document.getElementById('aiDropZone').style.display='none';
+    var slider=document.getElementById('aiDiffSlider');
+    if(slider) slider.oninput=function(){document.getElementById('aiDiffLabel').textContent=aiDiffMap[this.value]||'B1';};
+  };
+  reader.readAsDataURL(file);
+}
+
+window.setAIToggle=function(mode){
+  aiToggleMode=mode;
+  document.getElementById('aib-comm').classList.toggle('active',mode==='communicative');
+  document.getElementById('aib-struct').classList.toggle('active',mode==='structured');
+};
+
+window.resetAIBuilder=function(){
+  aiImageData=null;
+  document.getElementById('aiPreviewArea').innerHTML='';
+  document.getElementById('aiControls').style.display='none';
+  document.getElementById('aiButtons').style.display='none';
+  document.getElementById('aiDropZone').style.display='block';
+  document.getElementById('aiAnalysisArea').innerHTML='';
+  document.getElementById('aiLessonArea').innerHTML='';
+  document.getElementById('aiLoading').classList.remove('show');
+};
+
+var aiLoadSteps=['Detecting topic and grammar focus…','Identifying vocabulary themes…','Analyzing difficulty level…','Detecting skills involved…','Building 50-minute lesson structure…','Writing activities and tasks…','Adding pronunciation drills…','Generating extension materials…'];
+var aiLoadIdx=0;
+var aiLoadInterval=null;
+
+function startLoadAnimation(){
+  aiLoadIdx=0;
+  document.getElementById('aiLoading').classList.add('show');
+  aiLoadInterval=setInterval(function(){
+    aiLoadIdx=(aiLoadIdx+1)%aiLoadSteps.length;
+    var el=document.getElementById('aiLoadStep');
+    if(el)el.textContent=aiLoadSteps[aiLoadIdx];
+  },1800);
+}
+function stopLoadAnimation(){
+  clearInterval(aiLoadInterval);
+  document.getElementById('aiLoading').classList.remove('show');
+}
+
+window.runAILesson=function(){
+  if(!aiImageData){showToast('Please upload an image first.','d');return;}
+  var diff=document.getElementById('aiDiffSlider');
+  var diffVal=diff?parseInt(diff.value):3;
+  var diffLabel=aiDiffMap[diffVal]||'B1 Intermediate';
+  startLoadAnimation();
+  document.getElementById('aiAnalysisArea').innerHTML='';
+  document.getElementById('aiLessonArea').innerHTML='';
+
+  var base64Data=aiImageData.split(',')[1];
+  var mediaType=aiImageData.split(';')[0].split(':')[1]||'image/jpeg';
+
+  var systemPrompt='You are an expert EFL teacher assistant. Analyze the uploaded textbook/material image and respond ONLY with a JSON object (no markdown, no extra text). The JSON must have these keys:\n{\n  "topic": "string",\n  "grammarFocus": "string or null",\n  "vocabularyTheme": "string",\n  "skills": ["Speaking","Reading","Writing","Listening"] (include relevant ones),\n  "difficulty": "string (e.g. B1 Intermediate)",\n  "lessonTitle": "string",\n  "objective": "string",\n  "warmUp": {"activity":"string","time":"5 min"},\n  "targetLanguage": {"focus":"string","examples":["string","string"],"time":"10 min"},\n  "guidedPractice": {"activity":"string","time":"12 min"},\n  "communicativeTask": {"activity":"string","time":"15 min"},\n  "realLifeApplication": {"activity":"string","time":"5 min"},\n  "homework": "string",\n  "extension": "string",\n  "speakingPrompts": ["string","string","string"],\n  "pronunciationDrill": {"sounds":["string"],"drillSentences":["string","string"]},\n  "writingTask": "string",\n  "vocabularyExpansion": ["word1","word2","word3","word4","word5"],\n  "realLifeMission": "string"\n}\nThe lesson must follow a 50-minute structure. Style: '+aiToggleMode+'. Target level: '+diffLabel+'.';
+
+  fetch('/.netlify/functions/ai-lesson',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      systemPrompt:systemPrompt,
+      imageData:base64Data,
+      mediaType:mediaType
+    })
+  })
+  .then(function(r){
+    return r.json().then(function(data){
+      if(!r.ok){
+        var detail=data.detail||data.error||'Unknown error ('+r.status+')';
+        throw new Error('Status '+r.status+': '+detail);
+      }
+      return data;
+    });
+  })
+  .then(function(data){
+    stopLoadAnimation();
+    var text=(data.content||[]).map(function(b){return b.text||'';}).join('');
+    var clean=text.replace(/```json[\s\S]*?```|```/g,'').trim();
+    var jsonMatch=clean.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON found in Gemini response. Raw: '+text.slice(0,200));
+    var lesson=JSON.parse(jsonMatch[0]);
+    renderAIAnalysis(lesson);
+    renderAILessonPlan(lesson);
+    showToast('Lesson generated!','t');
+  })
+  .catch(function(err){
+    stopLoadAnimation();
+    console.error('AI Lesson error:',err);
+    showToast('Falhou — veja o erro abaixo.','d');
+    document.getElementById('aiAnalysisArea').innerHTML=
+      '<div class="card"><div style="color:#c0392b;font-size:13px;line-height:1.8">'+
+      '<strong>Falhou ao gerar a aula.</strong><br>'+
+      '<code style="background:#fef2f2;padding:4px 8px;border-radius:5px;font-size:12px;display:block;margin:8px 0;word-break:break-all">'+err.message+'</code>'+
+      'Verifique:<br>'+
+      '1. A variável <strong>GEMINI_API_KEY</strong> está definida no Netlify?<br>'+
+      '2. O site foi redeploy depois de adicionar a key?<br>'+
+      '3. A imagem tem menos de 3MB?'+
+      '</div></div>';
+  });
+};
+
+function renderAIAnalysis(l){
+  var html='<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Material Analysis</div>'+
+    '<div class="ai-analysis-grid">'+
+      '<div class="ai-tag-group"><div class="ai-tag-label">Topic</div><div class="ai-tag-val">'+l.topic+'</div></div>'+
+      '<div class="ai-tag-group"><div class="ai-tag-label">Grammar Focus</div><div class="ai-tag-val">'+(l.grammarFocus||'—')+'</div></div>'+
+      '<div class="ai-tag-group"><div class="ai-tag-label">Vocabulary Theme</div><div class="ai-tag-val">'+l.vocabularyTheme+'</div></div>'+
+      '<div class="ai-tag-group"><div class="ai-tag-label">Difficulty</div><div class="ai-tag-val">'+l.difficulty+'</div></div>'+
+      '<div class="ai-tag-group"><div class="ai-tag-label">Skills</div><div class="ai-tag-val"><div class="ai-skills-row">'+(l.skills||[]).map(function(s){return '<span class="ai-skill-pill">'+s+'</span>';}).join('')+'</div></div></div>'+
+      '<div class="ai-tag-group"><div class="ai-tag-label">Style</div><div class="ai-tag-val">'+aiToggleMode.charAt(0).toUpperCase()+aiToggleMode.slice(1)+'</div></div>'+
+    '</div></div>';
+  document.getElementById('aiAnalysisArea').innerHTML=html;
+}
+
+function renderAILessonPlan(l){
+  var sections=[
+    {label:'Lesson Objective',content:l.objective,time:null},
+    {label:'Warm-Up Activity',content:l.warmUp?l.warmUp.activity:'—',time:l.warmUp?l.warmUp.time:null},
+    {label:'Target Language Focus',content:l.targetLanguage?(l.targetLanguage.focus+(l.targetLanguage.examples?'<br><em style="font-size:12px;color:var(--warm-gray)">e.g. '+l.targetLanguage.examples.join(' / ')+'</em>':'')):'—',time:l.targetLanguage?l.targetLanguage.time:null},
+    {label:'Guided Practice',content:l.guidedPractice?l.guidedPractice.activity:'—',time:l.guidedPractice?l.guidedPractice.time:null},
+    {label:'Communicative Task',content:l.communicativeTask?l.communicativeTask.activity:'—',time:l.communicativeTask?l.communicativeTask.time:null},
+    {label:'Real-Life Application',content:l.realLifeApplication?l.realLifeApplication.activity:'—',time:l.realLifeApplication?l.realLifeApplication.time:null},
+    {label:'Homework',content:l.homework||'—',time:null},
+    {label:'Extension Activity',content:l.extension||'—',time:null},
+  ];
+  if(l.speakingPrompts&&l.speakingPrompts.length){
+    sections.push({label:'Speaking Prompts',content:l.speakingPrompts.map(function(p,i){return '<div style="margin-bottom:6px">'+(i+1)+'. '+p+'</div>';}).join(''),time:null});
+  }
+  if(l.pronunciationDrill){
+    sections.push({label:'Pronunciation Drill',content:'<strong>Focus sounds:</strong> '+l.pronunciationDrill.sounds.join(', ')+'<br><br>'+(l.pronunciationDrill.drillSentences||[]).map(function(s){return '<div style="padding:4px 0;font-style:italic">→ '+s+'</div>';}).join(''),time:null});
+  }
+  if(l.writingTask){sections.push({label:'Follow-up Writing Task',content:l.writingTask,time:null});}
+  if(l.vocabularyExpansion&&l.vocabularyExpansion.length){
+    sections.push({label:'Vocabulary Expansion',content:'<div style="display:flex;flex-wrap:wrap;gap:6px">'+(l.vocabularyExpansion||[]).map(function(w){return '<span class="vtag">'+w+'</span>';}).join('')+'</div>',time:null});
+  }
+  if(l.realLifeMission){sections.push({label:'Real-Life Mission',content:l.realLifeMission,time:null});}
+
+  var secHtml=sections.map(function(s){
+    return '<div class="lp-section">'+
+      '<div class="lp-sec-label">'+s.label+(s.time?'<span class="lp-sec-time">'+s.time+'</span>':'')+'</div>'+
+      '<div class="lp-sec-body">'+s.content+'</div>'+
+    '</div>';
+  }).join('');
+
+  var html='<div class="lesson-plan-output">'+
+    '<div class="lp-header">'+
+      '<div class="lp-title">'+l.lessonTitle+'</div>'+
+      '<div class="lp-meta">50-minute lesson · '+l.difficulty+' · AI-Generated</div>'+
+    '</div>'+
+    secHtml+
+    '<div class="lp-actions">'+
+      '<button class="btn-save" onclick="publishAILesson()">Publish to Student →</button>'+
+      '<button class="btn-cancel" onclick="runAILesson()">🔄 Regenerate</button>'+
+      '<button class="btn-cancel" onclick="printAILesson()">🖨 Print</button>'+
+    '</div>'+
+  '</div>';
+  document.getElementById('aiLessonArea').innerHTML=html;
+  window._lastAILesson=l;
+}
+
+window.publishAILesson=function(){
+  if(!window._lastAILesson)return;
+  var l=window._lastAILesson;
+  // Auto-add vocabulary to the vocab bank
+  var added=0;
+  (l.vocabularyExpansion||[]).forEach(function(word){
+    var exists=(appData.vocabulary||[]).some(function(v){return v.word.toLowerCase()===word.toLowerCase();});
+    if(!exists){
+      if(!appData.vocabulary)appData.vocabulary=[];
+      appData.vocabulary.push({word:word,type:'word',def:'From AI Lesson: '+l.lessonTitle,ex:'',addedDate:Date.now()});
+      appData.student.vocab=appData.vocabulary.length;
+      added++;
+    }
+  });
+  saveData();
+  showToast('Lesson published! '+added+' words added to vocab bank.','t');
+};
+window.printAILesson=function(){window.print();};
+
+/* ══ ENHANCED VOCAB EDITOR (Teacher) ══ */
+function tVocab(){
+  var v=appData.vocabulary||[];
+  var tags=v.map(function(voc,i){return '<div class="vtag" style="display:flex;align-items:center;gap:6px;margin:3px;padding:6px 12px;border-radius:20px;background:var(--teacher-pale);color:var(--teacher);">'+
+    '<span style="font-weight:600">'+voc.word+'</span>'+
+    '<span style="font-size:10px;color:var(--teacher-light)">'+voc.type+'</span>'+
+    '<span class="vtag-x" onclick="removeVocab('+i+')">×</span></div>';}).join('');
+  return '<div class="panel active"><div class="pg pg-t">Vocabulary <em>Editor</em></div><div class="psub">Add words for '+appData.student.name+' from each lesson.</div>'+
+    '<div class="tip-box"><div class="tip-icon">✦</div><div><div class="tip-title">AI Auto-Import</div><div class="tip-text">Use the AI Lesson Builder to automatically add vocabulary from generated lesson plans.</div></div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Add New Word</div>'+
+    '<div class="two-col"><div class="fg"><label class="flab">Word / Phrase</label><input class="fi" id="v-w" placeholder="e.g. approximately"></div>'+
+    '<div class="fg"><label class="flab">Type</label><select class="fsel" id="v-t"><option>noun</option><option>verb</option><option>adjective</option><option>adverb</option><option>phrase</option><option>phrasal verb</option><option>idiom</option><option>collocation</option></select></div></div>'+
+    '<div class="two-col"><div class="fg"><label class="flab">IPA Pronunciation (optional)</label><input class="fi" id="v-ipa" placeholder="e.g. əˈprɒksɪmətli"></div>'+
+    '<div class="fg"><label class="flab">Definition</label><input class="fi" id="v-d" placeholder="Short, clear definition…"></div></div>'+
+    '<div class="fg"><label class="flab">Example Sentence</label><input class="fi" id="v-e" placeholder="e.g. The flight takes approximately 3 hours."></div>'+
+    '<div class="fg"><label class="flab">2nd Example (travel / real life)</label><input class="fi" id="v-e2" placeholder="e.g. The hotel is approximately 10 minutes from the beach."></div>'+
+    '<div class="btn-row" style="margin-top:8px"><button class="btn-save" onclick="addVocab()">Add Word</button></div></div>'+
+    (v.length>0?'<div class="card"><div class="card-title"><div class="dot"></div>Words Added ('+v.length+')</div><div style="display:flex;flex-wrap:wrap">'+tags+'</div></div>':'')+
+    '</div>';
+}
+
+window.addVocab=function(){
+  var w=document.getElementById('v-w'),t=document.getElementById('v-t'),d=document.getElementById('v-d'),e=document.getElementById('v-e'),e2=document.getElementById('v-e2'),ipa=document.getElementById('v-ipa');
+  if(!w||!d||!w.value.trim()||!d.value.trim()){showToast('Word and definition required.','d');return;}
+  if(!appData.vocabulary)appData.vocabulary=[];
+  appData.vocabulary.push({word:w.value.trim(),type:t?t.value:'noun',ipa:ipa?ipa.value.trim():'',def:d.value.trim(),ex:e?e.value.trim():'',ex2:e2?e2.value.trim():'',addedDate:Date.now()});
+  appData.student.vocab=appData.vocabulary.length;
+  saveData();showPanel('t-vocab');
+  showToast('"'+w.value.trim()+'" added!','t');
+};
+window.removeVocab=function(i){appData.vocabulary.splice(i,1);appData.student.vocab=appData.vocabulary.length;saveData();showPanel('t-vocab');showToast('Word removed.','t');};
+
+/* ══ TOAST ══ */
+function showToast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+(type==='t'?'toast-t':type==='f'?'toast-f':'toast-d');
+  clearTimeout(window._toast);window._toast=setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('login-screen').classList.contains('active'))
+    window.doLogin(document.getElementById('tab-t').classList.contains('active')?'teacher':'student');
+});
+</script>
+</body>
+</html>
