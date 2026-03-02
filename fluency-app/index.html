@@ -1994,7 +1994,7 @@ window.runAILesson=function(){
       '<strong>Falhou ao gerar a aula.</strong><br>'+
       '<code style="background:#fef2f2;padding:4px 8px;border-radius:5px;font-size:12px;display:block;margin:8px 0;word-break:break-all">'+err.message+'</code>'+
       'Verifique:<br>'+
-      '1. A variável <strong>GEMINI_API_KEY</strong> está definida no Netlify?<br>'+
+      '1. A variável <strong>GROQ_API_KEY</strong> está definida no Netlify?<br>'+
       '2. O site foi redeploy depois de adicionar a key?<br>'+
       '3. A imagem tem menos de 3MB?'+
       '</div></div>';
@@ -2051,7 +2051,7 @@ function renderAILessonPlan(l){
     '</div>'+
     secHtml+
     '<div class="lp-actions">'+
-      '<button class="btn-save" onclick="publishAILesson()">Publish to Student →</button>'+
+      '<button class="btn-save" onclick="showPublishModal()">Publish to Student →</button>'+
       '<button class="btn-cancel" onclick="runAILesson()">🔄 Regenerate</button>'+
       '<button class="btn-cancel" onclick="printAILesson()">🖨 Print</button>'+
     '</div>'+
@@ -2060,22 +2060,89 @@ function renderAILessonPlan(l){
   window._lastAILesson=l;
 }
 
+window.showPublishModal=function(){
+  if(!window._lastAILesson)return;
+  var l=window._lastAILesson;
+  // Build module options
+  var moduleOpts=(appData.modules||[]).map(function(m,i){
+    return '<option value="'+i+'">'+m.title+'</option>';
+  }).join('');
+  var modal=document.createElement('div');
+  modal.id='publishModal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML=
+    '<div style="background:white;border-radius:16px;padding:28px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.3);">'+
+    '<div style="font-size:18px;font-weight:600;color:var(--dark-brown);margin-bottom:4px">Publish to Modules & Lessons</div>'+
+    '<div style="font-size:13px;color:var(--warm-gray);margin-bottom:20px">The AI lesson will be added as a new lesson inside the selected module.</div>'+
+    '<div class="fg"><label class="flab">Select Module</label>'+
+    '<select class="fi" id="pub-module-sel">'+moduleOpts+'</select></div>'+
+    '<div class="fg"><label class="flab">Lesson Title</label>'+
+    '<input class="fi" id="pub-lesson-title" value="'+l.lessonTitle+'"></div>'+
+    '<div class="fg"><label class="flab">Description</label>'+
+    '<input class="fi" id="pub-lesson-meta" value="AI Lesson · '+l.difficulty+' · 50 min"></div>'+
+    '<div style="display:flex;gap:10px;margin-top:8px">'+
+    '<button class="btn-save" style="flex:1" onclick="publishAILesson()">Publish →</button>'+
+    '<button class="btn-cancel" style="flex:1" onclick="document.getElementById(\'publishModal\').remove()">Cancel</button>'+
+    '</div></div>';
+  document.body.appendChild(modal);
+  modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});
+};
+
 window.publishAILesson=function(){
   if(!window._lastAILesson)return;
   var l=window._lastAILesson;
-  // Auto-add vocabulary to the vocab bank
+  var sel=document.getElementById('pub-module-sel');
+  var titleEl=document.getElementById('pub-lesson-title');
+  var metaEl=document.getElementById('pub-lesson-meta');
+  var mi=sel?parseInt(sel.value):0;
+  var lessonTitle=titleEl?titleEl.value.trim():l.lessonTitle;
+  var lessonMeta=metaEl?metaEl.value.trim():'AI Lesson · '+l.difficulty;
+
+  // Build lesson contents from AI plan
+  var contents=[];
+  if(l.objective) contents.push({type:'text',label:'Lesson Objective',body:l.objective});
+  if(l.warmUp&&l.warmUp.activity) contents.push({type:'text',label:'Warm-Up ('+l.warmUp.time+')',body:l.warmUp.activity});
+  if(l.targetLanguage&&l.targetLanguage.focus){
+    var tlBody=l.targetLanguage.focus;
+    if(l.targetLanguage.examples&&l.targetLanguage.examples.length) tlBody+='\n\nExamples:\n'+l.targetLanguage.examples.join('\n');
+    contents.push({type:'text',label:'Target Language ('+l.targetLanguage.time+')',body:tlBody});
+  }
+  if(l.guidedPractice&&l.guidedPractice.activity) contents.push({type:'exercise',label:'Guided Practice ('+l.guidedPractice.time+')',body:l.guidedPractice.activity});
+  if(l.communicativeTask&&l.communicativeTask.activity) contents.push({type:'dialogue',label:'Communicative Task ('+l.communicativeTask.time+')',body:l.communicativeTask.activity});
+  if(l.realLifeApplication&&l.realLifeApplication.activity) contents.push({type:'exercise',label:'Real-Life Application ('+l.realLifeApplication.time+')',body:l.realLifeApplication.activity});
+  if(l.speakingPrompts&&l.speakingPrompts.length) contents.push({type:'dialogue',label:'Speaking Prompts',body:l.speakingPrompts.map(function(p,i){return (i+1)+'. '+p;}).join('\n')});
+  if(l.pronunciationDrill) contents.push({type:'exercise',label:'Pronunciation Drill',body:'Focus: '+l.pronunciationDrill.sounds.join(', ')+'\n\n'+(l.pronunciationDrill.drillSentences||[]).join('\n')});
+  if(l.writingTask) contents.push({type:'exercise',label:'Writing Task',body:l.writingTask});
+  if(l.homework) contents.push({type:'text',label:'Homework',body:l.homework});
+  if(l.realLifeMission) contents.push({type:'exercise',label:'Real-Life Mission',body:l.realLifeMission});
+
+  // Add to module
+  if(!appData.modules[mi].lessons) appData.modules[mi].lessons=[];
+  appData.modules[mi].lessons.push({
+    title:lessonTitle,
+    meta:lessonMeta,
+    unlocked:true,
+    aiGenerated:true,
+    contents:contents
+  });
+
+  // Auto-add vocabulary
   var added=0;
   (l.vocabularyExpansion||[]).forEach(function(word){
     var exists=(appData.vocabulary||[]).some(function(v){return v.word.toLowerCase()===word.toLowerCase();});
     if(!exists){
       if(!appData.vocabulary)appData.vocabulary=[];
-      appData.vocabulary.push({word:word,type:'word',def:'From AI Lesson: '+l.lessonTitle,ex:'',addedDate:Date.now()});
+      appData.vocabulary.push({word:word,type:'word',ipa:'',def:'From: '+lessonTitle,ex:'',ex2:'',addedDate:Date.now()});
       appData.student.vocab=appData.vocabulary.length;
       added++;
     }
   });
+
   saveData();
-  showToast('Lesson published! '+added+' words added to vocab bank.','t');
+  var modal=document.getElementById('publishModal');if(modal)modal.remove();
+  showToast('✦ Lesson added to '+appData.modules[mi].title+(added?' · '+added+' words added':''),'t');
+  // Navigate to modules
+  setTimeout(function(){showPanel('t-course');},800);
 };
 window.printAILesson=function(){window.print();};
 
