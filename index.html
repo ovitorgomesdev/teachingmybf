@@ -1,847 +1,775 @@
-import React, { useState, useEffect } from 'react';
-import { Star, Trophy, User, Play, Check, X, HelpCircle, ArrowRight, Award, BookOpen, Activity, Clock, Smile, Users } from 'lucide-react';
-
-// --- DATA & CONTENT FROM UPLOADED IMAGES ---
-
-const STUDENTS_CONFIG = {
-  Leticia: { id: 'Leticia', name: 'Letícia', mode: 'support', color: 'bg-pink-500', borderColor: 'border-pink-500', lightColor: 'bg-pink-50', textColor: 'text-pink-600', avatar: '🦄' },
-  JoaoPedro: { id: 'JoaoPedro', name: 'João Pedro', mode: 'challenge', color: 'bg-blue-500', borderColor: 'border-blue-500', lightColor: 'bg-blue-50', textColor: 'text-blue-600', avatar: '🚀' },
-  Heloisa: { id: 'Heloisa', name: 'Heloisa', mode: 'challenge', color: 'bg-purple-500', borderColor: 'border-purple-500', lightColor: 'bg-purple-50', textColor: 'text-purple-600', avatar: '⭐' }
-};
-
-const LEVELS = [
-  {
-    id: 'vocab',
-    title: 'Routine & Habits',
-    icon: <Clock size={24} />,
-    color: 'bg-green-100 border-green-400 text-green-800',
-    questions: [
-      {
-        type: 'sort',
-        title: 'Good vs Bad Habits',
-        instruction: 'Sort the habits into the correct list!',
-        items: [
-          { id: 1, text: 'Exercise', category: 'good' },
-          { id: 2, text: 'Eat fast food', category: 'bad' },
-          { id: 3, text: 'Be on time', category: 'good' },
-          { id: 4, text: 'Go to bed late', category: 'bad' },
-          { id: 5, text: 'Study for tests', category: 'good' },
-          { id: 6, text: 'Watch TV all evening', category: 'bad' }
-        ]
-      },
-      {
-        type: 'correction',
-        title: 'Fix the Chores',
-        instruction: 'The phrases are wrong! Choose the correct verb.',
-        q: '___ my room',
-        wrong: 'Wash',
-        correct: 'Clean',
-        options: ['Clean', 'Wash', 'Cook']
-      },
-      {
-        type: 'correction',
-        title: 'Fix the Chores',
-        instruction: 'Choose the correct verb.',
-        q: '___ the table',
-        wrong: 'Wash',
-        correct: 'Set',
-        options: ['Set', 'Wash', 'Do']
-      },
-      {
-        type: 'correction',
-        title: 'Fix the Chores',
-        instruction: 'Choose the correct verb.',
-        q: '___ my bed',
-        wrong: 'Take out',
-        correct: 'Make',
-        options: ['Make', 'Take out', 'Do']
-      },
-      {
-         type: 'correction',
-         title: 'Fix the Chores',
-         instruction: 'Choose the correct verb.',
-         q: '___ the dishes',
-         wrong: 'Clear',
-         correct: 'Wash',
-         options: ['Wash', 'Clear', 'Make']
-       }
-    ]
-  },
-  {
-    id: 'grammar1',
-    title: 'Simple Present',
-    icon: <BookOpen size={24} />,
-    color: 'bg-blue-100 border-blue-400 text-blue-800',
-    questions: [
-      {
-        type: 'fill',
-        title: 'Daily Routine',
-        instruction: 'Complete with the correct form of the verb.',
-        q: 'Maddy ___ (get up) early on Saturdays.',
-        answer: 'gets up',
-        options: ['get up', 'gets up', 'getting up'],
-        hint: 'Remember the "s" for She/He/It!'
-      },
-      {
-        type: 'fill',
-        title: 'Negatives',
-        instruction: 'Make it negative!',
-        q: 'They ___ (not / clean) their room every day.',
-        answer: "don't clean",
-        options: ["doesn't clean", "don't clean", "not clean"],
-        hint: 'They = plural -> do not'
-      },
-      {
-        type: 'order',
-        title: 'Frequency Adverbs',
-        instruction: 'Put the words in the correct order.',
-        words: ['I', 'never', 'am', 'late', 'for', 'school'],
-        correctOrder: ['I', 'am', 'never', 'late', 'for', 'school']
-      },
-      {
-        type: 'order',
-        title: 'Frequency Adverbs',
-        instruction: 'Put the words in the correct order.',
-        words: ['She', 'usually', 'goes', 'to', 'bed', 'early'],
-        correctOrder: ['She', 'usually', 'goes', 'to', 'bed', 'early']
-      },
-      {
-        type: 'fill',
-        title: 'Simple Present',
-        instruction: 'Complete the sentence.',
-        q: 'Our teacher ___ (go) to school at 7:00 a.m.',
-        answer: 'goes',
-        options: ['go', 'goes', 'going'],
-        hint: 'Verbs ending in "o" add "es"'
-      }
-    ]
-  },
-  {
-    id: 'sports',
-    title: 'Sports & Action',
-    icon: <Activity size={24} />,
-    color: 'bg-orange-100 border-orange-400 text-orange-800',
-    questions: [
-      {
-        type: 'fill',
-        title: 'Sports Vocabulary',
-        instruction: 'Look at the context. Complete the sport.',
-        q: 'They are wearing white suits and fighting. They do ___.',
-        answer: 'karate',
-        options: ['gymnastics', 'karate', 'sailing'],
-        hint: 'It is a martial art.'
-      },
-      {
-        type: 'fill',
-        title: 'Present Progressive',
-        instruction: 'What are they doing right now?',
-        q: 'Look! Jo and Ana ___ (swim).',
-        answer: 'are swimming',
-        options: ['is swimming', 'are swimming', 'swims'],
-        hint: 'Use verb TO BE (am/is/are) + ING'
-      },
-      {
-        type: 'fill',
-        title: 'Present Progressive',
-        instruction: 'What is he doing?',
-        q: 'Adam ___ (read) a book right now.',
-        answer: 'is reading',
-        options: ['are reading', 'is reading', 'read'],
-        hint: 'He is...'
-      },
-      {
-        type: 'fill',
-        title: 'Sports Vocabulary',
-        instruction: 'Look at the context. Complete the sport.',
-        q: 'They are on a boat in the water. They are ___.',
-        answer: 'sailing',
-        options: ['surfing', 'sailing', 'swimming'],
-        hint: 'Using a boat with a sail.'
-      }
-    ]
-  },
-  {
-    id: 'pronouns',
-    title: 'Pronouns & Questions',
-    icon: <HelpCircle size={24} />,
-    color: 'bg-purple-100 border-purple-400 text-purple-800',
-    questions: [
-      {
-        type: 'fill',
-        title: 'Object Pronouns',
-        instruction: 'Replace the word in brackets.',
-        q: 'I love (beans). I love ___!',
-        answer: 'them',
-        options: ['it', 'them', 'him'],
-        hint: 'Beans is plural.'
-      },
-      {
-        type: 'fill',
-        title: 'Object Pronouns',
-        instruction: 'Replace the word in brackets.',
-        q: 'Where is that T-shirt from? I really like ___ (the T-shirt).',
-        answer: 'it',
-        options: ['her', 'them', 'it'],
-        hint: 'T-shirt is a singular object.'
-      },
-      {
-        type: 'fill',
-        title: 'Question Words',
-        instruction: 'Complete the question.',
-        q: '___ time do you get up?',
-        answer: 'What',
-        options: ['When', 'What', 'Who'],
-        hint: 'We say "What time".'
-      },
-      {
-        type: 'fill',
-        title: 'Question Words',
-        instruction: 'Complete the question.',
-        q: '___ is your teacher? Mr. Smith.',
-        answer: 'Who',
-        options: ['Why', 'Who', 'Where'],
-        hint: 'Asking about a person.'
-      },
-      {
-        type: 'fill',
-        title: 'Object Pronouns',
-        instruction: 'Replace the word in brackets.',
-        q: 'Happy Birthday Sofia! I have a present for ___ (Sofia).',
-        answer: 'her',
-        options: ['her', 'him', 'it'],
-        hint: 'Sofia is a girl.'
-      }
-    ]
-  }
-];
-
-// --- COMPONENTS ---
-
-const WelcomeScreen = ({ onStartGame }) => {
-  const [selectedStudents, setSelectedStudents] = useState(Object.keys(STUDENTS_CONFIG));
-
-  const toggleStudent = (id) => {
-    if (selectedStudents.includes(id)) {
-      setSelectedStudents(selectedStudents.filter(s => s !== id));
-    } else {
-      setSelectedStudents([...selectedStudents, id]);
-    }
-  };
-
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-sky-400 to-indigo-600 p-4">
-      <h1 className="text-5xl font-extrabold text-white mb-2 drop-shadow-lg text-center">
-        Grammar Galaxy 🚀
-      </h1>
-      <p className="text-white text-xl mb-8 font-medium">Multiplayer Mission Control</p>
-      
-      <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-4xl w-full">
-        <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center flex items-center justify-center gap-2">
-          <Users className="text-indigo-500" /> Who is playing today?
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {Object.entries(STUDENTS_CONFIG).map(([key, student]) => {
-            const isSelected = selectedStudents.includes(key);
-            return (
-              <button
-                key={key}
-                onClick={() => toggleStudent(key)}
-                className={`relative flex flex-col items-center p-6 rounded-2xl transition-all transform duration-200 border-4 
-                  ${isSelected ? `${student.borderColor} ${student.lightColor} scale-105 shadow-lg` : 'border-gray-200 bg-gray-50 opacity-60 grayscale'}
-                `}
-              >
-                {isSelected && (
-                  <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
-                    <Check size={16} strokeWidth={3} />
-                  </div>
-                )}
-                <div className={`w-24 h-24 rounded-full flex items-center justify-center text-5xl mb-4 ${student.color} text-white shadow-md`}>
-                  {student.avatar}
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">{student.name}</h3>
-                <p className="text-xs uppercase tracking-wider font-bold text-gray-500 mt-2">
-                  {student.mode === 'support' ? 'Explorer Mode' : 'Commander Mode'}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-
-        <button 
-          onClick={() => onStartGame(selectedStudents)}
-          disabled={selectedStudents.length === 0}
-          className={`w-full py-4 rounded-xl font-black text-xl tracking-wider uppercase transition-all shadow-lg flex items-center justify-center gap-2
-            ${selectedStudents.length > 0 
-              ? 'bg-yellow-400 text-yellow-900 hover:bg-yellow-300 hover:-translate-y-1' 
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`
-          }
-        >
-          <Play fill="currentColor" /> Start Mission
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const Dashboard = ({ activeStudentIds, completedLevels, onStartLevel, scores }) => {
-  // Calculate total score for team goal
-  const teamTotal = Object.values(scores).reduce((a, b) => a + b, 0);
-
-  return (
-    <div className="min-h-screen bg-gray-50 pb-12">
-      <header className="bg-indigo-600 text-white p-6 shadow-lg sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-               <div className="bg-white/20 p-2 rounded-lg"><Trophy size={32} className="text-yellow-300" /></div>
-               <div>
-                 <h1 className="text-2xl font-bold">Mission Dashboard</h1>
-                 <p className="text-white/80 text-sm">Team Score: {teamTotal}</p>
-               </div>
-            </div>
-
-            {/* Player Leaderboard Strip */}
-            <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
-               {activeStudentIds.map(id => {
-                 const s = STUDENTS_CONFIG[id];
-                 return (
-                   <div key={id} className={`flex items-center gap-3 bg-indigo-800/50 px-4 py-2 rounded-full border border-indigo-400/30`}>
-                      <span className="text-2xl">{s.avatar}</span>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-indigo-200">{s.name}</span>
-                        <span className="font-black text-lg">{scores[id] || 0} pts</span>
-                      </div>
-                   </div>
-                 );
-               })}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-5xl mx-auto p-6 mt-6">
-        <h2 className="text-2xl font-bold text-gray-700 mb-6 flex items-center gap-2">
-          <Award className="text-yellow-500" /> Select Next Mission
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {LEVELS.map((level, index) => {
-            const isCompleted = completedLevels.includes(level.id);
-            const isLocked = index > 0 && !completedLevels.includes(LEVELS[index - 1].id);
-
-            return (
-              <button
-                key={level.id}
-                disabled={isLocked}
-                onClick={() => !isLocked && onStartLevel(level.id)}
-                className={`relative overflow-hidden rounded-2xl p-6 text-left transition-all transform ${
-                  isLocked 
-                    ? 'bg-gray-200 cursor-not-allowed opacity-70 grayscale' 
-                    : `${level.color} hover:scale-105 hover:shadow-lg cursor-pointer border-2 bg-white`
-                }`}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className={`p-3 rounded-xl bg-gray-50 shadow-sm text-gray-700`}>
-                    {level.icon}
-                  </div>
-                  {isCompleted && <Check className="text-green-600 bg-green-100 rounded-full p-1" size={28} />}
-                  {isLocked && <div className="bg-gray-400 text-white text-xs px-2 py-1 rounded">LOCKED</div>}
-                </div>
-                <h3 className="text-xl font-bold mb-1">{level.title}</h3>
-                <p className="text-sm opacity-80 font-medium">{level.questions.length} Activities</p>
-                
-                {!isLocked && !isCompleted && (
-                  <div className="mt-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wide opacity-60">
-                    Start Mission <ArrowRight size={16} />
-                  </div>
-                )}
-                {isCompleted && (
-                   <div className="mt-4 flex items-center gap-2 text-sm font-bold text-green-700 uppercase tracking-wide">
-                   Mission Complete!
-                 </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </main>
-    </div>
-  );
-};
-
-// --- GAME ENGINES ---
-
-const SortGame = ({ question, onComplete }) => {
-  const [items, setItems] = useState(question.items.sort(() => Math.random() - 0.5));
-  const [good, setGood] = useState([]);
-  const [bad, setBad] = useState([]);
-  const [feedback, setFeedback] = useState(null);
-
-  const checkAnswers = () => {
-    const allGoodCorrect = good.every(i => i.category === 'good');
-    const allBadCorrect = bad.every(i => i.category === 'bad');
-    const allSorted = good.length + bad.length === question.items.length;
-
-    if (allSorted && allGoodCorrect && allBadCorrect) {
-      setFeedback('correct');
-      setTimeout(() => onComplete(true), 1500);
-    } else {
-      setFeedback('incorrect');
-      setTimeout(() => {
-        setItems(question.items);
-        setGood([]);
-        setBad([]);
-        setFeedback(null);
-      }, 2000);
-    }
-  };
-
-  const moveItem = (item, target) => {
-    if (target === 'good') setGood([...good, item]);
-    if (target === 'bad') setBad([...bad, item]);
-    setItems(items.filter(i => i.id !== item.id));
-  };
-
-  return (
-    <div className="w-full max-w-3xl">
-      <h3 className="text-xl font-bold mb-4 text-center text-gray-700">{question.instruction}</h3>
-      
-      <div className="flex flex-wrap gap-2 justify-center mb-8 min-h-[60px]">
-        {items.map(item => (
-          <button
-            key={item.id}
-            onClick={() => null} 
-            className="bg-white border-2 border-gray-300 px-4 py-2 rounded-full shadow-sm hover:bg-gray-50 cursor-grab active:cursor-grabbing animate-fade-in"
-            draggable
-            onDragStart={(e) => e.dataTransfer.setData("text/plain", JSON.stringify(item))}
-          >
-            {item.text}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-2 gap-6">
-        {['good', 'bad'].map((type) => (
-          <div
-            key={type}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-                e.preventDefault();
-                const item = JSON.parse(e.dataTransfer.getData("text/plain"));
-                moveItem(item, type);
-            }}
-            className={`min-h-[200px] rounded-2xl p-4 border-4 border-dashed transition-colors ${
-              type === 'good' ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'
-            }`}
-          >
-            <h4 className={`text-center font-bold mb-4 uppercase tracking-wider ${
-               type === 'good' ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {type === 'good' ? '😊 Good Habits' : '☹️ Bad Habits'}
-            </h4>
-            <div className="flex flex-col gap-2">
-              {(type === 'good' ? good : bad).map(item => (
-                 <div key={item.id} className="bg-white p-2 rounded shadow text-center text-sm font-medium animate-pop-in">
-                   {item.text}
-                 </div>
-              ))}
-              {(type === 'good' ? good : bad).length === 0 && (
-                <p className="text-center text-gray-400 text-sm mt-8 italic">Drag items here</p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      {/* Mobile Click fallback */}
-       <div className="mt-4 text-center text-xs text-gray-400">
-        (Drag and drop items into the correct box)
-      </div>
-
-      {(good.length + bad.length === question.items.length) && (
-         <button 
-           onClick={checkAnswers}
-           className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:bg-indigo-700 transition-all"
-         >
-           Check Sorting
-         </button>
-      )}
-      
-      {feedback === 'correct' && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-3xl animate-bounce shadow-2xl text-center">
-             <span className="text-6xl">🎉</span>
-             <h2 className="text-3xl font-bold text-green-600 mt-4">Perfect!</h2>
-          </div>
-        </div>
-      )}
-       {feedback === 'incorrect' && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-           <div className="bg-white p-8 rounded-3xl shadow-2xl text-center">
-             <span className="text-6xl">❌</span>
-             <h2 className="text-3xl font-bold text-red-600 mt-4">Oops! Try Again.</h2>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const QuizGame = ({ question, currentPlayer, onComplete }) => {
-  const [answer, setAnswer] = useState('');
-  const [feedback, setFeedback] = useState(null);
-  const [showHint, setShowHint] = useState(false);
-
-  // RESET state when player or question changes
-  useEffect(() => {
-      setAnswer('');
-      setFeedback(null);
-      setShowHint(false);
-      setPool(question.words ? [...question.words].sort(() => Math.random() - 0.5) : []);
-      setCurrentOrder([]);
-  }, [question, currentPlayer]);
-
-  // Check mode dynamically
-  const mode = currentPlayer.mode;
-  const isSelection = question.type === 'correction' || question.type === 'order' || (mode === 'support' && question.options);
-  const isOrder = question.type === 'order';
-
-  const checkAnswer = () => {
-    let isCorrect = false;
-    
-    if (isOrder) {
-       isCorrect = answer === question.correctOrder.join(' ');
-    } else if (isSelection) {
-       isCorrect = answer === question.correct || answer === question.answer;
-    } else {
-       // Fuzzy text match
-       const cleanUser = answer.toLowerCase().trim();
-       const cleanCorrect = question.answer.toLowerCase().trim();
-       isCorrect = cleanUser === cleanCorrect || cleanUser === cleanCorrect.replace("'", "");
-    }
-
-    if (isCorrect) {
-      setFeedback('correct');
-      const points = showHint ? 5 : 10;
-      setTimeout(() => onComplete(true, points), 1500);
-    } else {
-      setFeedback('incorrect');
-      setTimeout(() => setFeedback(null), 1500);
-    }
-  };
-
-  // Order Game Logic
-  const [currentOrder, setCurrentOrder] = useState([]);
-  const [pool, setPool] = useState([]);
-
-  useEffect(() => {
-     if (isOrder) setAnswer(currentOrder.join(' '));
-  }, [currentOrder, isOrder]);
-
-  const handleWordClick = (word, fromPool) => {
-      if (fromPool) {
-          setPool(pool.filter(w => w !== word));
-          setCurrentOrder([...currentOrder, word]);
-      } else {
-          setCurrentOrder(currentOrder.filter(w => w !== word));
-          setPool([...pool, word]);
-      }
-  };
-
-  return (
-    <div className="w-full max-w-3xl bg-white p-6 md:p-10 rounded-3xl shadow-xl border-b-8 border-gray-100 relative overflow-hidden">
-       {/* Turn Indicator Strip within Card */}
-       <div className={`absolute top-0 left-0 right-0 h-2 ${currentPlayer.color}`}></div>
-       
-      <div className="flex justify-between items-start mb-6">
-        <h3 className="text-xl font-bold text-gray-600">{question.instruction}</h3>
-        {question.hint && (
-          <button 
-            onClick={() => setShowHint(true)}
-            className="text-indigo-500 hover:bg-indigo-50 p-2 rounded-full transition-colors"
-            title="Get a hint"
-          >
-            <HelpCircle size={24} />
-          </button>
-        )}
-      </div>
-
-      <div className="mb-8 text-center">
-         {/* Question Display */}
-         {!isOrder && (
-            <h2 className="text-2xl md:text-3xl font-bold text-indigo-900 leading-relaxed">
-              {question.q.split('___').map((part, i, arr) => (
-                <React.Fragment key={i}>
-                  {part}
-                  {i < arr.length - 1 && (
-                    <span className="inline-block min-w-[80px] border-b-4 border-indigo-300 mx-2 text-indigo-600 px-2 bg-indigo-50 rounded">
-                       {answer || '?'}
-                    </span>
-                  )}
-                </React.Fragment>
-              ))}
-            </h2>
-         )}
-
-         {isOrder && (
-             <div className="min-h-[70px] bg-indigo-50 rounded-xl p-4 mb-6 flex flex-wrap gap-2 justify-center items-center border-2 border-indigo-100 border-dashed">
-                 {currentOrder.length === 0 && <span className="text-gray-400 italic">Tap words below to build the sentence</span>}
-                 {currentOrder.map((w, i) => (
-                     <button key={i} onClick={() => handleWordClick(w, false)} className="bg-white text-indigo-800 font-bold px-3 py-2 rounded-lg shadow hover:bg-red-50 animate-pop-in">
-                         {w}
-                     </button>
-                 ))}
-             </div>
-         )}
-      </div>
-
-      {/* Input Area */}
-      <div className="space-y-6">
-        {showHint && (
-            <div className="bg-yellow-50 text-yellow-800 p-4 rounded-xl text-sm text-center animate-fade-in border border-yellow-200 shadow-inner">
-                💡 Hint: {question.hint || "Think about the grammar rule!"}
-            </div>
-        )}
-
-        {isOrder && (
-             <div className="flex flex-wrap gap-3 justify-center p-4 bg-gray-50 rounded-xl">
-                {pool.map((w, i) => (
-                    <button key={i} onClick={() => handleWordClick(w, true)} className="bg-white text-indigo-800 px-4 py-2 rounded-lg font-medium hover:bg-indigo-100 transition-all border shadow-sm">
-                        {w}
-                    </button>
-                ))}
-             </div>
-        )}
-
-        {isSelection && !isOrder && (
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-             {question.options.map(opt => (
-               <button
-                 key={opt}
-                 onClick={() => setAnswer(opt)}
-                 className={`p-4 rounded-xl font-bold text-lg transition-all border-b-4 ${
-                    answer === opt 
-                    ? `${currentPlayer.color} text-white border-indigo-900 scale-105 shadow-lg` 
-                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
-                 }`}
-               >
-                 {opt}
-               </button>
-             ))}
-           </div>
-        )}
-
-        {!isSelection && !isOrder && (
-           <div className="relative">
-              <input 
-                type="text" 
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Type answer here..."
-                autoFocus
-                className="w-full text-center text-2xl p-4 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 outline-none transition-all"
-              />
-              <div className="absolute right-4 top-4 text-xs text-gray-400 font-bold border px-2 py-1 rounded">Challenge Mode ✍️</div>
-           </div>
-        )}
-        
-        <button
-          onClick={checkAnswer}
-          disabled={!answer}
-          className={`w-full py-4 rounded-xl font-black text-xl tracking-wider uppercase transition-all transform ${
-            answer 
-            ? 'bg-green-500 text-white shadow-lg hover:bg-green-600 hover:-translate-y-1 hover:shadow-green-200' 
-            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          Check Answer
-        </button>
-      </div>
-
-       {feedback === 'correct' && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-white/80 backdrop-blur-sm z-10">
-           <div className="bg-green-500 text-white p-8 rounded-3xl shadow-2xl animate-bounce flex flex-col items-center">
-             <Check size={64} strokeWidth={4} />
-             <span className="font-black text-2xl mt-2">Correct!</span>
-           </div>
-        </div>
-      )}
-      
-      {feedback === 'incorrect' && (
-         <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-white/80 backdrop-blur-sm z-10">
-           <div className="bg-red-500 text-white p-8 rounded-3xl shadow-2xl animate-shake flex flex-col items-center">
-             <X size={64} strokeWidth={4} />
-             <span className="font-black text-2xl mt-2">Try Again</span>
-           </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const GameScreen = ({ levelId, activeStudentIds, onCompleteLevel, onExit, onScoreUpdate }) => {
-  const level = LEVELS.find(l => l.id === levelId);
-  const [currentQIndex, setCurrentQIndex] = useState(0);
-  const [showLevelComplete, setShowLevelComplete] = useState(false);
-
-  // Determine whose turn it is based on question index
-  const currentStudentId = activeStudentIds[currentQIndex % activeStudentIds.length];
-  const currentPlayer = STUDENTS_CONFIG[currentStudentId];
-
-  const currentQ = level.questions[currentQIndex];
-
-  const handleQuestionComplete = (success, points) => {
-    if (success) {
-       onScoreUpdate(currentStudentId, points);
-       
-       if (currentQIndex < level.questions.length - 1) {
-         setCurrentQIndex(prev => prev + 1);
-       } else {
-         setShowLevelComplete(true);
-       }
-    }
-  };
-
-  if (showLevelComplete) {
-    return (
-      <div className="min-h-screen bg-indigo-600 flex flex-col items-center justify-center p-4 text-white">
-         <div className="bg-white text-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl text-center max-w-lg w-full animate-pop-in">
-           <div className="w-32 h-32 bg-yellow-400 rounded-full mx-auto mb-6 flex items-center justify-center shadow-lg">
-             <Trophy size={64} className="text-yellow-700" />
-           </div>
-           <h2 className="text-4xl font-black mb-2 text-indigo-900">Mission Complete!</h2>
-           <p className="text-xl text-gray-500 font-medium mb-8">Great teamwork, squad!</p>
-           
-           <button 
-             onClick={onCompleteLevel}
-             className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold text-xl hover:bg-indigo-700 transition-colors"
-           >
-             Back to Base
-           </button>
-         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
-      {/* Game Header */}
-      <div className="bg-white p-4 shadow-sm flex justify-between items-center px-6">
-        <button onClick={onExit} className="text-gray-400 hover:text-gray-600 font-bold text-sm">
-           EXIT
-        </button>
-        <div className="flex gap-1">
-           {level.questions.map((_, i) => (
-              <div 
-                key={i} 
-                className={`h-3 w-3 md:h-2 md:w-8 rounded-full transition-colors ${
-                  i < currentQIndex ? 'bg-green-500' : i === currentQIndex ? 'bg-indigo-500' : 'bg-gray-200'
-                }`}
-              />
-           ))}
-        </div>
-        <div className="font-bold text-indigo-600 uppercase text-sm">{level.title}</div>
-      </div>
-
-      {/* Game Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
-        
-        {/* Turn Announcer */}
-        <div className={`mb-6 flex flex-col items-center animate-bounce-short`}>
-            <div className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Current Player</div>
-            <div className={`flex items-center gap-4 px-8 py-3 rounded-full shadow-lg bg-white border-4 ${currentPlayer.borderColor}`}>
-                <span className="text-4xl">{currentPlayer.avatar}</span>
-                <div>
-                    <h2 className={`text-2xl font-black ${currentPlayer.textColor}`}>{currentPlayer.name}</h2>
-                    <span className="text-xs text-gray-400 font-bold uppercase">{currentPlayer.mode === 'support' ? 'Explorer' : 'Commander'}</span>
-                </div>
-            </div>
-        </div>
-
-        {currentQ.type === 'sort' ? (
-          <SortGame question={currentQ} onComplete={(s) => handleQuestionComplete(s, 10)} />
-        ) : (
-          <QuizGame 
-            question={currentQ} 
-            currentPlayer={currentPlayer}
-            onComplete={handleQuestionComplete} 
-          />
-        )}
-      </div>
-    </div>
-  );
-};
-
-
-export default function App() {
-  const [activeStudentIds, setActiveStudentIds] = useState([]);
-  const [view, setView] = useState('welcome'); 
-  const [completedLevels, setCompletedLevels] = useState([]);
-  const [currentLevel, setCurrentLevel] = useState(null);
-  const [scores, setScores] = useState({});
-
-  const handleStartGame = (selectedIds) => {
-    setActiveStudentIds(selectedIds);
-    // Initialize scores for selected students
-    const initialScores = {};
-    selectedIds.forEach(id => initialScores[id] = 0);
-    setScores(initialScores);
-    setView('dashboard');
-  };
-
-  const handleStartLevel = (levelId) => {
-    setCurrentLevel(levelId);
-    setView('game');
-  };
-
-  const handleUpdateScore = (studentId, points) => {
-      setScores(prev => ({
-          ...prev,
-          [studentId]: (prev[studentId] || 0) + points
-      }));
-  };
-
-  const handleLevelFinished = () => {
-    setCompletedLevels([...completedLevels, currentLevel]);
-    setView('dashboard');
-    setCurrentLevel(null);
-  };
-
-  return (
-    <div className="font-sans text-gray-800 antialiased selection:bg-indigo-200">
-      <style>{`
-        @keyframes pop-in {
-          0% { transform: scale(0.8); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes bounce-short {
-           0%, 100% { transform: translateY(0); }
-           50% { transform: translateY(-5px); }
-        }
-        .animate-pop-in { animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .animate-bounce-short { animation: bounce-short 2s infinite ease-in-out; }
-      `}</style>
-
-      {view === 'welcome' && <WelcomeScreen onStartGame={handleStartGame} />}
-      
-      {view === 'dashboard' && (
-        <Dashboard 
-          activeStudentIds={activeStudentIds}
-          completedLevels={completedLevels} 
-          onStartLevel={handleStartLevel}
-          scores={scores}
-        />
-      )}
-
-      {view === 'game' && (
-        <GameScreen 
-          levelId={currentLevel}
-          activeStudentIds={activeStudentIds}
-          onCompleteLevel={handleLevelFinished}
-          onExit={() => setView('dashboard')}
-          onScoreUpdate={handleUpdateScore}
-        />
-      )}
-    </div>
-  );
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluency</title>
+<style>
+:root {
+  --cream:#FAF8F4; --warm-white:#F5F2EC; --stone:#E8E2D9; --sand:#D4C9B8;
+  --warm-gray:#9E9080; --dark-brown:#2C2416; --mid-brown:#5C4E38;
+  --accent:#B85C38; --accent-light:#E8855F; --accent-pale:#F5E0D6;
+  --gold:#C9972A; --gold-pale:#F5EDD3; --teal:#2D6B6B; --teal-pale:#D4ECEC;
+  --success:#3D7A5C; --success-pale:#D4EDE1;
+  --teacher:#4A3080; --teacher-pale:#EDE4F5; --teacher-light:#7B5FC0;
 }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(--dark-brown);min-height:100vh;}
+.screen{display:none;min-height:100vh;} .screen.active{display:flex;}
+
+/* LOGIN */
+#login-screen{background:var(--dark-brown);align-items:center;justify-content:center;}
+.login-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:48px;width:420px;max-width:calc(100vw - 32px);}
+.login-logo{font-size:34px;font-weight:300;color:white;margin-bottom:4px;letter-spacing:-1px;}
+.login-logo span{color:var(--accent-light);font-style:italic;}
+.login-tagline{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px;}
+.login-tabs{display:flex;gap:4px;background:rgba(255,255,255,.07);border-radius:10px;padding:4px;margin-bottom:24px;}
+.login-tab{flex:1;padding:9px;border:none;border-radius:7px;background:transparent;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);transition:all .2s;font-family:inherit;}
+.login-tab.active{background:rgba(255,255,255,.13);color:white;}
+.login-tab.t-tab.active{background:var(--teacher);color:white;}
+.fl{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:7px;font-weight:500;}
+.fi-login{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:12px 15px;color:white;font-size:14px;outline:none;margin-bottom:16px;font-family:inherit;}
+.fi-login:focus{border-color:var(--accent-light);}
+.fi-login::placeholder{color:rgba(255,255,255,.2);}
+.btn-login{width:100%;padding:13px;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;color:white;font-family:inherit;}
+.btn-s{background:var(--accent);} .btn-s:hover{background:var(--accent-light);}
+.btn-t{background:var(--teacher);} .btn-t:hover{background:var(--teacher-light);}
+.login-hint{font-size:11px;color:rgba(255,255,255,.2);text-align:center;margin-top:14px;}
+
+/* APP */
+#app-screen{flex-direction:row;}
+.sidebar{width:252px;min-width:252px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-student{background:var(--dark-brown);} .sb-teacher{background:var(--teacher);}
+.sb-logo{padding:24px 22px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sb-logo-text{font-size:24px;font-weight:300;color:white;letter-spacing:-.5px;}
+.sb-logo-text span{color:var(--accent-light);font-style:italic;}
+.sb-badge{display:inline-block;margin-top:5px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 9px;border-radius:20px;font-weight:500;}
+.sb-badge-s{color:var(--gold);background:rgba(201,151,42,.18);}
+.sb-badge-t{color:#C9B8F0;background:rgba(255,255,255,.15);}
+.sb-nav{padding:14px 11px;flex:1;}
+.nav-sec{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:0 10px;margin:14px 0 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;color:rgba(255,255,255,.5);font-size:13px;margin-bottom:2px;transition:all .15s;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:white;}
+.nav-item.active{color:white;}
+.sb-student .nav-item.active{background:var(--accent);}
+.sb-teacher .nav-item.active{background:rgba(255,255,255,.2);}
+.sb-user{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+.sb-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white;flex-shrink:0;}
+.av-s{background:linear-gradient(135deg,var(--accent),var(--gold));}
+.av-t{background:linear-gradient(135deg,var(--teacher),var(--teacher-light));}
+.sb-uname{font-size:13px;font-weight:600;color:white;}
+.sb-usub{font-size:11px;color:rgba(255,255,255,.35);}
+.sb-logout{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:15px;margin-left:auto;}
+.sb-logout:hover{color:rgba(255,255,255,.7);}
+
+/* MAIN */
+.main-content{flex:1;overflow-y:auto;height:100vh;}
+.panel{display:none;padding:40px 48px;max-width:980px;}
+.panel.active{display:block;}
+.pg{font-size:36px;font-weight:300;color:var(--dark-brown);line-height:1.1;margin-bottom:6px;font-family:Georgia,serif;}
+.pg em{font-style:italic;color:var(--accent);}
+.pg-t em{color:var(--teacher);}
+.psub{font-size:13px;color:var(--warm-gray);margin-bottom:28px;}
+
+/* CARDS */
+.card{background:white;border-radius:14px;padding:22px;border:1px solid var(--stone);margin-bottom:18px;}
+.card-title{font-size:13px;font-weight:600;color:var(--dark-brown);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px;}
+.stat-card{background:white;border-radius:12px;padding:16px;border:1px solid var(--stone);}
+.stat-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:8px;font-weight:500;}
+.stat-val{font-size:32px;font-weight:300;color:var(--dark-brown);line-height:1;margin-bottom:2px;font-family:Georgia,serif;}
+.stat-det{font-size:11px;color:var(--warm-gray);}
+.stat-bar-wrap{margin-top:7px;background:var(--stone);border-radius:4px;height:3px;overflow:hidden;}
+.stat-bar{height:100%;border-radius:4px;}
+
+/* FORM */
+.fg{margin-bottom:13px;}
+.flab{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:6px;font-weight:600;}
+.fi{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;}
+.fi:focus{border-color:var(--teacher);background:white;}
+.fta{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;resize:vertical;min-height:76px;line-height:1.6;}
+.fta:focus{border-color:var(--teacher);background:white;}
+.fsel{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;cursor:pointer;}
+.btn-save{padding:9px 20px;background:var(--teacher);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-save:hover{background:var(--teacher-light);}
+.btn-cancel{padding:9px 15px;background:white;color:var(--mid-brown);border:1px solid var(--stone);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;}
+.btn-sm{padding:6px 13px;font-size:12px;font-weight:600;border:none;border-radius:7px;cursor:pointer;font-family:inherit;}
+.btn-sm-t{background:var(--teacher-pale);color:var(--teacher);}
+.btn-sm-t:hover{background:var(--teacher);color:white;}
+.btn-sm-danger{background:#FEE;color:#C0392B;}
+.btn-sm-danger:hover{background:#C0392B;color:white;}
+.btn-sm-success{background:var(--success-pale);color:var(--success);}
+.btn-sm-success:hover{background:var(--success);color:white;}
+.btn-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
+
+/* LESSON / MODULE ROWS */
+.mod-block{border:1px solid var(--stone);border-radius:13px;margin-bottom:14px;overflow:hidden;background:white;}
+.mod-header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:white;}
+.mod-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0;}
+.mod-info{flex:1;}
+.mod-title{font-size:14px;font-weight:600;color:var(--dark-brown);}
+.mod-sub{font-size:11px;color:var(--warm-gray);margin-top:1px;}
+.mod-lessons{border-top:1px solid var(--stone);}
+.les-row{display:flex;align-items:center;gap:11px;padding:11px 18px;border-bottom:1px solid var(--stone);}
+.les-row:last-child{border-bottom:none;}
+.les-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.les-info{flex:1;}
+.les-title{font-size:13px;font-weight:500;color:var(--dark-brown);}
+.les-meta{font-size:11px;color:var(--warm-gray);margin-top:1px;}
+.pill{font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap;}
+.pill-locked{background:var(--stone);color:var(--warm-gray);}
+.pill-open{background:var(--accent-pale);color:var(--accent);}
+
+/* TOGGLE */
+.tog{width:38px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;flex-shrink:0;}
+.tog-on{background:var(--success);} .tog-off{background:var(--sand);}
+.tok{position:absolute;top:3px;width:14px;height:14px;border-radius:50%;background:white;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tog-on .tok{left:21px;} .tog-off .tok{left:3px;}
+
+/* EDIT FORM */
+.edit-form{background:var(--teacher-pale);border:1px solid rgba(74,48,128,.15);border-radius:11px;padding:18px;margin-top:10px;}
+.edit-form .fi,.edit-form .fta{background:white;}
+
+/* CONTENT SECTIONS IN LESSON */
+.content-block{border:1px solid var(--stone);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--warm-white);}
+.content-block-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.content-type-badge{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.badge-text{background:var(--teal-pale);color:var(--teal);}
+.badge-dialogue{background:var(--accent-pale);color:var(--accent);}
+.badge-exercise{background:var(--gold-pale);color:var(--gold);}
+.badge-vocab{background:var(--success-pale);color:var(--success);}
+
+/* VOCAB TAGS */
+.vtag{display:inline-flex;align-items:center;gap:5px;background:var(--teacher-pale);color:var(--teacher);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:500;margin:3px;}
+.vtag-x{cursor:pointer;font-size:12px;color:var(--teacher-light);}
+.vtag-x:hover{color:var(--teacher);}
+
+/* FEEDBACK */
+.fb-card{background:white;border:1px solid var(--stone);border-radius:11px;padding:16px;margin-bottom:10px;}
+.fb-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.fb-title-t{font-size:13px;font-weight:600;color:var(--dark-brown);}
+.fb-date{font-size:11px;color:var(--warm-gray);}
+.fb-text{font-size:13px;color:var(--mid-brown);line-height:1.6;}
+.fb-stars{color:var(--gold);font-size:12px;margin-top:5px;}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--warm-gray);font-size:13px;padding:2px 4px;}
+.del-btn:hover{color:var(--accent);}
+
+/* SKILL BARS */
+.skill-row{margin-bottom:11px;}
+.skill-h{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;color:var(--mid-brown);}
+.skill-track{background:var(--stone);border-radius:6px;height:6px;overflow:hidden;}
+.skill-fill{height:100%;border-radius:6px;}
+
+/* WELCOME / EMPTY */
+.welcome-card{background:linear-gradient(135deg,var(--dark-brown),#3a2e1a);border-radius:14px;padding:28px 32px;margin-bottom:20px;display:flex;align-items:center;gap:22px;}
+.wc-icon{font-size:42px;flex-shrink:0;}
+.wc-title{font-size:22px;font-weight:300;color:white;margin-bottom:4px;font-family:Georgia,serif;}
+.wc-title em{font-style:italic;color:var(--accent-light);}
+.wc-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6;}
+.wc-teacher{margin-top:11px;display:flex;align-items:center;gap:8px;}
+.wct-av{width:26px;height:26px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600;}
+.wct-name{font-size:12px;font-weight:600;color:white;}
+.wct-role{font-size:10px;color:rgba(255,255,255,.4);}
+.empty-state{text-align:center;padding:44px 32px;background:white;border-radius:14px;border:1px solid var(--stone);margin-bottom:16px;}
+.ei{font-size:42px;margin-bottom:11px;}
+.et{font-size:22px;font-weight:300;color:var(--dark-brown);margin-bottom:5px;font-family:Georgia,serif;}
+.eb{font-size:13px;color:var(--warm-gray);line-height:1.6;max-width:340px;margin:0 auto;}
+
+/* TIP */
+.tip-box{background:var(--teal-pale);border:1px solid rgba(45,107,107,.2);border-radius:11px;padding:14px 18px;display:flex;gap:11px;margin-bottom:16px;}
+.tip-icon{font-size:17px;flex-shrink:0;}
+.tip-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:2px;}
+.tip-text{font-size:12px;color:var(--mid-brown);line-height:1.5;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:9px;font-size:13px;box-shadow:0 6px 22px rgba(0,0,0,.2);z-index:9999;display:none;color:white;}
+.toast.show{display:block;}
+.toast-d{background:var(--dark-brown);} .toast-t{background:var(--teacher);}
+
+@media(max-width:800px){.sidebar{display:none;} .panel{padding:22px 16px;} .stat-grid{grid-template-columns:repeat(2,1fr);} .two-col{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen active" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">flu<span>ency</span></div>
+    <div class="login-tagline">English Learning Platform</div>
+    <div class="login-tabs">
+      <button class="login-tab active" id="tab-s" onclick="switchTab('student')">Student</button>
+      <button class="login-tab t-tab" id="tab-t" onclick="switchTab('teacher')">Teacher</button>
+    </div>
+    <div id="form-student">
+      <label class="fl">Your Name</label>
+      <input class="fi-login" type="text" id="s-name" placeholder="Lucas" value="Lucas">
+      <label class="fl">Access Code</label>
+      <input class="fi-login" type="password" id="s-pass" placeholder="••••••••" value="english2026">
+      <button class="btn-login btn-s" onclick="doLogin('student')">Start Learning →</button>
+      <div class="login-hint">Code provided by your teacher, Vítor</div>
+    </div>
+    <div id="form-teacher" style="display:none">
+      <label class="fl">Password</label>
+      <input class="fi-login" type="password" id="t-pass" placeholder="••••••••" value="teacher2026">
+      <button class="btn-login btn-t" onclick="doLogin('teacher')">Enter Dashboard →</button>
+      <div class="login-hint">Teacher access only</div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="app-screen">
+  <aside class="sidebar sb-student" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-text">flu<span>ency</span></div>
+      <div class="sb-badge sb-badge-s" id="sb-badge">Starting Soon</div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-user">
+      <div class="sb-avatar av-s" id="sb-av">L</div>
+      <div>
+        <div class="sb-uname" id="sb-name">Lucas</div>
+        <div class="sb-usub" id="sb-sub">Ready to begin</div>
+      </div>
+      <button class="sb-logout" onclick="doLogout()">↩</button>
+    </div>
+  </aside>
+  <main class="main-content" id="main"></main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var mode = '';
+var editingMod = -1;
+var editingLes = -1;
+var editingContent = -1;
+
+var appData = {
+  student: { name:'Lucas', lessons:0, vocab:0, streak:0, fluency:null },
+  note:'', noteDate:'',
+  skills:{ Speaking:0, Vocabulary:0, Grammar:0, Pronunciation:0, Writing:0 },
+  feedback:[], vocabulary:[],
+  modules:[
+    { id:1, title:'Starting the Journey', sub:'Breaking the ice · Self-expression',
+      lessons:[
+        { title:'Lesson 1 — Starting the Journey', meta:'Module 1 · 50 min', unlocked:false,
+          contents:[
+            { type:'text', label:'Introduction', body:'Welcome to your first English lesson! Today we\'ll focus on introducing yourself naturally.' },
+            { type:'dialogue', label:'Sample Dialogue', body:'A: Hi, I\'m Sarah. Nice to meet you!\nB: Nice to meet you too! I\'m Lucas. Where are you from?' },
+            { type:'exercise', label:'Exercise', body:'Practice introducing yourself. Say your name, where you\'re from, and one thing you like.' }
+          ]
+        },
+        { title:'Lesson 2 — Describing Yourself', meta:'Module 1 · 50 min', unlocked:false, contents:[] }
+      ]
+    },
+    { id:2, title:'Travel Ready', sub:'Airports, hotels, restaurants',
+      lessons:[
+        { title:'Lesson 1 — At the Airport', meta:'Module 2 · 50 min', unlocked:false, contents:[] },
+        { title:'Lesson 2 — Booking a Hotel', meta:'Module 2 · 50 min', unlocked:false, contents:[] }
+      ]
+    },
+    { id:3, title:'Speaking Your Mind', sub:'Opinions · Debates · Storytelling',
+      lessons:[
+        { title:'Lesson 1 — Expressing Opinions', meta:'Module 3 · 50 min', unlocked:false, contents:[] }
+      ]
+    },
+    { id:4, title:'Real-Life Conversations', sub:'Shopping, relationships, culture', lessons:[] },
+    { id:5, title:'Professional English', sub:'Emails, presentations, social media', lessons:[] },
+    { id:6, title:'Advanced Fluency', sub:'Idioms, humour, nuance, B2', lessons:[] }
+  ]
+};
+
+/* ── STORAGE ── */
+function saveData() {
+  try { window.storage.set('fluency-v2', JSON.stringify(appData)); } catch(e) {}
+}
+function loadData(cb) {
+  try {
+    window.storage.get('fluency-v2').then(function(r) {
+      if (r && r.value) { try { appData = JSON.parse(r.value); } catch(e) {} }
+      cb();
+    }).catch(function() { cb(); });
+  } catch(e) { cb(); }
+}
+
+/* ── LOGIN ── */
+function switchTab(t) {
+  document.getElementById('tab-s').classList.toggle('active', t==='student');
+  document.getElementById('tab-t').classList.toggle('active', t==='teacher');
+  document.getElementById('form-student').style.display = t==='student' ? 'block' : 'none';
+  document.getElementById('form-teacher').style.display = t==='teacher' ? 'block' : 'none';
+}
+function doLogin(m) {
+  var pass = m==='student' ? document.getElementById('s-pass').value : document.getElementById('t-pass').value;
+  if (pass !== (m==='student' ? 'english2026' : 'teacher2026')) { showToast('Incorrect password.'); return; }
+  loadData(function() {
+    mode = m;
+    if (m==='student') { var n=document.getElementById('s-name').value.trim()||'Lucas'; appData.student.name=n; }
+    document.getElementById('login-screen').classList.remove('active');
+    document.getElementById('app-screen').classList.add('active');
+    buildSidebar();
+    showPanel(m==='student' ? 's-dash' : 't-dash');
+  });
+}
+function doLogout() {
+  document.getElementById('app-screen').classList.remove('active');
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('main').innerHTML = '';
+  mode = '';
+}
+
+/* ── SIDEBAR ── */
+function buildSidebar() {
+  var sb=document.getElementById('sidebar');
+  sb.className='sidebar '+(mode==='teacher'?'sb-teacher':'sb-student');
+  var b=document.getElementById('sb-badge');
+  b.className='sb-badge '+(mode==='teacher'?'sb-badge-t':'sb-badge-s');
+  b.textContent=mode==='teacher'?'✎ Teacher':'Starting Soon';
+  var av=document.getElementById('sb-av');
+  av.className='sb-avatar '+(mode==='teacher'?'av-t':'av-s');
+  av.textContent=mode==='teacher'?'V':appData.student.name.charAt(0).toUpperCase();
+  document.getElementById('sb-name').textContent=mode==='teacher'?'Vítor':appData.student.name;
+  document.getElementById('sb-sub').textContent=mode==='teacher'?'Teacher Dashboard':'Ready to begin';
+  if (mode==='student') {
+    document.getElementById('sb-nav').innerHTML=
+      '<div class="nav-sec">Main</div>'+
+      '<div class="nav-item" id="nav-s-dash" onclick="showPanel(\'s-dash\')">⊞ Dashboard</div>'+
+      '<div class="nav-item" id="nav-s-course" onclick="showPanel(\'s-course\')">◫ My Course</div>'+
+      '<div class="nav-item" id="nav-s-progress" onclick="showPanel(\'s-progress\')">◎ Progress</div>'+
+      '<div class="nav-sec">Resources</div>'+
+      '<div class="nav-item" id="nav-s-vocab" onclick="showPanel(\'s-vocab\')">◈ Vocabulary</div>';
+  } else {
+    document.getElementById('sb-nav').innerHTML=
+      '<div class="nav-sec">Dashboard</div>'+
+      '<div class="nav-item" id="nav-t-dash" onclick="showPanel(\'t-dash\')">⊞ Overview</div>'+
+      '<div class="nav-sec">Edit</div>'+
+      '<div class="nav-item" id="nav-t-course" onclick="showPanel(\'t-course\')">◫ Modules & Lessons</div>'+
+      '<div class="nav-item" id="nav-t-progress" onclick="showPanel(\'t-progress\')">◎ Progress & Scores</div>'+
+      '<div class="nav-item" id="nav-t-feedback" onclick="showPanel(\'t-feedback\')">✎ Feedback & Notes</div>'+
+      '<div class="nav-item" id="nav-t-vocab" onclick="showPanel(\'t-vocab\')">◈ Vocabulary</div>';
+  }
+}
+
+/* ── ROUTER ── */
+function showPanel(name) {
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  var el=document.getElementById('nav-'+name);
+  if(el) el.classList.add('active');
+  var mc=document.getElementById('main');
+  if(name==='s-dash') mc.innerHTML=sDash();
+  else if(name==='s-course') mc.innerHTML=sCourse();
+  else if(name==='s-progress') mc.innerHTML=sProgress();
+  else if(name==='s-vocab') mc.innerHTML=sVocab();
+  else if(name==='t-dash') mc.innerHTML=tDash();
+  else if(name==='t-course') { editingMod=-1; editingLes=-1; mc.innerHTML=tCourse(); }
+  else if(name==='t-progress') mc.innerHTML=tProgress();
+  else if(name==='t-feedback') mc.innerHTML=tFeedback();
+  else if(name==='t-vocab') mc.innerHTML=tVocab();
+}
+
+/* ══════════════════════════
+   STUDENT PANELS
+══════════════════════════ */
+function sDash() {
+  var s=appData.student;
+  var noteHtml=appData.note ?
+    '<div style="background:linear-gradient(135deg,#F5E0D6,#F5EDD3);border:1px solid rgba(184,92,56,.15);border-radius:13px;padding:22px 26px;margin-bottom:18px;">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">'+
+    '<div style="width:30px;height:30px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:600;">V</div>'+
+    '<div><div style="font-size:13px;font-weight:600;color:var(--dark-brown);">Vítor</div>'+
+    '<div style="font-size:11px;color:var(--warm-gray);">Your Teacher · '+(appData.noteDate||'Recent')+'</div></div></div>'+
+    '<div style="font-size:16px;font-weight:300;font-style:italic;color:var(--mid-brown);line-height:1.6;font-family:Georgia,serif;">"'+appData.note+'"</div></div>'
+    :
+    '<div class="welcome-card"><div class="wc-icon">👋</div><div>'+
+    '<div class="wc-title">Hello, <em>'+s.name+'</em>!</div>'+
+    '<div class="wc-body">I\'m looking forward to our first lesson together. This is your personal learning space.</div>'+
+    '<div class="wc-teacher"><div class="wct-av">V</div><div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div>'+
+    '</div></div>';
+  var lastFb='';
+  if(appData.feedback.length>0){
+    var f=appData.feedback[appData.feedback.length-1];
+    lastFb='<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Latest Feedback</div>'+
+      '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div><div class="fb-date">'+f.date+'</div></div>'+
+      '<div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div></div>';
+  }
+  return '<div class="panel active">'+
+    '<div class="pg">Welcome,<br><em>'+s.name+'.</em></div>'+
+    '<div class="psub">'+(s.streak>0?'You\'re on a '+s.streak+'-day streak! 🔥':'Your English journey starts here!')+'</div>'+
+    noteHtml+
+    '<div class="stat-grid">'+
+    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">'+s.lessons+'</div><div class="stat-det">of 48 total</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.round(s.lessons/48*100)+'%;background:var(--accent)"></div></div></div>'+
+    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">'+appData.vocabulary.length+'</div><div class="stat-det">words learned</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.min(appData.vocabulary.length,100)+'%;background:var(--gold)"></div></div></div>'+
+    '<div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val">'+s.streak+'</div><div class="stat-det">'+(s.streak>0?'days in a row':'first class soon!')+'</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.min(s.streak/30*100,100)+'%;background:var(--teal)"></div></div></div>'+
+    '<div class="stat-card"><div class="stat-label">Fluency Score</div><div class="stat-val">'+(s.fluency!=null&&s.fluency!==''?s.fluency:'—')+'</div><div class="stat-det">'+(s.fluency!=null&&s.fluency!==''?'out of 100':'assessed in class')+'</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+(s.fluency||0)+'%;background:var(--success)"></div></div></div>'+
+    '</div>'+lastFb+'</div>';
+}
+
+function sCourse() {
+  var rows=appData.modules.map(function(m){
+    var anyOpen=m.lessons.some(function(l){return l.unlocked;});
+    var lesRows=m.lessons.map(function(l){
+      return '<div class="les-row" style="'+(l.unlocked?'':'opacity:.5')+'">'+
+        '<div class="les-dot" style="background:'+(l.unlocked?'var(--accent)':'var(--sand)')+'"></div>'+
+        '<div class="les-info"><div class="les-title">'+l.title+'</div><div class="les-meta">'+l.meta+'</div></div>'+
+        '<span class="pill '+(l.unlocked?'pill-open':'pill-locked')+'">'+(l.unlocked?'Available':'Locked')+'</span>'+
+        (l.unlocked&&l.contents&&l.contents.length?'<button class="btn-sm btn-sm-t" onclick="openStudentLesson('+appData.modules.indexOf(m)+','+m.lessons.indexOf(l)+')">Open →</button>':'')+'</div>';
+    }).join('');
+    return '<div class="mod-block" style="'+(anyOpen?'':'opacity:.55')+'">'+
+      '<div class="mod-header">'+
+      '<div class="mod-num" style="background:'+(anyOpen?'var(--accent-pale)':'var(--stone)')+';color:'+(anyOpen?'var(--accent)':'var(--warm-gray)')+'">'+m.id+'</div>'+
+      '<div class="mod-info"><div class="mod-title">'+m.title+'</div><div class="mod-sub">'+m.sub+'</div></div>'+
+      '<span class="pill '+(anyOpen?'pill-open':'pill-locked')+'">'+(anyOpen?'In Progress':'🔒 Locked')+'</span>'+
+      '</div>'+
+      (m.lessons.length?'<div class="mod-lessons">'+lesRows+'</div>':'')+'</div>';
+  }).join('');
+  return '<div class="panel active"><div class="pg">My <em>Course</em></div><div class="psub">Lessons unlock as you progress with Vítor.</div>'+rows+'</div>';
+}
+
+function openStudentLesson(mi,li) {
+  var l=appData.modules[mi].lessons[li];
+  var mc=document.getElementById('main');
+  var contents=l.contents||[];
+  var blocks=contents.map(function(c){
+    var typeClass=c.type==='dialogue'?'badge-dialogue':c.type==='exercise'?'badge-exercise':c.type==='vocab'?'badge-vocab':'badge-text';
+    return '<div class="content-block">'+
+      '<div class="content-block-header">'+
+      '<span class="content-type-badge '+typeClass+'">'+c.type.charAt(0).toUpperCase()+c.type.slice(1)+'</span>'+
+      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown)">'+c.label+'</span>'+
+      '</div>'+
+      '<div style="font-size:13px;color:var(--mid-brown);line-height:1.7;white-space:pre-line">'+c.body+'</div>'+
+      '</div>';
+  }).join('');
+  mc.innerHTML='<div class="panel active">'+
+    '<div style="margin-bottom:18px"><button class="btn-sm btn-sm-t" onclick="showPanel(\'s-course\')">← Back to Course</button></div>'+
+    '<div class="pg"><em>'+l.title+'</em></div>'+
+    '<div class="psub">'+l.meta+'</div>'+
+    (blocks||'<div class="empty-state"><div class="ei">📖</div><div class="et">Content coming soon</div><div class="eb">Your teacher will add the lesson content here.</div></div>')+
+    '</div>';
+}
+
+function sProgress() {
+  var sk=appData.skills;
+  var hasSkills=Object.values(sk).some(function(v){return v>0;});
+  var skillsHtml=hasSkills ?
+    '<div class="card"><div class="card-title"><div class="dot"></div>Skill Progress</div>'+
+    Object.keys(sk).map(function(k){
+      return '<div class="skill-row"><div class="skill-h"><span>'+k+'</span><span>'+sk[k]+'%</span></div>'+
+        '<div class="skill-track"><div class="skill-fill" style="width:'+sk[k]+'%;background:var(--accent)"></div></div></div>';
+    }).join('')+'</div>'
+    : '<div class="empty-state"><div class="ei">🌱</div><div class="et">Your story starts soon</div><div class="eb">Vítor will update your skills after each lesson.</div></div>';
+  var fbHtml='';
+  if(appData.feedback.length>0){
+    fbHtml='<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Teacher Feedback</div>'+
+      appData.feedback.map(function(f){
+        return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div><div class="fb-date">'+f.date+'</div></div>'+
+          '<div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div>';
+      }).join('')+'</div>';
+  }
+  return '<div class="panel active"><div class="pg">Your <em>Progress</em></div><div class="psub">Updated by Vítor after each lesson.</div>'+skillsHtml+fbHtml+'</div>';
+}
+
+function sVocab() {
+  var v=appData.vocabulary;
+  return '<div class="panel active"><div class="pg">Vocabulary <em>Bank</em></div><div class="psub">'+(v.length>0?v.length+' words added by Vítor.':'Words from your lessons will appear here.')+'</div>'+
+    (v.length===0?'<div class="empty-state"><div class="ei">📚</div><div class="et">No words yet</div><div class="eb">Vítor will add vocabulary after each lesson.</div></div>'
+    :'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'+
+    v.map(function(w){
+      return '<div style="background:white;border:1px solid var(--stone);border-radius:11px;padding:14px">'+
+        '<div style="font-size:14px;font-weight:600;color:var(--dark-brown);margin-bottom:3px">'+w.word+'</div>'+
+        '<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:500">'+w.type+'</div>'+
+        '<div style="font-size:12px;color:var(--warm-gray);margin-top:5px;line-height:1.5">'+w.def+'</div>'+
+        (w.ex?'<div style="font-size:12px;color:var(--mid-brown);font-style:italic;margin-top:3px">"'+w.ex+'"</div>':'')+
+        '</div>';
+    }).join('')+'</div>')+'</div>';
+}
+
+/* ══════════════════════════
+   TEACHER PANELS
+══════════════════════════ */
+function tDash() {
+  var s=appData.student;
+  var uRows=appData.modules.map(function(m){
+    var u=m.lessons.filter(function(l){return l.unlocked;}).length;
+    return u>0?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stone);font-size:13px;color:var(--mid-brown)"><span>'+m.title+'</span><span style="font-weight:600;color:var(--dark-brown)">'+u+'/'+m.lessons.length+'</span></div>':'';
+  }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Teacher <em>Overview</em></div><div class="psub">Hello Vítor — here\'s a snapshot of '+s.name+'\'s platform.</div>'+
+    '<div class="tip-box"><div class="tip-icon">✎</div><div><div class="tip-title">Quick tip</div><div class="tip-text">Use the sidebar to edit modules, lessons, scores, feedback and vocabulary for '+s.name+'.</div></div></div>'+
+    '<div class="stat-grid">'+
+    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">'+s.lessons+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">'+appData.vocabulary.length+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val">'+s.streak+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">Fluency</div><div class="stat-val">'+(s.fluency!=null&&s.fluency!==''?s.fluency:'—')+'</div></div>'+
+    '</div>'+
+    '<div class="two-col">'+
+    '<div class="card"><div class="card-title"><div class="dot"></div>Unlocked Lessons</div>'+(uRows||'<div style="font-size:13px;color:var(--warm-gray)">None yet.</div>')+'</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Recent Feedback</div>'+
+    (appData.feedback.length>0?appData.feedback.slice(-2).map(function(f){return '<div style="padding:7px 0;border-bottom:1px solid var(--stone)"><div style="font-size:13px;font-weight:500;color:var(--dark-brown)">'+f.title+'</div><div style="font-size:11px;color:var(--warm-gray)">'+f.date+'</div></div>';}).join(''):'<div style="font-size:13px;color:var(--warm-gray)">None added yet.</div>')+
+    '</div></div></div>';
+}
+
+/* ── TEACHER: MODULES & LESSONS ── */
+function tCourse() {
+  var modBlocks=appData.modules.map(function(m,mi){
+    var isEditing=editingMod===mi&&editingLes===-1;
+    var lesList=m.lessons.map(function(l,li){
+      var isEditingL=editingMod===mi&&editingLes===li;
+      var lesContent=isEditingL?tLessonEditor(mi,li):'';
+      return '<div class="les-row">'+
+        '<div class="les-dot" style="background:'+(l.unlocked?'var(--accent)':'var(--sand)')+'"></div>'+
+        '<div class="les-info"><div class="les-title">'+l.title+'</div><div class="les-meta">'+l.meta+'</div></div>'+
+        '<span class="pill '+(l.unlocked?'pill-open':'pill-locked')+'">'+(l.unlocked?'Unlocked':'Locked')+'</span>'+
+        '<button class="tog '+(l.unlocked?'tog-on':'tog-off')+'" onclick="toggleLesson('+mi+','+li+')" title="Toggle"><div class="tok"></div></button>'+
+        '<button class="btn-sm btn-sm-t" onclick="openLessonEditor('+mi+','+li+')">✎ Edit</button>'+
+        '<button class="btn-sm btn-sm-danger" onclick="deleteLesson('+mi+','+li+')">✕</button>'+
+        '</div>'+
+        lesContent;
+    }).join('');
+    var modEditForm=isEditing?
+      '<div class="edit-form" style="margin:0 14px 14px">'+
+      '<div class="fg"><label class="flab">Module Title</label><input class="fi" id="med-title" value="'+m.title+'"></div>'+
+      '<div class="fg"><label class="flab">Subtitle</label><input class="fi" id="med-sub" value="'+m.sub+'"></div>'+
+      '<div class="btn-row"><button class="btn-save" onclick="saveModuleEdit('+mi+')">Save</button><button class="btn-cancel" onclick="cancelEdit()">Cancel</button></div>'+
+      '</div>':'';
+    return '<div class="mod-block">'+
+      '<div class="mod-header">'+
+      '<div class="mod-num" style="background:var(--teacher-pale);color:var(--teacher)">'+m.id+'</div>'+
+      '<div class="mod-info"><div class="mod-title">'+m.title+'</div><div class="mod-sub">'+m.sub+'</div></div>'+
+      '<button class="btn-sm btn-sm-t" onclick="openModuleEditor('+mi+')">✎ Edit Module</button>'+
+      '</div>'+modEditForm+
+      (m.lessons.length?'<div class="mod-lessons">'+lesList+'</div>':'')+
+      '<div style="padding:12px 18px;border-top:'+(m.lessons.length?'1px solid var(--stone)':'none')+'">'+
+      '<button class="btn-sm btn-sm-success" onclick="addLesson('+mi+')">+ Add Lesson</button>'+
+      '</div>'+
+      '</div>';
+  }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Modules & <em>Lessons</em></div>'+
+    '<div class="psub">Edit module names, lesson titles, content and unlock status.</div>'+
+    modBlocks+'</div>';
+}
+
+function tLessonEditor(mi,li) {
+  var l=appData.modules[mi].lessons[li];
+  var contents=l.contents||[];
+  var contentBlocks=contents.map(function(c,ci){
+    return '<div class="content-block">'+
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
+      '<span class="content-type-badge '+(c.type==='dialogue'?'badge-dialogue':c.type==='exercise'?'badge-exercise':c.type==='vocab'?'badge-vocab':'badge-text')+'">'+c.type+'</span>'+
+      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown);flex:1">'+c.label+'</span>'+
+      '<button class="btn-sm btn-sm-t" onclick="openContentEditor('+mi+','+li+','+ci+')">✎</button>'+
+      '<button class="btn-sm btn-sm-danger" onclick="deleteContent('+mi+','+li+','+ci+')">✕</button>'+
+      '</div>'+
+      (editingContent===ci?
+        '<div class="edit-form">'+
+        '<div class="fg"><label class="flab">Label</label><input class="fi" id="ced-label" value="'+c.label+'"></div>'+
+        '<div class="fg"><label class="flab">Type</label><select class="fsel" id="ced-type">'+
+        ['text','dialogue','exercise','vocab'].map(function(t){return '<option'+(t===c.type?' selected':'')+'>'+t+'</option>';}).join('')+
+        '</select></div>'+
+        '<div class="fg"><label class="flab">Content</label><textarea class="fta" id="ced-body" style="min-height:100px">'+c.body+'</textarea></div>'+
+        '<div class="btn-row"><button class="btn-save" onclick="saveContentEdit('+mi+','+li+','+ci+')">Save</button><button class="btn-cancel" onclick="cancelContentEdit('+mi+','+li+')">Cancel</button></div>'+
+        '</div>'
+        :'')+'</div>';
+  }).join('');
+  return '<div class="edit-form" style="margin-left:28px;margin-top:0;margin-bottom:0;border-radius:0 0 11px 11px">'+
+    '<div class="fg"><label class="flab">Lesson Title</label><input class="fi" id="led-title-'+mi+'-'+li+'" value="'+l.title+'"></div>'+
+    '<div class="fg"><label class="flab">Description / Meta</label><input class="fi" id="led-meta-'+mi+'-'+li+'" value="'+l.meta+'"></div>'+
+    '<div class="btn-row" style="margin-bottom:14px"><button class="btn-save" onclick="saveLessonMeta('+mi+','+li+')">Save Title</button></div>'+
+    '<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--teacher);margin-bottom:8px">Lesson Content Blocks</div>'+
+    contentBlocks+
+    '<div class="btn-row" style="margin-top:10px">'+
+    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'text\')">+ Text</button>'+
+    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'dialogue\')">+ Dialogue</button>'+
+    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'exercise\')">+ Exercise</button>'+
+    '</div>'+
+    '<div class="btn-row" style="margin-top:8px"><button class="btn-cancel" onclick="cancelEdit()">Close Editor</button></div>'+
+    '</div>';
+}
+
+/* ── EDIT ACTIONS ── */
+function openModuleEditor(mi) { editingMod=mi; editingLes=-1; editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
+function openLessonEditor(mi,li) { editingMod=mi; editingLes=li; editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
+function openContentEditor(mi,li,ci) { editingContent=ci; document.getElementById('main').innerHTML=tCourse(); }
+function cancelEdit() { editingMod=-1; editingLes=-1; editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
+function cancelContentEdit(mi,li) { editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
+
+function saveModuleEdit(mi) {
+  var t=document.getElementById('med-title');
+  var s=document.getElementById('med-sub');
+  if(!t||!s) return;
+  appData.modules[mi].title=t.value.trim()||appData.modules[mi].title;
+  appData.modules[mi].sub=s.value.trim()||appData.modules[mi].sub;
+  saveData(); editingMod=-1; editingLes=-1;
+  document.getElementById('main').innerHTML=tCourse();
+  showToast('Module updated!',true);
+}
+
+function saveLessonMeta(mi,li) {
+  var t=document.getElementById('led-title-'+mi+'-'+li);
+  var m=document.getElementById('led-meta-'+mi+'-'+li);
+  if(!t) return;
+  appData.modules[mi].lessons[li].title=t.value.trim()||appData.modules[mi].lessons[li].title;
+  if(m) appData.modules[mi].lessons[li].meta=m.value.trim()||appData.modules[mi].lessons[li].meta;
+  saveData();
+  showToast('Lesson title saved!',true);
+}
+
+function saveContentEdit(mi,li,ci) {
+  var lab=document.getElementById('ced-label');
+  var typ=document.getElementById('ced-type');
+  var bod=document.getElementById('ced-body');
+  if(!lab||!bod) return;
+  appData.modules[mi].lessons[li].contents[ci].label=lab.value.trim();
+  appData.modules[mi].lessons[li].contents[ci].type=typ?typ.value:'text';
+  appData.modules[mi].lessons[li].contents[ci].body=bod.value.trim();
+  saveData(); editingContent=-1;
+  document.getElementById('main').innerHTML=tCourse();
+  showToast('Content block saved!',true);
+}
+
+function addContent(mi,li,type) {
+  if(!appData.modules[mi].lessons[li].contents) appData.modules[mi].lessons[li].contents=[];
+  appData.modules[mi].lessons[li].contents.push({ type:type, label:'New '+type.charAt(0).toUpperCase()+type.slice(1), body:'' });
+  var ci=appData.modules[mi].lessons[li].contents.length-1;
+  editingContent=ci;
+  saveData();
+  document.getElementById('main').innerHTML=tCourse();
+}
+
+function deleteContent(mi,li,ci) {
+  appData.modules[mi].lessons[li].contents.splice(ci,1);
+  editingContent=-1;
+  saveData();
+  document.getElementById('main').innerHTML=tCourse();
+  showToast('Block deleted.',true);
+}
+
+function addLesson(mi) {
+  appData.modules[mi].lessons.push({ title:'New Lesson', meta:'Module '+(mi+1)+' · 50 min', unlocked:false, contents:[] });
+  var li=appData.modules[mi].lessons.length-1;
+  editingMod=mi; editingLes=li; editingContent=-1;
+  saveData();
+  document.getElementById('main').innerHTML=tCourse();
+  showToast('Lesson added!',true);
+}
+
+function deleteLesson(mi,li) {
+  appData.modules[mi].lessons.splice(li,1);
+  editingMod=-1; editingLes=-1; editingContent=-1;
+  saveData();
+  document.getElementById('main').innerHTML=tCourse();
+  showToast('Lesson deleted.',true);
+}
+
+function toggleLesson(mi,li) {
+  appData.modules[mi].lessons[li].unlocked=!appData.modules[mi].lessons[li].unlocked;
+  saveData();
+  document.getElementById('main').innerHTML=tCourse();
+  showToast('Lesson '+(appData.modules[mi].lessons[li].unlocked?'unlocked!':'locked.'),true);
+}
+
+/* ── TEACHER: PROGRESS ── */
+function tProgress() {
+  var s=appData.student; var sk=appData.skills;
+  return '<div class="panel active"><div class="pg pg-t">Progress & <em>Scores</em></div><div class="psub">Update '+appData.student.name+'\'s stats after each session.</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>General Stats</div>'+
+    '<div class="two-col">'+
+    '<div class="fg"><label class="flab">Lessons Completed</label><input class="fi" type="number" min="0" max="48" id="f-les" value="'+s.lessons+'"></div>'+
+    '<div class="fg"><label class="flab">Study Streak (days)</label><input class="fi" type="number" min="0" id="f-str" value="'+s.streak+'"></div>'+
+    '</div>'+
+    '<div class="fg"><label class="flab">Fluency Score (0–100) — <span id="fl-v">'+(s.fluency!=null?s.fluency:0)+'</span></label>'+
+    '<input type="range" min="0" max="100" id="f-flu" value="'+(s.fluency||0)+'" oninput="document.getElementById(\'fl-v\').textContent=this.value"></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="saveStats()">Save Stats</button></div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--gold)"></div>Skill Levels</div>'+
+    Object.keys(sk).map(function(k){
+      return '<div class="fg"><label class="flab">'+k+' — <span id="sk-'+k+'-v">'+sk[k]+'%</span></label>'+
+        '<input type="range" min="0" max="100" id="sk-'+k+'" value="'+sk[k]+'" oninput="document.getElementById(\'sk-'+k+'-v\').textContent=this.value+\'%\'"></div>';
+    }).join('')+
+    '<div class="btn-row"><button class="btn-save" onclick="saveSkills()">Save Skills</button></div></div></div>';
+}
+
+function saveStats() {
+  var les=document.getElementById('f-les'); var str=document.getElementById('f-str'); var flu=document.getElementById('f-flu');
+  if(!les||!str||!flu) return;
+  appData.student.lessons=parseInt(les.value)||0;
+  appData.student.streak=parseInt(str.value)||0;
+  appData.student.fluency=parseInt(flu.value);
+  saveData(); showToast('Stats saved!',true);
+}
+function saveSkills() {
+  Object.keys(appData.skills).forEach(function(k){ var el=document.getElementById('sk-'+k); if(el) appData.skills[k]=parseInt(el.value)||0; });
+  saveData(); showToast('Skills updated!',true);
+}
+
+/* ── TEACHER: FEEDBACK ── */
+function tFeedback() {
+  var fbCards=appData.feedback.map(function(f,i){
+    return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div>'+
+      '<div style="display:flex;align-items:center;gap:8px"><div class="fb-date">'+f.date+'</div>'+
+      '<button class="del-btn" onclick="delFeedback('+i+')">✕</button></div></div>'+
+      '<div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div>';
+  }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Feedback & <em>Notes</em></div><div class="psub">Leave notes and feedback for '+appData.student.name+'.</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Dashboard Note</div>'+
+    '<div class="fg"><label class="flab">Shown on '+appData.student.name+'\'s home screen</label><textarea class="fta" id="f-note" placeholder="Write a personal note…">'+(appData.note||'')+'</textarea></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="saveNote()">Save Note</button>'+(appData.note?'<button class="btn-cancel" onclick="clearNote()">Clear</button>':'')+'</div></div>'+
+    '<div class="card"><div class="card-title"><div class="dot"></div>Add Lesson Feedback</div>'+
+    '<div class="fg"><label class="flab">Title</label><input class="fi" id="fb-ti" placeholder="e.g. Lesson Review — M1 L1"></div>'+
+    '<div class="fg" style="margin-top:10px"><label class="flab">Feedback</label><textarea class="fta" id="fb-tx" placeholder="Your feedback…"></textarea></div>'+
+    '<div class="fg" style="margin-top:10px"><label class="flab">Rating — <span id="fb-sv">★★★★☆</span></label><input type="range" min="1" max="5" id="fb-st" value="4" oninput="updateStars(this.value)"></div>'+
+    '<div class="btn-row"><button class="btn-save" onclick="addFeedback()">Add Feedback</button></div></div>'+
+    (appData.feedback.length>0?'<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Saved Feedback ('+appData.feedback.length+')</div>'+fbCards+'</div>':'')+'</div>';
+}
+
+function saveNote() { var el=document.getElementById('f-note'); if(!el) return; appData.note=el.value.trim(); appData.noteDate=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); saveData(); showPanel('t-feedback'); showToast('Note saved!',true); }
+function clearNote() { appData.note=''; appData.noteDate=''; saveData(); showPanel('t-feedback'); showToast('Note cleared.',true); }
+function updateStars(v) { var el=document.getElementById('fb-sv'); if(el) el.textContent='★'.repeat(v)+'☆'.repeat(5-v); }
+function addFeedback() {
+  var ti=document.getElementById('fb-ti'); var tx=document.getElementById('fb-tx'); var st=document.getElementById('fb-st');
+  if(!ti||!tx) return;
+  if(!ti.value.trim()||!tx.value.trim()) { showToast('Fill in the title and feedback.'); return; }
+  appData.feedback.push({ title:ti.value.trim(), text:tx.value.trim(), stars:parseInt(st?st.value:4)||4, date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) });
+  saveData(); showPanel('t-feedback'); showToast('Feedback added!',true);
+}
+function delFeedback(i) { appData.feedback.splice(i,1); saveData(); showPanel('t-feedback'); showToast('Deleted.',true); }
+
+/* ── TEACHER: VOCAB ── */
+function tVocab() {
+  var tags=appData.vocabulary.map(function(v,i){ return '<span class="vtag">'+v.word+'<span class="vtag-x" onclick="removeVocab('+i+')">×</span></span>'; }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Vocabulary <em>Editor</em></div><div class="psub">Add words for '+appData.student.name+' from each lesson.</div>'+
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Add New Word</div>'+
+    '<div class="two-col"><div class="fg"><label class="flab">Word / Phrase</label><input class="fi" id="v-w" placeholder="e.g. approximately"></div>'+
+    '<div class="fg"><label class="flab">Type</label><select class="fsel" id="v-t"><option>noun</option><option>verb</option><option>adjective</option><option>adverb</option><option>phrase</option><option>phrasal verb</option><option>idiom</option></select></div></div>'+
+    '<div class="fg"><label class="flab">Definition</label><input class="fi" id="v-d" placeholder="Short, clear definition…"></div>'+
+    '<div class="fg" style="margin-top:10px"><label class="flab">Example (optional)</label><input class="fi" id="v-e" placeholder="e.g. The flight takes approximately 3 hours."></div>'+
+    '<div class="btn-row" style="margin-top:8px"><button class="btn-save" onclick="addVocab()">Add Word</button></div></div>'+
+    (appData.vocabulary.length>0?'<div class="card"><div class="card-title"><div class="dot"></div>Words Added ('+appData.vocabulary.length+')</div><div>'+tags+'</div></div>':'')+'</div>';
+}
+function addVocab() {
+  var w=document.getElementById('v-w'); var t=document.getElementById('v-t'); var d=document.getElementById('v-d'); var e=document.getElementById('v-e');
+  if(!w||!d) return;
+  if(!w.value.trim()||!d.value.trim()) { showToast('Word and definition required.'); return; }
+  appData.vocabulary.push({ word:w.value.trim(), type:t?t.value:'noun', def:d.value.trim(), ex:e?e.value.trim():'' });
+  appData.student.vocab=appData.vocabulary.length;
+  saveData(); showPanel('t-vocab'); showToast('"'+w.value.trim()+'" added!',true);
+}
+function removeVocab(i) { appData.vocabulary.splice(i,1); appData.student.vocab=appData.vocabulary.length; saveData(); showPanel('t-vocab'); showToast('Word removed.',true); }
+
+/* ── UTILS ── */
+function showToast(msg,isT) {
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+(isT?'toast-t':'toast-d');
+  clearTimeout(window._t);
+  window._t=setTimeout(function(){t.classList.remove('show');},3000);
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('login-screen').classList.contains('active')){
+    doLogin(document.getElementById('tab-t').classList.contains('active')?'teacher':'student');
+  }
+});
+</script>
+</body>
+</html>
