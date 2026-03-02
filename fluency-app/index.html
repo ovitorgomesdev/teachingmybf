@@ -1552,7 +1552,41 @@ function tDash(){
     '<div class="card"><div class="card-title"><div class="dot"></div>Unlocked Lessons</div>'+(uRows||'<div style="font-size:13px;color:var(--warm-gray)">None yet.</div>')+'</div>'+
     '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Recent Feedback</div>'+
     (appData.feedback&&appData.feedback.length>0?appData.feedback.slice(-2).map(function(f){return '<div style="padding:7px 0;border-bottom:1px solid var(--stone)"><div style="font-size:13px;font-weight:500;color:var(--dark-brown)">'+f.title+'</div><div style="font-size:11px;color:var(--warm-gray)">'+f.date+'</div></div>';}).join(''):'<div style="font-size:13px;color:var(--warm-gray)">None added yet.</div>')+
-    '</div></div></div>';
+    '</div></div>'+
+    /* Flame Control */
+    '<div class="card" style="border-left:3px solid var(--f-hot)">'+
+      '<div class="card-title"><div class="dot" style="background:var(--f-hot)"></div>🔥 Pride Flame Control</div>'+
+      '<div style="font-size:13px;color:var(--mid-brown);margin-bottom:16px;line-height:1.6">'+
+        'Start or restart the Pride Flame for '+s.name+'. This sets today as Day 1 and resets the streak counter.'+
+      '</div>'+
+      '<div class="two-col">'+
+        '<div style="background:var(--gold-pale);border-radius:10px;padding:14px;text-align:center">'+
+          '<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--warm-gray);margin-bottom:4px">Current Streak</div>'+
+          '<div style="font-size:28px;font-weight:700;color:var(--f-hot)">'+(appData.flame?appData.flame.streak:0)+'</div>'+
+          '<div style="font-size:11px;color:var(--warm-gray)">days</div>'+
+        '</div>'+
+        '<div style="background:var(--accent-pale);border-radius:10px;padding:14px;text-align:center">'+
+          '<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--warm-gray);margin-bottom:4px">Total Days</div>'+
+          '<div style="font-size:28px;font-weight:700;color:var(--accent)">'+(appData.flame?appData.flame.totalDays:0)+'</div>'+
+          '<div style="font-size:11px;color:var(--warm-gray)">completed</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="btn-row" style="margin-top:14px">'+
+        '<button class="btn-save" style="background:linear-gradient(135deg,var(--f-hot),var(--gold))" onclick="teacherStartFlame()">🔥 Start Pride Flame</button>'+
+      '</div>'+
+    '</div>'+
+    /* Danger Zone */
+    '<div class="card" style="border-left:3px solid #dc2626">'+
+      '<div class="card-title"><div class="dot" style="background:#dc2626"></div>⚠️ Reset</div>'+
+      '<div style="font-size:13px;color:var(--mid-brown);margin-bottom:14px;line-height:1.6">'+
+        'Reset all of '+s.name+'\'s scores and progress. This cannot be undone.'+
+      '</div>'+
+      '<div class="btn-row">'+
+        '<button class="btn-sm btn-sm-danger" style="padding:10px 20px;font-size:13px" onclick="resetAllScores()">Reset All Scores</button>'+
+        '<button class="btn-sm btn-sm-danger" style="padding:10px 20px;font-size:13px" onclick="resetFlameOnly()">Reset Flame Only</button>'+
+      '</div>'+
+    '</div>'+
+    '</div>';
 }
 
 function tCourse(){
@@ -2145,6 +2179,50 @@ window.publishAILesson=function(){
   setTimeout(function(){showPanel('t-course');},800);
 };
 window.printAILesson=function(){window.print();};
+
+window.teacherStartFlame=function(){
+  if(!confirm('Start the Pride Flame for '+appData.student.name+'? This resets the streak to 0 and marks today as Day 1.')) return;
+  var today=todayStr();
+  appData.flame=Object.assign({},JSON.parse(JSON.stringify(defaultFlame)),{
+    lastCompleted:Date.now(),
+    streak:0,
+    totalDays:0,
+    points:0,
+    badges:0,
+    weeklyDone:[],
+    stepsCompleted:[false,false,false,false],
+    _streakReset:false,
+    flyingLeave:{used:false,weekStart:null}
+  });
+  saveData();
+  showPanel('t-dash');
+  showToast('🔥 Pride Flame started! Day 1 begins today.','t');
+};
+
+window.resetFlameOnly=function(){
+  if(!confirm('Reset the Pride Flame? Streak, points and badges will be cleared.')) return;
+  appData.flame=JSON.parse(JSON.stringify(defaultFlame));
+  saveData();
+  showPanel('t-dash');
+  showToast('Flame reset.','t');
+};
+
+window.resetAllScores=function(){
+  if(!confirm('Reset ALL scores for '+appData.student.name+'? This will clear flame, stats, vocabulary and feedback. This cannot be undone.')) return;
+  appData.student.lessons=0;
+  appData.student.vocab=0;
+  appData.student.streak=0;
+  appData.student.fluency=null;
+  appData.skills={Speaking:0,Vocabulary:0,Grammar:0,Pronunciation:0,Writing:0};
+  appData.feedback=[];
+  appData.vocabulary=[];
+  appData.flame=JSON.parse(JSON.stringify(defaultFlame));
+  appData.challenges=[];
+  saveData();
+  showPanel('t-dash');
+  showToast('All scores reset.','t');
+};
+
 
 /* ══ ENHANCED VOCAB EDITOR (Teacher) ══ */
 function tVocab(){
