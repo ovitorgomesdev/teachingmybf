@@ -17,7 +17,6 @@
 body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(--dark-brown);min-height:100vh;}
 .screen{display:none;min-height:100vh;} .screen.active{display:flex;}
 
-/* LOGIN */
 #login-screen{background:var(--dark-brown);align-items:center;justify-content:center;}
 .login-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:48px;width:420px;max-width:calc(100vw - 32px);}
 .login-logo{font-size:34px;font-weight:300;color:white;margin-bottom:4px;letter-spacing:-1px;}
@@ -36,7 +35,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .btn-t{background:var(--teacher);} .btn-t:hover{background:var(--teacher-light);}
 .login-hint{font-size:11px;color:rgba(255,255,255,.2);text-align:center;margin-top:14px;}
 
-/* APP */
 #app-screen{flex-direction:row;}
 .sidebar{width:252px;min-width:252px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
 .sb-student{background:var(--dark-brown);} .sb-teacher{background:var(--teacher);}
@@ -54,7 +52,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .sb-student .nav-item.active{background:var(--accent);}
 .sb-teacher .nav-item.active{background:rgba(255,255,255,.2);}
 .sb-user{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
-.sb-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white;flex-shrink:0;}
+.sb-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:white;flex-shrink:0;overflow:hidden;}
 .av-s{background:linear-gradient(135deg,var(--accent),var(--gold));}
 .av-t{background:linear-gradient(135deg,var(--teacher),var(--teacher-light));}
 .sb-uname{font-size:13px;font-weight:600;color:white;}
@@ -62,7 +60,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .sb-logout{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:15px;margin-left:auto;}
 .sb-logout:hover{color:rgba(255,255,255,.7);}
 
-/* MAIN */
 .main-content{flex:1;overflow-y:auto;height:100vh;}
 .panel{display:none;padding:40px 48px;max-width:980px;}
 .panel.active{display:block;}
@@ -71,7 +68,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .pg-t em{color:var(--teacher);}
 .psub{font-size:13px;color:var(--warm-gray);margin-bottom:28px;}
 
-/* CARDS */
 .card{background:white;border-radius:14px;padding:22px;border:1px solid var(--stone);margin-bottom:18px;}
 .card-title{font-size:13px;font-weight:600;color:var(--dark-brown);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
@@ -84,7 +80,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .stat-bar-wrap{margin-top:7px;background:var(--stone);border-radius:4px;height:3px;overflow:hidden;}
 .stat-bar{height:100%;border-radius:4px;}
 
-/* FORM */
 .fg{margin-bottom:13px;}
 .flab{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:6px;font-weight:600;}
 .fi{width:100%;border:1px solid var(--stone);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--dark-brown);outline:none;background:var(--warm-white);font-family:inherit;}
@@ -95,7 +90,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .btn-save{padding:9px 20px;background:var(--teacher);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
 .btn-save:hover{background:var(--teacher-light);}
 .btn-cancel{padding:9px 15px;background:white;color:var(--mid-brown);border:1px solid var(--stone);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;}
-.btn-sm{padding:6px 13px;font-size:12px;font-weight:600;border:none;border-radius:7px;cursor:pointer;font-family:inherit;}
+.btn-sm{padding:6px 12px;font-size:12px;font-weight:600;border:none;border-radius:7px;cursor:pointer;font-family:inherit;}
 .btn-sm-t{background:var(--teacher-pale);color:var(--teacher);}
 .btn-sm-t:hover{background:var(--teacher);color:white;}
 .btn-sm-danger{background:#FEE;color:#C0392B;}
@@ -105,56 +100,41 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--cream);color:var(-
 .btn-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
 input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 
-/* LESSON / MODULE ROWS */
 .mod-block{border:1px solid var(--stone);border-radius:13px;margin-bottom:14px;overflow:hidden;background:white;}
-.mod-header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:white;}
+.mod-header{display:flex;align-items:center;gap:12px;padding:16px 18px;background:white;flex-wrap:wrap;}
 .mod-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0;}
 .mod-info{flex:1;}
-.mod-title{font-size:14px;font-weight:600;color:var(--dark-brown);}
-.mod-sub{font-size:11px;color:var(--warm-gray);margin-top:1px;}
+.mod-title-text{font-size:14px;font-weight:600;color:var(--dark-brown);}
+.mod-sub-text{font-size:11px;color:var(--warm-gray);margin-top:1px;}
 .mod-lessons{border-top:1px solid var(--stone);}
-.les-row{display:flex;align-items:center;gap:11px;padding:11px 18px;border-bottom:1px solid var(--stone);}
+.les-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--stone);flex-wrap:wrap;}
 .les-row:last-child{border-bottom:none;}
 .les-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.les-info{flex:1;}
+.les-info{flex:1;min-width:120px;}
 .les-title{font-size:13px;font-weight:500;color:var(--dark-brown);}
 .les-meta{font-size:11px;color:var(--warm-gray);margin-top:1px;}
 .pill{font-size:10px;letter-spacing:.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap;}
 .pill-locked{background:var(--stone);color:var(--warm-gray);}
 .pill-open{background:var(--accent-pale);color:var(--accent);}
 
-/* AVATAR UPLOAD */
-.avatar-upload-wrap { position:relative; display:inline-block; cursor:pointer; }
-.avatar-upload-wrap input[type=file] { display:none; }
-.avatar-img { width:100%; height:100%; border-radius:50%; object-fit:cover; }
-.avatar-overlay { position:absolute; inset:0; border-radius:50%; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; font-size:12px; color:white; }
-.avatar-upload-wrap:hover .avatar-overlay { display:flex; }
-
-/* TOGGLE */
 .tog{width:38px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;flex-shrink:0;}
 .tog-on{background:var(--success);} .tog-off{background:var(--sand);}
 .tok{position:absolute;top:3px;width:14px;height:14px;border-radius:50%;background:white;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
 .tog-on .tok{left:21px;} .tog-off .tok{left:3px;}
 
-/* EDIT FORM */
-.edit-form{background:var(--teacher-pale);border:1px solid rgba(74,48,128,.15);border-radius:11px;padding:18px;margin-top:10px;}
+.edit-form{background:var(--teacher-pale);border:1px solid rgba(74,48,128,.15);border-radius:11px;padding:18px;margin-top:0;}
 .edit-form .fi,.edit-form .fta{background:white;}
 
-/* CONTENT SECTIONS IN LESSON */
 .content-block{border:1px solid var(--stone);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--warm-white);}
-.content-block-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.content-type-badge{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:600;padding:2px 8px;border-radius:20px;}
-.badge-text{background:var(--teal-pale);color:var(--teal);}
-.badge-dialogue{background:var(--accent-pale);color:var(--accent);}
-.badge-exercise{background:var(--gold-pale);color:var(--gold);}
-.badge-vocab{background:var(--success-pale);color:var(--success);}
+.ct-badge{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.ct-text{background:var(--teal-pale);color:var(--teal);}
+.ct-dialogue{background:var(--accent-pale);color:var(--accent);}
+.ct-exercise{background:var(--gold-pale);color:var(--gold);}
 
-/* VOCAB TAGS */
 .vtag{display:inline-flex;align-items:center;gap:5px;background:var(--teacher-pale);color:var(--teacher);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:500;margin:3px;}
 .vtag-x{cursor:pointer;font-size:12px;color:var(--teacher-light);}
 .vtag-x:hover{color:var(--teacher);}
 
-/* FEEDBACK */
 .fb-card{background:white;border:1px solid var(--stone);border-radius:11px;padding:16px;margin-bottom:10px;}
 .fb-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
 .fb-title-t{font-size:13px;font-weight:600;color:var(--dark-brown);}
@@ -164,20 +144,17 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .del-btn{background:none;border:none;cursor:pointer;color:var(--warm-gray);font-size:13px;padding:2px 4px;}
 .del-btn:hover{color:var(--accent);}
 
-/* SKILL BARS */
 .skill-row{margin-bottom:11px;}
 .skill-h{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;color:var(--mid-brown);}
 .skill-track{background:var(--stone);border-radius:6px;height:6px;overflow:hidden;}
 .skill-fill{height:100%;border-radius:6px;}
 
-/* WELCOME / EMPTY */
 .welcome-card{background:linear-gradient(135deg,var(--dark-brown),#3a2e1a);border-radius:14px;padding:28px 32px;margin-bottom:20px;display:flex;align-items:center;gap:22px;}
-.wc-icon{font-size:42px;flex-shrink:0;}
 .wc-title{font-size:22px;font-weight:300;color:white;margin-bottom:4px;font-family:Georgia,serif;}
 .wc-title em{font-style:italic;color:var(--accent-light);}
 .wc-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6;}
 .wc-teacher{margin-top:11px;display:flex;align-items:center;gap:8px;}
-.wct-av{width:26px;height:26px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600;}
+.wct-av{width:26px;height:26px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:600;overflow:hidden;flex-shrink:0;}
 .wct-name{font-size:12px;font-weight:600;color:white;}
 .wct-role{font-size:10px;color:rgba(255,255,255,.4);}
 .empty-state{text-align:center;padding:44px 32px;background:white;border-radius:14px;border:1px solid var(--stone);margin-bottom:16px;}
@@ -185,25 +162,29 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 .et{font-size:22px;font-weight:300;color:var(--dark-brown);margin-bottom:5px;font-family:Georgia,serif;}
 .eb{font-size:13px;color:var(--warm-gray);line-height:1.6;max-width:340px;margin:0 auto;}
 
-/* TIP */
 .tip-box{background:var(--teal-pale);border:1px solid rgba(45,107,107,.2);border-radius:11px;padding:14px 18px;display:flex;gap:11px;margin-bottom:16px;}
 .tip-icon{font-size:17px;flex-shrink:0;}
 .tip-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:2px;}
 .tip-text{font-size:12px;color:var(--mid-brown);line-height:1.5;}
 
-/* TOAST */
-.toast{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:9px;font-size:13px;box-shadow:0 6px 22px rgba(0,0,0,.2);z-index:9999;display:none;color:white;}
-.toast.show{display:block;}
-.toast-d{background:var(--dark-brown);} .toast-t{background:var(--teacher);}
+/* avatar upload */
+.av-upload{position:relative;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;}
+.av-upload input{display:none;}
+.av-upload-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;font-size:11px;color:white;}
+.av-upload:hover .av-upload-overlay{display:flex;}
 
-/* ── BOTTOM NAV (mobile) ── */
+/* bottom nav */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--dark-brown);border-top:1px solid rgba(255,255,255,.1);z-index:1000;padding:0 4px 4px;}
 .bottom-nav.teacher-nav{background:var(--teacher);}
 .bottom-nav-inner{display:flex;justify-content:space-around;}
-.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 6px;cursor:pointer;color:rgba(255,255,255,.45);flex:1;border:none;background:none;font-family:inherit;transition:color .15s;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;cursor:pointer;color:rgba(255,255,255,.45);flex:1;border:none;background:none;font-family:inherit;transition:color .15s;}
 .bn-item.active{color:white;}
 .bn-icon{font-size:18px;line-height:1;}
 .bn-label{font-size:9px;letter-spacing:.5px;text-transform:uppercase;font-weight:500;}
+
+.toast{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:9px;font-size:13px;box-shadow:0 6px 22px rgba(0,0,0,.2);z-index:9999;display:none;color:white;}
+.toast.show{display:block;}
+.toast-d{background:var(--dark-brown);} .toast-t{background:var(--teacher);}
 
 @media(max-width:800px){
   .sidebar{display:none;}
@@ -217,7 +198,6 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="screen active" id="login-screen">
   <div class="login-card">
     <div class="login-logo">flu<span>ency</span></div>
@@ -243,7 +223,6 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
   </div>
 </div>
 
-<!-- APP -->
 <div class="screen" id="app-screen">
   <aside class="sidebar sb-student" id="sidebar">
     <div class="sb-logo">
@@ -262,7 +241,7 @@ input[type=range]{width:100%;accent-color:var(--teacher);margin:5px 0;}
   </aside>
   <main class="main-content" id="main"></main>
   <nav class="bottom-nav" id="bottom-nav">
-    <div class="bottom-nav-inner" id="bottom-nav-inner"></div>
+    <div class="bottom-nav-inner" id="bn-inner"></div>
   </nav>
 </div>
 
@@ -285,7 +264,7 @@ var appData = {
       lessons:[
         { title:'Lesson 1 — Starting the Journey', meta:'Module 1 · 50 min', unlocked:false,
           contents:[
-            { type:'text', label:'Introduction', body:'Welcome to your first English lesson! Today we\'ll focus on introducing yourself naturally.' },
+            { type:'text', label:'Introduction', body:'Welcome to your first English lesson! Today we focus on introducing yourself naturally.' },
             { type:'dialogue', label:'Sample Dialogue', body:'A: Hi, I\'m Sarah. Nice to meet you!\nB: Nice to meet you too! I\'m Lucas. Where are you from?' },
             { type:'exercise', label:'Exercise', body:'Practice introducing yourself. Say your name, where you\'re from, and one thing you like.' }
           ]
@@ -300,9 +279,7 @@ var appData = {
       ]
     },
     { id:3, title:'Speaking Your Mind', sub:'Opinions · Debates · Storytelling',
-      lessons:[
-        { title:'Lesson 1 — Expressing Opinions', meta:'Module 3 · 50 min', unlocked:false, contents:[] }
-      ]
+      lessons:[{ title:'Lesson 1 — Expressing Opinions', meta:'Module 3 · 50 min', unlocked:false, contents:[] }]
     },
     { id:4, title:'Real-Life Conversations', sub:'Shopping, relationships, culture', lessons:[] },
     { id:5, title:'Professional English', sub:'Emails, presentations, social media', lessons:[] },
@@ -310,38 +287,43 @@ var appData = {
   ]
 };
 
-/* ── STORAGE ── */
+/* STORAGE */
 function saveData() {
-  try { window.storage.set('fluency-v2', JSON.stringify(appData)); } catch(e) {}
+  try { window.storage.set('fluency-v3', JSON.stringify(appData)); } catch(e) {}
 }
 function loadData(cb) {
   try {
-    window.storage.get('fluency-v2').then(function(r) {
+    window.storage.get('fluency-v3').then(function(r) {
       if (r && r.value) { try { appData = JSON.parse(r.value); } catch(e) {} }
       cb();
     }).catch(function() { cb(); });
   } catch(e) { cb(); }
 }
 
-/* ── LOGIN ── */
+/* LOGIN */
 function switchTab(t) {
-  document.getElementById('tab-s').classList.toggle('active', t==='student');
-  document.getElementById('tab-t').classList.toggle('active', t==='teacher');
-  document.getElementById('form-student').style.display = t==='student' ? 'block' : 'none';
-  document.getElementById('form-teacher').style.display = t==='teacher' ? 'block' : 'none';
+  document.getElementById('tab-s').classList.toggle('active', t === 'student');
+  document.getElementById('tab-t').classList.toggle('active', t === 'teacher');
+  document.getElementById('form-student').style.display = t === 'student' ? 'block' : 'none';
+  document.getElementById('form-teacher').style.display = t === 'teacher' ? 'block' : 'none';
 }
+
 function doLogin(m) {
-  var pass = m==='student' ? document.getElementById('s-pass').value : document.getElementById('t-pass').value;
-  if (pass !== (m==='student' ? 'english2026' : 'teacher2026')) { showToast('Incorrect password.'); return; }
+  var pass = m === 'student' ? document.getElementById('s-pass').value : document.getElementById('t-pass').value;
+  if (pass !== (m === 'student' ? 'english2026' : 'teacher2026')) { showToast('Incorrect password.'); return; }
   loadData(function() {
     mode = m;
-    if (m==='student') { var n=document.getElementById('s-name').value.trim()||'Lucas'; appData.student.name=n; }
+    if (m === 'student') {
+      var n = document.getElementById('s-name').value.trim() || 'Lucas';
+      appData.student.name = n;
+    }
     document.getElementById('login-screen').classList.remove('active');
     document.getElementById('app-screen').classList.add('active');
     buildSidebar();
-    showPanel(m==='student' ? 's-dash' : 't-dash');
+    showPanel(m === 'student' ? 's-dash' : 't-dash');
   });
 }
+
 function doLogout() {
   document.getElementById('app-screen').classList.remove('active');
   document.getElementById('login-screen').classList.add('active');
@@ -349,51 +331,48 @@ function doLogout() {
   mode = '';
 }
 
-/* ── SIDEBAR ── */
+/* SIDEBAR + BOTTOM NAV */
 function buildSidebar() {
-  var sb=document.getElementById('sidebar');
-  sb.className='sidebar '+(mode==='teacher'?'sb-teacher':'sb-student');
-  var b=document.getElementById('sb-badge');
-  b.className='sb-badge '+(mode==='teacher'?'sb-badge-t':'sb-badge-s');
-  b.textContent=mode==='teacher'?'✎ Teacher':'Starting Soon';
-  var av=document.getElementById('sb-av');
-  av.className='sb-avatar '+(mode==='teacher'?'av-t':'av-s');
-  av.textContent=mode==='teacher'?'V':appData.student.name.charAt(0).toUpperCase();
-  document.getElementById('sb-name').textContent=mode==='teacher'?'Vítor':appData.student.name;
-  document.getElementById('sb-sub').textContent=mode==='teacher'?'Teacher Dashboard':'Ready to begin';
+  var sb = document.getElementById('sidebar');
+  sb.className = 'sidebar ' + (mode === 'teacher' ? 'sb-teacher' : 'sb-student');
+  var b = document.getElementById('sb-badge');
+  b.className = 'sb-badge ' + (mode === 'teacher' ? 'sb-badge-t' : 'sb-badge-s');
+  b.textContent = mode === 'teacher' ? '✎ Teacher' : 'Starting Soon';
+  document.getElementById('sb-name').textContent = mode === 'teacher' ? 'Vítor' : appData.student.name;
+  document.getElementById('sb-sub').textContent = mode === 'teacher' ? 'Teacher Dashboard' : 'Ready to begin';
   renderSidebarAvatar();
 
-  var bn=document.getElementById('bottom-nav');
-  bn.className='bottom-nav '+(mode==='teacher'?'teacher-nav':'');
+  var bn = document.getElementById('bottom-nav');
+  bn.className = 'bottom-nav' + (mode === 'teacher' ? ' teacher-nav' : '');
 
-  if (mode==='student') {
-    document.getElementById('sb-nav').innerHTML=
-      '<div class="nav-sec">Main</div>'+
-      '<div class="nav-item" id="nav-s-dash" onclick="showPanel(\'s-dash\')">⊞ Dashboard</div>'+
-      '<div class="nav-item" id="nav-s-course" onclick="showPanel(\'s-course\')">◫ My Course</div>'+
-      '<div class="nav-item" id="nav-s-progress" onclick="showPanel(\'s-progress\')">◎ Progress</div>'+
-      '<div class="nav-sec">Resources</div>'+
+  if (mode === 'student') {
+    document.getElementById('sb-nav').innerHTML =
+      '<div class="nav-sec">Main</div>' +
+      '<div class="nav-item" id="nav-s-dash" onclick="showPanel(\'s-dash\')">⊞ Dashboard</div>' +
+      '<div class="nav-item" id="nav-s-course" onclick="showPanel(\'s-course\')">◫ My Course</div>' +
+      '<div class="nav-item" id="nav-s-progress" onclick="showPanel(\'s-progress\')">◎ Progress</div>' +
+      '<div class="nav-sec">Resources</div>' +
       '<div class="nav-item" id="nav-s-vocab" onclick="showPanel(\'s-vocab\')">◈ Vocabulary</div>';
-    document.getElementById('bottom-nav-inner').innerHTML=
-      '<button class="bn-item" id="bn-s-dash" onclick="showPanel(\'s-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Home</span></button>'+
-      '<button class="bn-item" id="bn-s-course" onclick="showPanel(\'s-course\')"><span class="bn-icon">◫</span><span class="bn-label">Course</span></button>'+
-      '<button class="bn-item" id="bn-s-progress" onclick="showPanel(\'s-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Progress</span></button>'+
-      '<button class="bn-item" id="bn-s-vocab" onclick="showPanel(\'s-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>'+
+    document.getElementById('bn-inner').innerHTML =
+      '<button class="bn-item" id="bn-s-dash" onclick="showPanel(\'s-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Home</span></button>' +
+      '<button class="bn-item" id="bn-s-course" onclick="showPanel(\'s-course\')"><span class="bn-icon">◫</span><span class="bn-label">Course</span></button>' +
+      '<button class="bn-item" id="bn-s-progress" onclick="showPanel(\'s-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Progress</span></button>' +
+      '<button class="bn-item" id="bn-s-vocab" onclick="showPanel(\'s-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>' +
       '<button class="bn-item" onclick="doLogout()"><span class="bn-icon">↩</span><span class="bn-label">Logout</span></button>';
   } else {
-    document.getElementById('sb-nav').innerHTML=
-      '<div class="nav-sec">Dashboard</div>'+
-      '<div class="nav-item" id="nav-t-dash" onclick="showPanel(\'t-dash\')">⊞ Overview</div>'+
-      '<div class="nav-sec">Edit</div>'+
-      '<div class="nav-item" id="nav-t-course" onclick="showPanel(\'t-course\')">◫ Modules & Lessons</div>'+
-      '<div class="nav-item" id="nav-t-progress" onclick="showPanel(\'t-progress\')">◎ Progress & Scores</div>'+
-      '<div class="nav-item" id="nav-t-feedback" onclick="showPanel(\'t-feedback\')">✎ Feedback & Notes</div>'+
+    document.getElementById('sb-nav').innerHTML =
+      '<div class="nav-sec">Dashboard</div>' +
+      '<div class="nav-item" id="nav-t-dash" onclick="showPanel(\'t-dash\')">⊞ Overview</div>' +
+      '<div class="nav-sec">Edit</div>' +
+      '<div class="nav-item" id="nav-t-course" onclick="showPanel(\'t-course\')">◫ Modules & Lessons</div>' +
+      '<div class="nav-item" id="nav-t-progress" onclick="showPanel(\'t-progress\')">◎ Progress & Scores</div>' +
+      '<div class="nav-item" id="nav-t-feedback" onclick="showPanel(\'t-feedback\')">✎ Feedback & Notes</div>' +
       '<div class="nav-item" id="nav-t-vocab" onclick="showPanel(\'t-vocab\')">◈ Vocabulary</div>';
-    document.getElementById('bottom-nav-inner').innerHTML=
-      '<button class="bn-item" id="bn-t-dash" onclick="showPanel(\'t-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Overview</span></button>'+
-      '<button class="bn-item" id="bn-t-course" onclick="showPanel(\'t-course\')"><span class="bn-icon">◫</span><span class="bn-label">Lessons</span></button>'+
-      '<button class="bn-item" id="bn-t-progress" onclick="showPanel(\'t-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Scores</span></button>'+
-      '<button class="bn-item" id="bn-t-feedback" onclick="showPanel(\'t-feedback\')"><span class="bn-icon">✎</span><span class="bn-label">Feedback</span></button>'+
+    document.getElementById('bn-inner').innerHTML =
+      '<button class="bn-item" id="bn-t-dash" onclick="showPanel(\'t-dash\')"><span class="bn-icon">⊞</span><span class="bn-label">Overview</span></button>' +
+      '<button class="bn-item" id="bn-t-course" onclick="showPanel(\'t-course\')"><span class="bn-icon">◫</span><span class="bn-label">Lessons</span></button>' +
+      '<button class="bn-item" id="bn-t-progress" onclick="showPanel(\'t-progress\')"><span class="bn-icon">◎</span><span class="bn-label">Scores</span></button>' +
+      '<button class="bn-item" id="bn-t-feedback" onclick="showPanel(\'t-feedback\')"><span class="bn-icon">✎</span><span class="bn-label">Feedback</span></button>' +
       '<button class="bn-item" id="bn-t-vocab" onclick="showPanel(\'t-vocab\')"><span class="bn-icon">◈</span><span class="bn-label">Vocab</span></button>';
   }
 }
@@ -402,14 +381,12 @@ function renderSidebarAvatar() {
   var av = document.getElementById('sb-av');
   var photo = mode === 'teacher' ? appData.teacherPhoto : appData.student.photo;
   var letter = mode === 'teacher' ? 'V' : appData.student.name.charAt(0).toUpperCase();
-  var cls = mode === 'teacher' ? 'av-t' : 'av-s';
-  av.className = 'sb-avatar ' + cls;
-  av.innerHTML = '<label class="avatar-upload-wrap" title="Change photo" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;">' +
-    '<input type="file" accept="image/*" onchange="uploadPhoto(this,\'' + (mode==='teacher'?'teacher':'student') + '\')">' +
-    (photo
-      ? '<img class="avatar-img" src="' + photo + '">'
-      : '<span style="font-size:13px;font-weight:600;color:white">' + letter + '</span>') +
-    '<div class="avatar-overlay">📷</div>' +
+  av.className = 'sb-avatar ' + (mode === 'teacher' ? 'av-t' : 'av-s');
+  av.innerHTML =
+    '<label class="av-upload" style="width:34px;height:34px;" title="Change photo">' +
+    '<input type="file" accept="image/*" onchange="uploadPhoto(this,\'' + (mode === 'teacher' ? 'teacher' : 'student') + '\')">' +
+    (photo ? '<img src="' + photo + '" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">' : '<span style="font-size:13px;font-weight:600;color:white">' + letter + '</span>') +
+    '<div class="av-upload-overlay">📷</div>' +
     '</label>';
 }
 
@@ -427,428 +404,474 @@ function uploadPhoto(input, who) {
   reader.readAsDataURL(file);
 }
 
+/* ROUTER */
 function showPanel(name) {
-  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-  document.querySelectorAll('.bn-item').forEach(function(n){n.classList.remove('active');});
-  var el=document.getElementById('nav-'+name);
-  if(el) el.classList.add('active');
-  var bn=document.getElementById('bn-'+name);
-  if(bn) bn.classList.add('active');
-  var mc=document.getElementById('main');
-  if(name==='s-dash') mc.innerHTML=sDash();
-  else if(name==='s-course') mc.innerHTML=sCourse();
-  else if(name==='s-progress') mc.innerHTML=sProgress();
-  else if(name==='s-vocab') mc.innerHTML=sVocab();
-  else if(name==='t-dash') mc.innerHTML=tDash();
-  else if(name==='t-course') { editingMod=-1; editingLes=-1; mc.innerHTML=tCourse(); }
-  else if(name==='t-progress') mc.innerHTML=tProgress();
-  else if(name==='t-feedback') mc.innerHTML=tFeedback();
-  else if(name==='t-vocab') mc.innerHTML=tVocab();
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.querySelectorAll('.bn-item').forEach(function(n) { n.classList.remove('active'); });
+  var el = document.getElementById('nav-' + name);
+  if (el) el.classList.add('active');
+  var bn = document.getElementById('bn-' + name);
+  if (bn) bn.classList.add('active');
+  var mc = document.getElementById('main');
+  if (name === 's-dash') mc.innerHTML = sDash();
+  else if (name === 's-course') mc.innerHTML = sCourse();
+  else if (name === 's-progress') mc.innerHTML = sProgress();
+  else if (name === 's-vocab') mc.innerHTML = sVocab();
+  else if (name === 't-dash') mc.innerHTML = tDash();
+  else if (name === 't-course') { editingMod = -1; editingLes = -1; editingContent = -1; mc.innerHTML = tCourse(); }
+  else if (name === 't-progress') mc.innerHTML = tProgress();
+  else if (name === 't-feedback') mc.innerHTML = tFeedback();
+  else if (name === 't-vocab') mc.innerHTML = tVocab();
 }
 
-/* ══════════════════════════
-   STUDENT PANELS
-══════════════════════════ */
+/* ── STUDENT ── */
 function sDash() {
-  var s=appData.student;
-  var teacherAvHtml = appData.teacherPhoto
-    ? '<img src="' + appData.teacherPhoto + '" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">'
-    : '<span style="font-size:12px;color:white;font-weight:600;">V</span>';
-  var noteHtml=appData.note ?
-    '<div style="background:linear-gradient(135deg,#F5E0D6,#F5EDD3);border:1px solid rgba(184,92,56,.15);border-radius:13px;padding:22px 26px;margin-bottom:18px;">'+
-    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">'+
-    '<div style="width:30px;height:30px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;overflow:hidden;">'+teacherAvHtml+'</div>'+
-    '<div><div style="font-size:13px;font-weight:600;color:var(--dark-brown);">Vítor</div>'+
-    '<div style="font-size:11px;color:var(--warm-gray);">Your Teacher · '+(appData.noteDate||'Recent')+'</div></div></div>'+
-    '<div style="font-size:16px;font-weight:300;font-style:italic;color:var(--mid-brown);line-height:1.6;font-family:Georgia,serif;">"'+appData.note+'"</div></div>'
-    :
-    '<div class="welcome-card"><div class="wc-icon">'+
-    (appData.student.photo ? '<img src="'+appData.student.photo+'" style="width:52px;height:52px;border-radius:50%;object-fit:cover;">' : '👋')+
-    '</div><div>'+
-    '<div class="wc-title">Hello, <em>'+s.name+'</em>!</div>'+
-    '<div class="wc-body">I\'m looking forward to our first lesson together. This is your personal learning space.</div>'+
-    '<div class="wc-teacher"><div class="wct-av" style="overflow:hidden;display:flex;align-items:center;justify-content:center;">'+teacherAvHtml+'</div>'+
-    '<div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div>'+
-    '</div></div>';
-  var lastFb='';
-  if(appData.feedback.length>0){
-    var f=appData.feedback[appData.feedback.length-1];
-    lastFb='<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Latest Feedback</div>'+
-      '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div><div class="fb-date">'+f.date+'</div></div>'+
-      '<div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div></div>';
+  var s = appData.student;
+  var tAvHtml = appData.teacherPhoto
+    ? '<img src="' + appData.teacherPhoto + '" style="width:26px;height:26px;border-radius:50%;object-fit:cover;">'
+    : '<span style="font-size:11px;color:white;font-weight:600;">V</span>';
+  var noteHtml;
+  if (appData.note) {
+    noteHtml =
+      '<div style="background:linear-gradient(135deg,#F5E0D6,#F5EDD3);border:1px solid rgba(184,92,56,.15);border-radius:13px;padding:22px 26px;margin-bottom:18px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">' +
+      '<div style="width:30px;height:30px;border-radius:50%;background:var(--teacher);display:flex;align-items:center;justify-content:center;overflow:hidden;">' + tAvHtml + '</div>' +
+      '<div><div style="font-size:13px;font-weight:600;color:var(--dark-brown);">Vítor</div>' +
+      '<div style="font-size:11px;color:var(--warm-gray);">Your Teacher · ' + (appData.noteDate || 'Recent') + '</div></div></div>' +
+      '<div style="font-size:16px;font-weight:300;font-style:italic;color:var(--mid-brown);line-height:1.6;font-family:Georgia,serif;">"' + appData.note + '"</div></div>';
+  } else {
+    var studentAvHtml = s.photo
+      ? '<img src="' + s.photo + '" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.2);">'
+      : '<div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;color:white;font-weight:300;">' + s.name.charAt(0).toUpperCase() + '</div>';
+    noteHtml =
+      '<div class="welcome-card">' +
+      '<div style="flex-shrink:0;">' + studentAvHtml + '</div>' +
+      '<div><div class="wc-title">Hello, <em>' + s.name + '</em>!</div>' +
+      '<div class="wc-body">I\'m looking forward to our first lesson together. This is your personal learning space.</div>' +
+      '<div class="wc-teacher"><div class="wct-av">' + tAvHtml + '</div>' +
+      '<div><div class="wct-name">Vítor</div><div class="wct-role">Your English Teacher</div></div></div>' +
+      '</div></div>';
   }
-  return '<div class="panel active">'+
-    '<div class="pg">Welcome,<br><em>'+s.name+'.</em></div>'+
-    '<div class="psub">'+(s.streak>0?'You\'re on a '+s.streak+'-day streak! 🔥':'Your English journey starts here!')+'</div>'+
-    noteHtml+
-    '<div class="stat-grid">'+
-    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">'+s.lessons+'</div><div class="stat-det">of 48 total</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.round(s.lessons/48*100)+'%;background:var(--accent)"></div></div></div>'+
-    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">'+appData.vocabulary.length+'</div><div class="stat-det">words learned</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.min(appData.vocabulary.length,100)+'%;background:var(--gold)"></div></div></div>'+
-    '<div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val">'+s.streak+'</div><div class="stat-det">'+(s.streak>0?'days in a row':'first class soon!')+'</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+Math.min(s.streak/30*100,100)+'%;background:var(--teal)"></div></div></div>'+
-    '<div class="stat-card"><div class="stat-label">Fluency Score</div><div class="stat-val">'+(s.fluency!=null&&s.fluency!==''?s.fluency:'—')+'</div><div class="stat-det">'+(s.fluency!=null&&s.fluency!==''?'out of 100':'assessed in class')+'</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:'+(s.fluency||0)+'%;background:var(--success)"></div></div></div>'+
-    '</div>'+lastFb+'</div>';
+  var lastFb = '';
+  if (appData.feedback.length > 0) {
+    var f = appData.feedback[appData.feedback.length - 1];
+    lastFb = '<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Latest Feedback</div>' +
+      '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">' + f.title + '</div><div class="fb-date">' + f.date + '</div></div>' +
+      '<div class="fb-text">' + f.text + '</div><div class="fb-stars">' + '★'.repeat(f.stars) + '☆'.repeat(5 - f.stars) + '</div></div></div>';
+  }
+  return '<div class="panel active">' +
+    '<div class="pg">Welcome,<br><em>' + s.name + '.</em></div>' +
+    '<div class="psub">' + (s.streak > 0 ? 'You\'re on a ' + s.streak + '-day streak! 🔥' : 'Your English journey starts here!') + '</div>' +
+    noteHtml +
+    '<div class="stat-grid">' +
+    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">' + s.lessons + '</div><div class="stat-det">of 48 total</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:' + Math.round(s.lessons / 48 * 100) + '%;background:var(--accent)"></div></div></div>' +
+    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">' + appData.vocabulary.length + '</div><div class="stat-det">words learned</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:' + Math.min(appData.vocabulary.length, 100) + '%;background:var(--gold)"></div></div></div>' +
+    '<div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val">' + s.streak + '</div><div class="stat-det">' + (s.streak > 0 ? 'days in a row' : 'first class soon!') + '</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:' + Math.min(s.streak / 30 * 100, 100) + '%;background:var(--teal)"></div></div></div>' +
+    '<div class="stat-card"><div class="stat-label">Fluency Score</div><div class="stat-val">' + (s.fluency != null ? s.fluency : '—') + '</div><div class="stat-det">' + (s.fluency != null ? 'out of 100' : 'assessed in class') + '</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:' + (s.fluency || 0) + '%;background:var(--success)"></div></div></div>' +
+    '</div>' + lastFb + '</div>';
 }
 
 function sCourse() {
-  var rows=appData.modules.map(function(m){
-    var anyOpen=m.lessons.some(function(l){return l.unlocked;});
-    var lesRows=m.lessons.map(function(l){
-      return '<div class="les-row" style="'+(l.unlocked?'':'opacity:.5')+'">'+
-        '<div class="les-dot" style="background:'+(l.unlocked?'var(--accent)':'var(--sand)')+'"></div>'+
-        '<div class="les-info"><div class="les-title">'+l.title+'</div><div class="les-meta">'+l.meta+'</div></div>'+
-        '<span class="pill '+(l.unlocked?'pill-open':'pill-locked')+'">'+(l.unlocked?'Available':'Locked')+'</span>'+
-        (l.unlocked&&l.contents&&l.contents.length?'<button class="btn-sm btn-sm-t" onclick="openStudentLesson('+appData.modules.indexOf(m)+','+m.lessons.indexOf(l)+')">Open →</button>':'')+'</div>';
+  var rows = appData.modules.map(function(m) {
+    var anyOpen = m.lessons.some(function(l) { return l.unlocked; });
+    var lesRows = m.lessons.map(function(l) {
+      var mi = appData.modules.indexOf(m);
+      var li = m.lessons.indexOf(l);
+      return '<div class="les-row" style="' + (l.unlocked ? '' : 'opacity:.5') + '">' +
+        '<div class="les-dot" style="background:' + (l.unlocked ? 'var(--accent)' : 'var(--sand)') + '"></div>' +
+        '<div class="les-info"><div class="les-title">' + l.title + '</div><div class="les-meta">' + l.meta + '</div></div>' +
+        '<span class="pill ' + (l.unlocked ? 'pill-open' : 'pill-locked') + '">' + (l.unlocked ? 'Available' : 'Locked') + '</span>' +
+        (l.unlocked && l.contents && l.contents.length ? '<button class="btn-sm btn-sm-t" onclick="openStudentLesson(' + mi + ',' + li + ')">Open →</button>' : '') +
+        '</div>';
     }).join('');
-    return '<div class="mod-block" style="'+(anyOpen?'':'opacity:.55')+'">'+
-      '<div class="mod-header">'+
-      '<div class="mod-num" style="background:'+(anyOpen?'var(--accent-pale)':'var(--stone)')+';color:'+(anyOpen?'var(--accent)':'var(--warm-gray)')+'">'+m.id+'</div>'+
-      '<div class="mod-info"><div class="mod-title">'+m.title+'</div><div class="mod-sub">'+m.sub+'</div></div>'+
-      '<span class="pill '+(anyOpen?'pill-open':'pill-locked')+'">'+(anyOpen?'In Progress':'🔒 Locked')+'</span>'+
-      '</div>'+
-      (m.lessons.length?'<div class="mod-lessons">'+lesRows+'</div>':'')+'</div>';
-  }).join('');
-  return '<div class="panel active"><div class="pg">My <em>Course</em></div><div class="psub">Lessons unlock as you progress with Vítor.</div>'+rows+'</div>';
-}
-
-function openStudentLesson(mi,li) {
-  var l=appData.modules[mi].lessons[li];
-  var mc=document.getElementById('main');
-  var contents=l.contents||[];
-  var blocks=contents.map(function(c){
-    var typeClass=c.type==='dialogue'?'badge-dialogue':c.type==='exercise'?'badge-exercise':c.type==='vocab'?'badge-vocab':'badge-text';
-    return '<div class="content-block">'+
-      '<div class="content-block-header">'+
-      '<span class="content-type-badge '+typeClass+'">'+c.type.charAt(0).toUpperCase()+c.type.slice(1)+'</span>'+
-      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown)">'+c.label+'</span>'+
-      '</div>'+
-      '<div style="font-size:13px;color:var(--mid-brown);line-height:1.7;white-space:pre-line">'+c.body+'</div>'+
+    return '<div class="mod-block" style="' + (anyOpen ? '' : 'opacity:.55') + '">' +
+      '<div class="mod-header">' +
+      '<div class="mod-num" style="background:' + (anyOpen ? 'var(--accent-pale)' : 'var(--stone)') + ';color:' + (anyOpen ? 'var(--accent)' : 'var(--warm-gray)') + '">' + m.id + '</div>' +
+      '<div class="mod-info"><div class="mod-title-text">' + m.title + '</div><div class="mod-sub-text">' + m.sub + '</div></div>' +
+      '<span class="pill ' + (anyOpen ? 'pill-open' : 'pill-locked') + '">' + (anyOpen ? 'In Progress' : '🔒 Locked') + '</span>' +
+      '</div>' +
+      (m.lessons.length ? '<div class="mod-lessons">' + lesRows + '</div>' : '') +
       '</div>';
   }).join('');
-  mc.innerHTML='<div class="panel active">'+
-    '<div style="margin-bottom:18px"><button class="btn-sm btn-sm-t" onclick="showPanel(\'s-course\')">← Back to Course</button></div>'+
-    '<div class="pg"><em>'+l.title+'</em></div>'+
-    '<div class="psub">'+l.meta+'</div>'+
-    (blocks||'<div class="empty-state"><div class="ei">📖</div><div class="et">Content coming soon</div><div class="eb">Your teacher will add the lesson content here.</div></div>')+
+  return '<div class="panel active"><div class="pg">My <em>Course</em></div><div class="psub">Lessons unlock as you progress with Vítor.</div>' + rows + '</div>';
+}
+
+function openStudentLesson(mi, li) {
+  var l = appData.modules[mi].lessons[li];
+  var contents = l.contents || [];
+  var blocks = contents.map(function(c) {
+    var cls = c.type === 'dialogue' ? 'ct-dialogue' : c.type === 'exercise' ? 'ct-exercise' : 'ct-text';
+    return '<div class="content-block">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+      '<span class="ct-badge ' + cls + '">' + c.type + '</span>' +
+      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown)">' + c.label + '</span>' +
+      '</div>' +
+      '<div style="font-size:13px;color:var(--mid-brown);line-height:1.7;white-space:pre-line">' + c.body + '</div>' +
+      '</div>';
+  }).join('');
+  document.getElementById('main').innerHTML =
+    '<div class="panel active">' +
+    '<div style="margin-bottom:16px"><button class="btn-sm btn-sm-t" onclick="showPanel(\'s-course\')">← Back to Course</button></div>' +
+    '<div class="pg"><em>' + l.title + '</em></div>' +
+    '<div class="psub">' + l.meta + '</div>' +
+    (blocks || '<div class="empty-state"><div class="ei">📖</div><div class="et">Content coming soon</div><div class="eb">Your teacher will add lesson content here.</div></div>') +
     '</div>';
 }
 
 function sProgress() {
-  var sk=appData.skills;
-  var hasSkills=Object.values(sk).some(function(v){return v>0;});
-  var skillsHtml=hasSkills ?
-    '<div class="card"><div class="card-title"><div class="dot"></div>Skill Progress</div>'+
-    Object.keys(sk).map(function(k){
-      return '<div class="skill-row"><div class="skill-h"><span>'+k+'</span><span>'+sk[k]+'%</span></div>'+
-        '<div class="skill-track"><div class="skill-fill" style="width:'+sk[k]+'%;background:var(--accent)"></div></div></div>';
-    }).join('')+'</div>'
+  var sk = appData.skills;
+  var hasSk = Object.values(sk).some(function(v) { return v > 0; });
+  var skillHtml = hasSk
+    ? '<div class="card"><div class="card-title"><div class="dot"></div>Skill Progress</div>' +
+      Object.keys(sk).map(function(k) {
+        return '<div class="skill-row"><div class="skill-h"><span>' + k + '</span><span>' + sk[k] + '%</span></div>' +
+          '<div class="skill-track"><div class="skill-fill" style="width:' + sk[k] + '%;background:var(--accent)"></div></div></div>';
+      }).join('') + '</div>'
     : '<div class="empty-state"><div class="ei">🌱</div><div class="et">Your story starts soon</div><div class="eb">Vítor will update your skills after each lesson.</div></div>';
-  var fbHtml='';
-  if(appData.feedback.length>0){
-    fbHtml='<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Teacher Feedback</div>'+
-      appData.feedback.map(function(f){
-        return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div><div class="fb-date">'+f.date+'</div></div>'+
-          '<div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div>';
-      }).join('')+'</div>';
+  var fbHtml = '';
+  if (appData.feedback.length > 0) {
+    fbHtml = '<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Teacher Feedback</div>' +
+      appData.feedback.map(function(f) {
+        return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">' + f.title + '</div><div class="fb-date">' + f.date + '</div></div>' +
+          '<div class="fb-text">' + f.text + '</div><div class="fb-stars">' + '★'.repeat(f.stars) + '☆'.repeat(5 - f.stars) + '</div></div>';
+      }).join('') + '</div>';
   }
-  return '<div class="panel active"><div class="pg">Your <em>Progress</em></div><div class="psub">Updated by Vítor after each lesson.</div>'+skillsHtml+fbHtml+'</div>';
+  return '<div class="panel active"><div class="pg">Your <em>Progress</em></div><div class="psub">Updated by Vítor after each lesson.</div>' + skillHtml + fbHtml + '</div>';
 }
 
 function sVocab() {
-  var v=appData.vocabulary;
-  return '<div class="panel active"><div class="pg">Vocabulary <em>Bank</em></div><div class="psub">'+(v.length>0?v.length+' words added by Vítor.':'Words from your lessons will appear here.')+'</div>'+
-    (v.length===0?'<div class="empty-state"><div class="ei">📚</div><div class="et">No words yet</div><div class="eb">Vítor will add vocabulary after each lesson.</div></div>'
-    :'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'+
-    v.map(function(w){
-      return '<div style="background:white;border:1px solid var(--stone);border-radius:11px;padding:14px">'+
-        '<div style="font-size:14px;font-weight:600;color:var(--dark-brown);margin-bottom:3px">'+w.word+'</div>'+
-        '<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:500">'+w.type+'</div>'+
-        '<div style="font-size:12px;color:var(--warm-gray);margin-top:5px;line-height:1.5">'+w.def+'</div>'+
-        (w.ex?'<div style="font-size:12px;color:var(--mid-brown);font-style:italic;margin-top:3px">"'+w.ex+'"</div>':'')+
-        '</div>';
-    }).join('')+'</div>')+'</div>';
-}
-
-/* ══════════════════════════
-   TEACHER PANELS
-══════════════════════════ */
-function tDash() {
-  var s=appData.student;
-  var uRows=appData.modules.map(function(m){
-    var u=m.lessons.filter(function(l){return l.unlocked;}).length;
-    return u>0?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stone);font-size:13px;color:var(--mid-brown)"><span>'+m.title+'</span><span style="font-weight:600;color:var(--dark-brown)">'+u+'/'+m.lessons.length+'</span></div>':'';
-  }).join('');
-  return '<div class="panel active"><div class="pg pg-t">Teacher <em>Overview</em></div><div class="psub">Hello Vítor — here\'s a snapshot of '+s.name+'\'s platform.</div>'+
-    '<div class="tip-box"><div class="tip-icon">✎</div><div><div class="tip-title">Quick tip</div><div class="tip-text">Use the sidebar to edit modules, lessons, scores, feedback and vocabulary for '+s.name+'.</div></div></div>'+
-    '<div class="stat-grid">'+
-    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">'+s.lessons+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">'+appData.vocabulary.length+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val">'+s.streak+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">Fluency</div><div class="stat-val">'+(s.fluency!=null&&s.fluency!==''?s.fluency:'—')+'</div></div>'+
-    '</div>'+
-    '<div class="two-col">'+
-    '<div class="card"><div class="card-title"><div class="dot"></div>Unlocked Lessons</div>'+(uRows||'<div style="font-size:13px;color:var(--warm-gray)">None yet.</div>')+'</div>'+
-    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Recent Feedback</div>'+
-    (appData.feedback.length>0?appData.feedback.slice(-2).map(function(f){return '<div style="padding:7px 0;border-bottom:1px solid var(--stone)"><div style="font-size:13px;font-weight:500;color:var(--dark-brown)">'+f.title+'</div><div style="font-size:11px;color:var(--warm-gray)">'+f.date+'</div></div>';}).join(''):'<div style="font-size:13px;color:var(--warm-gray)">None added yet.</div>')+
-    '</div></div></div>';
-}
-
-/* ── TEACHER: MODULES & LESSONS ── */
-function tCourse() {
-  var modBlocks=appData.modules.map(function(m,mi){
-    var isEditing=editingMod===mi&&editingLes===-1;
-    var lesList=m.lessons.map(function(l,li){
-      var isEditingL=editingMod===mi&&editingLes===li;
-      var lesContent=isEditingL?tLessonEditor(mi,li):'';
-      return '<div class="les-row">'+
-        '<div class="les-dot" style="background:'+(l.unlocked?'var(--accent)':'var(--sand)')+'"></div>'+
-        '<div class="les-info"><div class="les-title">'+l.title+'</div><div class="les-meta">'+l.meta+'</div></div>'+
-        '<span class="pill '+(l.unlocked?'pill-open':'pill-locked')+'">'+(l.unlocked?'Unlocked':'Locked')+'</span>'+
-        '<button class="tog '+(l.unlocked?'tog-on':'tog-off')+'" onclick="toggleLesson('+mi+','+li+')" title="Toggle"><div class="tok"></div></button>'+
-        '<button class="btn-sm btn-sm-t" onclick="openLessonEditor('+mi+','+li+')">✎ Edit</button>'+
-        '<button class="btn-sm btn-sm-danger" onclick="deleteLesson('+mi+','+li+')">✕</button>'+
-        '</div>'+
-        lesContent;
-    }).join('');
-    var modEditForm=isEditing?
-      '<div class="edit-form" style="margin:0 14px 14px">'+
-      '<div class="fg"><label class="flab">Module Title</label><input class="fi" id="med-title" value="'+m.title+'"></div>'+
-      '<div class="fg"><label class="flab">Subtitle</label><input class="fi" id="med-sub" value="'+m.sub+'"></div>'+
-      '<div class="btn-row"><button class="btn-save" onclick="saveModuleEdit('+mi+')">Save</button><button class="btn-cancel" onclick="cancelEdit()">Cancel</button></div>'+
-      '</div>':'';
-    return '<div class="mod-block">'+
-      '<div class="mod-header">'+
-      '<div class="mod-num" style="background:var(--teacher-pale);color:var(--teacher)">'+m.id+'</div>'+
-      '<div class="mod-info"><div class="mod-title">'+m.title+'</div><div class="mod-sub">'+m.sub+'</div></div>'+
-      '<button class="btn-sm btn-sm-t" onclick="openModuleEditor('+mi+')">✎ Edit Module</button>'+
-      '</div>'+modEditForm+
-      (m.lessons.length?'<div class="mod-lessons">'+lesList+'</div>':'')+
-      '<div style="padding:12px 18px;border-top:'+(m.lessons.length?'1px solid var(--stone)':'none')+'">'+
-      '<button class="btn-sm btn-sm-success" onclick="addLesson('+mi+')">+ Add Lesson</button>'+
-      '</div>'+
-      '</div>';
-  }).join('');
-  return '<div class="panel active"><div class="pg pg-t">Modules & <em>Lessons</em></div>'+
-    '<div class="psub">Edit module names, lesson titles, content and unlock status.</div>'+
-    modBlocks+'</div>';
-}
-
-function tLessonEditor(mi,li) {
-  var l=appData.modules[mi].lessons[li];
-  var contents=l.contents||[];
-  var contentBlocks=contents.map(function(c,ci){
-    return '<div class="content-block">'+
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
-      '<span class="content-type-badge '+(c.type==='dialogue'?'badge-dialogue':c.type==='exercise'?'badge-exercise':c.type==='vocab'?'badge-vocab':'badge-text')+'">'+c.type+'</span>'+
-      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown);flex:1">'+c.label+'</span>'+
-      '<button class="btn-sm btn-sm-t" onclick="openContentEditor('+mi+','+li+','+ci+')">✎</button>'+
-      '<button class="btn-sm btn-sm-danger" onclick="deleteContent('+mi+','+li+','+ci+')">✕</button>'+
-      '</div>'+
-      (editingContent===ci?
-        '<div class="edit-form">'+
-        '<div class="fg"><label class="flab">Label</label><input class="fi" id="ced-label" value="'+c.label+'"></div>'+
-        '<div class="fg"><label class="flab">Type</label><select class="fsel" id="ced-type">'+
-        ['text','dialogue','exercise','vocab'].map(function(t){return '<option'+(t===c.type?' selected':'')+'>'+t+'</option>';}).join('')+
-        '</select></div>'+
-        '<div class="fg"><label class="flab">Content</label><textarea class="fta" id="ced-body" style="min-height:100px">'+c.body+'</textarea></div>'+
-        '<div class="btn-row"><button class="btn-save" onclick="saveContentEdit('+mi+','+li+','+ci+')">Save</button><button class="btn-cancel" onclick="cancelContentEdit('+mi+','+li+')">Cancel</button></div>'+
-        '</div>'
-        :'')+'</div>';
-  }).join('');
-  return '<div class="edit-form" style="margin-left:28px;margin-top:0;margin-bottom:0;border-radius:0 0 11px 11px">'+
-    '<div class="fg"><label class="flab">Lesson Title</label><input class="fi" id="led-title-'+mi+'-'+li+'" value="'+l.title+'"></div>'+
-    '<div class="fg"><label class="flab">Description / Meta</label><input class="fi" id="led-meta-'+mi+'-'+li+'" value="'+l.meta+'"></div>'+
-    '<div class="btn-row" style="margin-bottom:14px"><button class="btn-save" onclick="saveLessonMeta('+mi+','+li+')">Save Title</button></div>'+
-    '<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--teacher);margin-bottom:8px">Lesson Content Blocks</div>'+
-    contentBlocks+
-    '<div class="btn-row" style="margin-top:10px">'+
-    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'text\')">+ Text</button>'+
-    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'dialogue\')">+ Dialogue</button>'+
-    '<button class="btn-sm btn-sm-success" onclick="addContent('+mi+','+li+',\'exercise\')">+ Exercise</button>'+
-    '</div>'+
-    '<div class="btn-row" style="margin-top:8px"><button class="btn-cancel" onclick="cancelEdit()">Close Editor</button></div>'+
+  var v = appData.vocabulary;
+  return '<div class="panel active"><div class="pg">Vocabulary <em>Bank</em></div><div class="psub">' + (v.length > 0 ? v.length + ' words added by Vítor.' : 'Words from your lessons will appear here.') + '</div>' +
+    (v.length === 0
+      ? '<div class="empty-state"><div class="ei">📚</div><div class="et">No words yet</div><div class="eb">Vítor will add vocabulary after each lesson.</div></div>'
+      : '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">' +
+        v.map(function(w) {
+          return '<div style="background:white;border:1px solid var(--stone);border-radius:11px;padding:14px">' +
+            '<div style="font-size:14px;font-weight:600;color:var(--dark-brown);margin-bottom:3px">' + w.word + '</div>' +
+            '<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:500">' + w.type + '</div>' +
+            '<div style="font-size:12px;color:var(--warm-gray);margin-top:5px;line-height:1.5">' + w.def + '</div>' +
+            (w.ex ? '<div style="font-size:12px;color:var(--mid-brown);font-style:italic;margin-top:3px">"' + w.ex + '"</div>' : '') +
+            '</div>';
+        }).join('') + '</div>') +
     '</div>';
 }
 
-/* ── EDIT ACTIONS ── */
-function openModuleEditor(mi) { editingMod=mi; editingLes=-1; editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
-function openLessonEditor(mi,li) { editingMod=mi; editingLes=li; editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
-function openContentEditor(mi,li,ci) { editingContent=ci; document.getElementById('main').innerHTML=tCourse(); }
-function cancelEdit() { editingMod=-1; editingLes=-1; editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
-function cancelContentEdit(mi,li) { editingContent=-1; document.getElementById('main').innerHTML=tCourse(); }
+/* ── TEACHER ── */
+function tDash() {
+  var s = appData.student;
+  var uRows = appData.modules.map(function(m) {
+    var u = m.lessons.filter(function(l) { return l.unlocked; }).length;
+    return u > 0 ? '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--stone);font-size:13px;color:var(--mid-brown)"><span>' + m.title + '</span><span style="font-weight:600;color:var(--dark-brown)">' + u + '/' + m.lessons.length + '</span></div>' : '';
+  }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Teacher <em>Overview</em></div><div class="psub">Hello Vítor — snapshot of ' + s.name + '\'s platform.</div>' +
+    '<div class="tip-box"><div class="tip-icon">✎</div><div><div class="tip-title">Quick tip</div><div class="tip-text">Use the sidebar to edit modules, lessons, scores, feedback and vocabulary.</div></div></div>' +
+    '<div class="stat-grid">' +
+    '<div class="stat-card"><div class="stat-label">Lessons Done</div><div class="stat-val">' + s.lessons + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Vocabulary</div><div class="stat-val">' + appData.vocabulary.length + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val">' + s.streak + '</div></div>' +
+    '<div class="stat-card"><div class="stat-label">Fluency</div><div class="stat-val">' + (s.fluency != null ? s.fluency : '—') + '</div></div>' +
+    '</div>' +
+    '<div class="two-col">' +
+    '<div class="card"><div class="card-title"><div class="dot"></div>Unlocked Lessons</div>' + (uRows || '<div style="font-size:13px;color:var(--warm-gray)">None yet.</div>') + '</div>' +
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Recent Feedback</div>' +
+    (appData.feedback.length > 0
+      ? appData.feedback.slice(-2).map(function(f) { return '<div style="padding:7px 0;border-bottom:1px solid var(--stone)"><div style="font-size:13px;font-weight:500;color:var(--dark-brown)">' + f.title + '</div><div style="font-size:11px;color:var(--warm-gray)">' + f.date + '</div></div>'; }).join('')
+      : '<div style="font-size:13px;color:var(--warm-gray)">None added yet.</div>') +
+    '</div></div></div>';
+}
+
+function tCourse() {
+  var modBlocks = appData.modules.map(function(m, mi) {
+    var isEditingMod = editingMod === mi && editingLes === -1;
+    var modEditForm = isEditingMod
+      ? '<div class="edit-form" style="margin:0 14px 14px">' +
+        '<div class="fg"><label class="flab">Module Title</label><input class="fi" id="med-title" value="' + m.title + '"></div>' +
+        '<div class="fg"><label class="flab">Subtitle</label><input class="fi" id="med-sub" value="' + m.sub + '"></div>' +
+        '<div class="btn-row"><button class="btn-save" onclick="saveModuleEdit(' + mi + ')">Save</button><button class="btn-cancel" onclick="cancelEdit()">Cancel</button></div>' +
+        '</div>'
+      : '';
+
+    var lesList = m.lessons.map(function(l, li) {
+      var isEditingL = editingMod === mi && editingLes === li;
+      var lesEditor = isEditingL ? tLessonEditor(mi, li) : '';
+      return '<div class="les-row">' +
+        '<div class="les-dot" style="background:' + (l.unlocked ? 'var(--accent)' : 'var(--sand)') + '"></div>' +
+        '<div class="les-info"><div class="les-title">' + l.title + '</div><div class="les-meta">' + l.meta + '</div></div>' +
+        '<span class="pill ' + (l.unlocked ? 'pill-open' : 'pill-locked') + '">' + (l.unlocked ? 'Unlocked' : 'Locked') + '</span>' +
+        '<button class="tog ' + (l.unlocked ? 'tog-on' : 'tog-off') + '" onclick="toggleLesson(' + mi + ',' + li + ')" title="Toggle"><div class="tok"></div></button>' +
+        '<button class="btn-sm btn-sm-t" onclick="openLessonEditor(' + mi + ',' + li + ')">✎</button>' +
+        '<button class="btn-sm btn-sm-danger" onclick="deleteLesson(' + mi + ',' + li + ')">✕</button>' +
+        '</div>' + lesEditor;
+    }).join('');
+
+    return '<div class="mod-block">' +
+      '<div class="mod-header">' +
+      '<div class="mod-num" style="background:var(--teacher-pale);color:var(--teacher)">' + m.id + '</div>' +
+      '<div class="mod-info"><div class="mod-title-text">' + m.title + '</div><div class="mod-sub-text">' + m.sub + '</div></div>' +
+      '<button class="btn-sm btn-sm-t" onclick="openModuleEditor(' + mi + ')">✎ Edit</button>' +
+      '<button class="btn-sm btn-sm-danger" onclick="deleteModule(' + mi + ')">✕ Delete</button>' +
+      '</div>' +
+      modEditForm +
+      (m.lessons.length ? '<div class="mod-lessons">' + lesList + '</div>' : '') +
+      '<div style="padding:12px 18px;border-top:' + (m.lessons.length ? '1px solid var(--stone)' : 'none') + '">' +
+      '<button class="btn-sm btn-sm-success" onclick="addLesson(' + mi + ')">+ Add Lesson</button>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+
+  return '<div class="panel active"><div class="pg pg-t">Modules & <em>Lessons</em></div>' +
+    '<div class="psub">Edit names, content and unlock status.</div>' +
+    modBlocks +
+    '<div style="margin-top:4px"><button class="btn-save" onclick="addModule()">+ Add Module</button></div>' +
+    '</div>';
+}
+
+function tLessonEditor(mi, li) {
+  var l = appData.modules[mi].lessons[li];
+  var contents = l.contents || [];
+  var contentBlocks = contents.map(function(c, ci) {
+    var cls = c.type === 'dialogue' ? 'ct-dialogue' : c.type === 'exercise' ? 'ct-exercise' : 'ct-text';
+    var isEditC = editingContent === ci;
+    return '<div class="content-block">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:' + (isEditC ? '12' : '0') + 'px">' +
+      '<span class="ct-badge ' + cls + '">' + c.type + '</span>' +
+      '<span style="font-size:13px;font-weight:600;color:var(--dark-brown);flex:1">' + c.label + '</span>' +
+      '<button class="btn-sm btn-sm-t" onclick="openContentEditor(' + mi + ',' + li + ',' + ci + ')">✎</button>' +
+      '<button class="btn-sm btn-sm-danger" onclick="deleteContent(' + mi + ',' + li + ',' + ci + ')">✕</button>' +
+      '</div>' +
+      (isEditC
+        ? '<div class="fg"><label class="flab">Label</label><input class="fi" id="ced-label" value="' + c.label + '"></div>' +
+          '<div class="fg"><label class="flab">Type</label><select class="fsel" id="ced-type">' +
+          ['text','dialogue','exercise'].map(function(t) { return '<option' + (t === c.type ? ' selected' : '') + '>' + t + '</option>'; }).join('') +
+          '</select></div>' +
+          '<div class="fg"><label class="flab">Content</label><textarea class="fta" id="ced-body" style="min-height:90px">' + c.body + '</textarea></div>' +
+          '<div class="btn-row"><button class="btn-save" onclick="saveContentEdit(' + mi + ',' + li + ',' + ci + ')">Save</button><button class="btn-cancel" onclick="cancelContentEdit()">Cancel</button></div>'
+        : '<div style="font-size:12px;color:var(--mid-brown);white-space:pre-line;line-height:1.5;margin-top:4px">' + (c.body ? c.body.substring(0, 80) + (c.body.length > 80 ? '…' : '') : '<em style="color:var(--warm-gray)">No content yet</em>') + '</div>') +
+      '</div>';
+  }).join('');
+
+  return '<div class="edit-form" style="margin-left:20px;border-radius:0 0 11px 11px">' +
+    '<div class="fg"><label class="flab">Lesson Title</label><input class="fi" id="led-title-' + mi + '-' + li + '" value="' + l.title + '"></div>' +
+    '<div class="fg"><label class="flab">Description</label><input class="fi" id="led-meta-' + mi + '-' + li + '" value="' + l.meta + '"></div>' +
+    '<div class="btn-row" style="margin-bottom:16px"><button class="btn-save" onclick="saveLessonMeta(' + mi + ',' + li + ')">Save Title</button></div>' +
+    '<div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--teacher);margin-bottom:8px">Content Blocks</div>' +
+    contentBlocks +
+    '<div class="btn-row" style="margin-top:10px">' +
+    '<button class="btn-sm btn-sm-success" onclick="addContent(' + mi + ',' + li + ',\'text\')">+ Text</button>' +
+    '<button class="btn-sm btn-sm-success" onclick="addContent(' + mi + ',' + li + ',\'dialogue\')">+ Dialogue</button>' +
+    '<button class="btn-sm btn-sm-success" onclick="addContent(' + mi + ',' + li + ',\'exercise\')">+ Exercise</button>' +
+    '</div>' +
+    '<div class="btn-row" style="margin-top:8px"><button class="btn-cancel" onclick="cancelEdit()">Close Editor</button></div>' +
+    '</div>';
+}
+
+/* MODULE / LESSON ACTIONS */
+function openModuleEditor(mi) { editingMod = mi; editingLes = -1; editingContent = -1; document.getElementById('main').innerHTML = tCourse(); }
+function openLessonEditor(mi, li) { editingMod = mi; editingLes = li; editingContent = -1; document.getElementById('main').innerHTML = tCourse(); }
+function openContentEditor(mi, li, ci) { editingContent = ci; document.getElementById('main').innerHTML = tCourse(); }
+function cancelEdit() { editingMod = -1; editingLes = -1; editingContent = -1; document.getElementById('main').innerHTML = tCourse(); }
+function cancelContentEdit() { editingContent = -1; document.getElementById('main').innerHTML = tCourse(); }
 
 function saveModuleEdit(mi) {
-  var t=document.getElementById('med-title');
-  var s=document.getElementById('med-sub');
-  if(!t||!s) return;
-  appData.modules[mi].title=t.value.trim()||appData.modules[mi].title;
-  appData.modules[mi].sub=s.value.trim()||appData.modules[mi].sub;
-  saveData(); editingMod=-1; editingLes=-1;
-  document.getElementById('main').innerHTML=tCourse();
-  showToast('Module updated!',true);
+  var t = document.getElementById('med-title');
+  var s = document.getElementById('med-sub');
+  if (t) appData.modules[mi].title = t.value.trim() || appData.modules[mi].title;
+  if (s) appData.modules[mi].sub = s.value.trim() || appData.modules[mi].sub;
+  saveData(); editingMod = -1; editingLes = -1;
+  document.getElementById('main').innerHTML = tCourse();
+  showToast('Module updated!', true);
 }
 
-function saveLessonMeta(mi,li) {
-  var t=document.getElementById('led-title-'+mi+'-'+li);
-  var m=document.getElementById('led-meta-'+mi+'-'+li);
-  if(!t) return;
-  appData.modules[mi].lessons[li].title=t.value.trim()||appData.modules[mi].lessons[li].title;
-  if(m) appData.modules[mi].lessons[li].meta=m.value.trim()||appData.modules[mi].lessons[li].meta;
+function saveLessonMeta(mi, li) {
+  var t = document.getElementById('led-title-' + mi + '-' + li);
+  var m = document.getElementById('led-meta-' + mi + '-' + li);
+  if (t) appData.modules[mi].lessons[li].title = t.value.trim() || appData.modules[mi].lessons[li].title;
+  if (m) appData.modules[mi].lessons[li].meta = m.value.trim() || appData.modules[mi].lessons[li].meta;
   saveData();
-  showToast('Lesson title saved!',true);
+  showToast('Lesson saved!', true);
 }
 
-function saveContentEdit(mi,li,ci) {
-  var lab=document.getElementById('ced-label');
-  var typ=document.getElementById('ced-type');
-  var bod=document.getElementById('ced-body');
-  if(!lab||!bod) return;
-  appData.modules[mi].lessons[li].contents[ci].label=lab.value.trim();
-  appData.modules[mi].lessons[li].contents[ci].type=typ?typ.value:'text';
-  appData.modules[mi].lessons[li].contents[ci].body=bod.value.trim();
-  saveData(); editingContent=-1;
-  document.getElementById('main').innerHTML=tCourse();
-  showToast('Content block saved!',true);
+function saveContentEdit(mi, li, ci) {
+  var lab = document.getElementById('ced-label');
+  var typ = document.getElementById('ced-type');
+  var bod = document.getElementById('ced-body');
+  if (lab) appData.modules[mi].lessons[li].contents[ci].label = lab.value.trim();
+  if (typ) appData.modules[mi].lessons[li].contents[ci].type = typ.value;
+  if (bod) appData.modules[mi].lessons[li].contents[ci].body = bod.value.trim();
+  saveData(); editingContent = -1;
+  document.getElementById('main').innerHTML = tCourse();
+  showToast('Content saved!', true);
 }
 
-function addContent(mi,li,type) {
-  if(!appData.modules[mi].lessons[li].contents) appData.modules[mi].lessons[li].contents=[];
-  appData.modules[mi].lessons[li].contents.push({ type:type, label:'New '+type.charAt(0).toUpperCase()+type.slice(1), body:'' });
-  var ci=appData.modules[mi].lessons[li].contents.length-1;
-  editingContent=ci;
-  saveData();
-  document.getElementById('main').innerHTML=tCourse();
+function addContent(mi, li, type) {
+  if (!appData.modules[mi].lessons[li].contents) appData.modules[mi].lessons[li].contents = [];
+  appData.modules[mi].lessons[li].contents.push({ type: type, label: 'New ' + type.charAt(0).toUpperCase() + type.slice(1), body: '' });
+  editingContent = appData.modules[mi].lessons[li].contents.length - 1;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
 }
 
-function deleteContent(mi,li,ci) {
-  appData.modules[mi].lessons[li].contents.splice(ci,1);
-  editingContent=-1;
-  saveData();
-  document.getElementById('main').innerHTML=tCourse();
-  showToast('Block deleted.',true);
+function deleteContent(mi, li, ci) {
+  appData.modules[mi].lessons[li].contents.splice(ci, 1);
+  editingContent = -1;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
+  showToast('Block deleted.', true);
 }
 
 function addLesson(mi) {
-  appData.modules[mi].lessons.push({ title:'New Lesson', meta:'Module '+(mi+1)+' · 50 min', unlocked:false, contents:[] });
-  var li=appData.modules[mi].lessons.length-1;
-  editingMod=mi; editingLes=li; editingContent=-1;
-  saveData();
-  document.getElementById('main').innerHTML=tCourse();
-  showToast('Lesson added!',true);
+  appData.modules[mi].lessons.push({ title: 'New Lesson', meta: 'Module ' + (mi + 1) + ' · 50 min', unlocked: false, contents: [] });
+  editingMod = mi; editingLes = appData.modules[mi].lessons.length - 1; editingContent = -1;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
+  showToast('Lesson added!', true);
 }
 
-function deleteLesson(mi,li) {
-  appData.modules[mi].lessons.splice(li,1);
-  editingMod=-1; editingLes=-1; editingContent=-1;
-  saveData();
-  document.getElementById('main').innerHTML=tCourse();
-  showToast('Lesson deleted.',true);
+function deleteLesson(mi, li) {
+  if (!confirm('Delete "' + appData.modules[mi].lessons[li].title + '"?')) return;
+  appData.modules[mi].lessons.splice(li, 1);
+  editingMod = -1; editingLes = -1; editingContent = -1;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
+  showToast('Lesson deleted.', true);
 }
 
-function toggleLesson(mi,li) {
-  appData.modules[mi].lessons[li].unlocked=!appData.modules[mi].lessons[li].unlocked;
-  saveData();
-  document.getElementById('main').innerHTML=tCourse();
-  showToast('Lesson '+(appData.modules[mi].lessons[li].unlocked?'unlocked!':'locked.'),true);
+function addModule() {
+  appData.modules.push({ id: appData.modules.length + 1, title: 'New Module', sub: 'Add a subtitle', lessons: [] });
+  editingMod = appData.modules.length - 1; editingLes = -1; editingContent = -1;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
+  showToast('Module added!', true);
 }
 
-/* ── TEACHER: PROGRESS ── */
+function deleteModule(mi) {
+  if (!confirm('Delete "' + appData.modules[mi].title + '" and all its lessons?')) return;
+  appData.modules.splice(mi, 1);
+  appData.modules.forEach(function(m, i) { m.id = i + 1; });
+  editingMod = -1; editingLes = -1; editingContent = -1;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
+  showToast('Module deleted.', true);
+}
+
+function toggleLesson(mi, li) {
+  appData.modules[mi].lessons[li].unlocked = !appData.modules[mi].lessons[li].unlocked;
+  saveData(); document.getElementById('main').innerHTML = tCourse();
+  showToast(appData.modules[mi].lessons[li].unlocked ? 'Lesson unlocked!' : 'Lesson locked.', true);
+}
+
+/* TEACHER: PROGRESS */
 function tProgress() {
-  var s=appData.student; var sk=appData.skills;
-  return '<div class="panel active"><div class="pg pg-t">Progress & <em>Scores</em></div><div class="psub">Update '+appData.student.name+'\'s stats after each session.</div>'+
-    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>General Stats</div>'+
-    '<div class="two-col">'+
-    '<div class="fg"><label class="flab">Lessons Completed</label><input class="fi" type="number" min="0" max="48" id="f-les" value="'+s.lessons+'"></div>'+
-    '<div class="fg"><label class="flab">Study Streak (days)</label><input class="fi" type="number" min="0" id="f-str" value="'+s.streak+'"></div>'+
-    '</div>'+
-    '<div class="fg"><label class="flab">Fluency Score (0–100) — <span id="fl-v">'+(s.fluency!=null?s.fluency:0)+'</span></label>'+
-    '<input type="range" min="0" max="100" id="f-flu" value="'+(s.fluency||0)+'" oninput="document.getElementById(\'fl-v\').textContent=this.value"></div>'+
-    '<div class="btn-row"><button class="btn-save" onclick="saveStats()">Save Stats</button></div></div>'+
-    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--gold)"></div>Skill Levels</div>'+
-    Object.keys(sk).map(function(k){
-      return '<div class="fg"><label class="flab">'+k+' — <span id="sk-'+k+'-v">'+sk[k]+'%</span></label>'+
-        '<input type="range" min="0" max="100" id="sk-'+k+'" value="'+sk[k]+'" oninput="document.getElementById(\'sk-'+k+'-v\').textContent=this.value+\'%\'"></div>';
-    }).join('')+
+  var s = appData.student;
+  var sk = appData.skills;
+  return '<div class="panel active"><div class="pg pg-t">Progress & <em>Scores</em></div><div class="psub">Update ' + s.name + '\'s stats after each session.</div>' +
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>General Stats</div>' +
+    '<div class="two-col">' +
+    '<div class="fg"><label class="flab">Lessons Completed</label><input class="fi" type="number" min="0" max="48" id="f-les" value="' + s.lessons + '"></div>' +
+    '<div class="fg"><label class="flab">Study Streak (days)</label><input class="fi" type="number" min="0" id="f-str" value="' + s.streak + '"></div>' +
+    '</div>' +
+    '<div class="fg"><label class="flab">Fluency Score — <span id="fl-v">' + (s.fluency != null ? s.fluency : 0) + '</span>/100</label>' +
+    '<input type="range" min="0" max="100" id="f-flu" value="' + (s.fluency || 0) + '" oninput="document.getElementById(\'fl-v\').textContent=this.value"></div>' +
+    '<div class="btn-row"><button class="btn-save" onclick="saveStats()">Save Stats</button></div></div>' +
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--gold)"></div>Skill Levels</div>' +
+    Object.keys(sk).map(function(k) {
+      return '<div class="fg"><label class="flab">' + k + ' — <span id="sk-' + k + '-v">' + sk[k] + '%</span></label>' +
+        '<input type="range" min="0" max="100" id="sk-' + k + '" value="' + sk[k] + '" oninput="document.getElementById(\'sk-' + k + '-v\').textContent=this.value+\'%\'"></div>';
+    }).join('') +
     '<div class="btn-row"><button class="btn-save" onclick="saveSkills()">Save Skills</button></div></div></div>';
 }
 
 function saveStats() {
-  var les=document.getElementById('f-les'); var str=document.getElementById('f-str'); var flu=document.getElementById('f-flu');
-  if(!les||!str||!flu) return;
-  appData.student.lessons=parseInt(les.value)||0;
-  appData.student.streak=parseInt(str.value)||0;
-  appData.student.fluency=parseInt(flu.value);
-  saveData(); showToast('Stats saved!',true);
+  var les = document.getElementById('f-les');
+  var str = document.getElementById('f-str');
+  var flu = document.getElementById('f-flu');
+  if (les) appData.student.lessons = parseInt(les.value) || 0;
+  if (str) appData.student.streak = parseInt(str.value) || 0;
+  if (flu) appData.student.fluency = parseInt(flu.value);
+  saveData(); showToast('Stats saved!', true);
 }
+
 function saveSkills() {
-  Object.keys(appData.skills).forEach(function(k){ var el=document.getElementById('sk-'+k); if(el) appData.skills[k]=parseInt(el.value)||0; });
-  saveData(); showToast('Skills updated!',true);
+  Object.keys(appData.skills).forEach(function(k) {
+    var el = document.getElementById('sk-' + k);
+    if (el) appData.skills[k] = parseInt(el.value) || 0;
+  });
+  saveData(); showToast('Skills updated!', true);
 }
 
-/* ── TEACHER: FEEDBACK ── */
+/* TEACHER: FEEDBACK */
 function tFeedback() {
-  var fbCards=appData.feedback.map(function(f,i){
-    return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">'+f.title+'</div>'+
-      '<div style="display:flex;align-items:center;gap:8px"><div class="fb-date">'+f.date+'</div>'+
-      '<button class="del-btn" onclick="delFeedback('+i+')">✕</button></div></div>'+
-      '<div class="fb-text">'+f.text+'</div><div class="fb-stars">'+'★'.repeat(f.stars)+'☆'.repeat(5-f.stars)+'</div></div>';
+  var fbCards = appData.feedback.map(function(f, i) {
+    return '<div class="fb-card"><div class="fb-hd"><div class="fb-title-t">' + f.title + '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px"><div class="fb-date">' + f.date + '</div>' +
+      '<button class="del-btn" onclick="delFeedback(' + i + ')">✕</button></div></div>' +
+      '<div class="fb-text">' + f.text + '</div>' +
+      '<div class="fb-stars">' + '★'.repeat(f.stars) + '☆'.repeat(5 - f.stars) + '</div></div>';
   }).join('');
-  return '<div class="panel active"><div class="pg pg-t">Feedback & <em>Notes</em></div><div class="psub">Leave notes and feedback for '+appData.student.name+'.</div>'+
-    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Dashboard Note</div>'+
-    '<div class="fg"><label class="flab">Shown on '+appData.student.name+'\'s home screen</label><textarea class="fta" id="f-note" placeholder="Write a personal note…">'+(appData.note||'')+'</textarea></div>'+
-    '<div class="btn-row"><button class="btn-save" onclick="saveNote()">Save Note</button>'+(appData.note?'<button class="btn-cancel" onclick="clearNote()">Clear</button>':'')+'</div></div>'+
-    '<div class="card"><div class="card-title"><div class="dot"></div>Add Lesson Feedback</div>'+
-    '<div class="fg"><label class="flab">Title</label><input class="fi" id="fb-ti" placeholder="e.g. Lesson Review — M1 L1"></div>'+
-    '<div class="fg" style="margin-top:10px"><label class="flab">Feedback</label><textarea class="fta" id="fb-tx" placeholder="Your feedback…"></textarea></div>'+
-    '<div class="fg" style="margin-top:10px"><label class="flab">Rating — <span id="fb-sv">★★★★☆</span></label><input type="range" min="1" max="5" id="fb-st" value="4" oninput="updateStars(this.value)"></div>'+
-    '<div class="btn-row"><button class="btn-save" onclick="addFeedback()">Add Feedback</button></div></div>'+
-    (appData.feedback.length>0?'<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Saved Feedback ('+appData.feedback.length+')</div>'+fbCards+'</div>':'')+'</div>';
+
+  return '<div class="panel active"><div class="pg pg-t">Feedback & <em>Notes</em></div><div class="psub">Leave notes and feedback for ' + appData.student.name + '.</div>' +
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Dashboard Note</div>' +
+    '<div class="fg"><label class="flab">Shown on ' + appData.student.name + '\'s home screen</label><textarea class="fta" id="f-note" placeholder="Write a personal note…">' + (appData.note || '') + '</textarea></div>' +
+    '<div class="btn-row"><button class="btn-save" onclick="saveNote()">Save Note</button>' + (appData.note ? '<button class="btn-cancel" onclick="clearNote()">Clear</button>' : '') + '</div></div>' +
+    '<div class="card"><div class="card-title"><div class="dot"></div>Add Lesson Feedback</div>' +
+    '<div class="fg"><label class="flab">Title</label><input class="fi" id="fb-ti" placeholder="e.g. Lesson Review — M1 L1"></div>' +
+    '<div class="fg" style="margin-top:10px"><label class="flab">Feedback</label><textarea class="fta" id="fb-tx" placeholder="Your feedback…"></textarea></div>' +
+    '<div class="fg" style="margin-top:10px"><label class="flab">Rating — <span id="fb-sv">★★★★☆</span></label><input type="range" min="1" max="5" id="fb-st" value="4" oninput="updateStars(this.value)"></div>' +
+    '<div class="btn-row"><button class="btn-save" onclick="addFeedback()">Add Feedback</button></div></div>' +
+    (appData.feedback.length > 0 ? '<div class="card"><div class="card-title"><div class="dot" style="background:var(--success)"></div>Saved Feedback (' + appData.feedback.length + ')</div>' + fbCards + '</div>' : '') +
+    '</div>';
 }
 
-function saveNote() { var el=document.getElementById('f-note'); if(!el) return; appData.note=el.value.trim(); appData.noteDate=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); saveData(); showPanel('t-feedback'); showToast('Note saved!',true); }
-function clearNote() { appData.note=''; appData.noteDate=''; saveData(); showPanel('t-feedback'); showToast('Note cleared.',true); }
-function updateStars(v) { var el=document.getElementById('fb-sv'); if(el) el.textContent='★'.repeat(v)+'☆'.repeat(5-v); }
+function saveNote() { var el = document.getElementById('f-note'); if (!el) return; appData.note = el.value.trim(); appData.noteDate = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }); saveData(); showPanel('t-feedback'); showToast('Note saved!', true); }
+function clearNote() { appData.note = ''; appData.noteDate = ''; saveData(); showPanel('t-feedback'); showToast('Note cleared.', true); }
+function updateStars(v) { var el = document.getElementById('fb-sv'); if (el) el.textContent = '★'.repeat(v) + '☆'.repeat(5 - v); }
 function addFeedback() {
-  var ti=document.getElementById('fb-ti'); var tx=document.getElementById('fb-tx'); var st=document.getElementById('fb-st');
-  if(!ti||!tx) return;
-  if(!ti.value.trim()||!tx.value.trim()) { showToast('Fill in the title and feedback.'); return; }
-  appData.feedback.push({ title:ti.value.trim(), text:tx.value.trim(), stars:parseInt(st?st.value:4)||4, date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) });
-  saveData(); showPanel('t-feedback'); showToast('Feedback added!',true);
+  var ti = document.getElementById('fb-ti');
+  var tx = document.getElementById('fb-tx');
+  var st = document.getElementById('fb-st');
+  if (!ti || !tx || !ti.value.trim() || !tx.value.trim()) { showToast('Fill in title and feedback.'); return; }
+  appData.feedback.push({ title: ti.value.trim(), text: tx.value.trim(), stars: parseInt(st ? st.value : 4) || 4, date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) });
+  saveData(); showPanel('t-feedback'); showToast('Feedback added!', true);
 }
-function delFeedback(i) { appData.feedback.splice(i,1); saveData(); showPanel('t-feedback'); showToast('Deleted.',true); }
+function delFeedback(i) { appData.feedback.splice(i, 1); saveData(); showPanel('t-feedback'); showToast('Deleted.', true); }
 
-/* ── TEACHER: VOCAB ── */
+/* TEACHER: VOCAB */
 function tVocab() {
-  var tags=appData.vocabulary.map(function(v,i){ return '<span class="vtag">'+v.word+'<span class="vtag-x" onclick="removeVocab('+i+')">×</span></span>'; }).join('');
-  return '<div class="panel active"><div class="pg pg-t">Vocabulary <em>Editor</em></div><div class="psub">Add words for '+appData.student.name+' from each lesson.</div>'+
-    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Add New Word</div>'+
-    '<div class="two-col"><div class="fg"><label class="flab">Word / Phrase</label><input class="fi" id="v-w" placeholder="e.g. approximately"></div>'+
-    '<div class="fg"><label class="flab">Type</label><select class="fsel" id="v-t"><option>noun</option><option>verb</option><option>adjective</option><option>adverb</option><option>phrase</option><option>phrasal verb</option><option>idiom</option></select></div></div>'+
-    '<div class="fg"><label class="flab">Definition</label><input class="fi" id="v-d" placeholder="Short, clear definition…"></div>'+
-    '<div class="fg" style="margin-top:10px"><label class="flab">Example (optional)</label><input class="fi" id="v-e" placeholder="e.g. The flight takes approximately 3 hours."></div>'+
-    '<div class="btn-row" style="margin-top:8px"><button class="btn-save" onclick="addVocab()">Add Word</button></div></div>'+
-    (appData.vocabulary.length>0?'<div class="card"><div class="card-title"><div class="dot"></div>Words Added ('+appData.vocabulary.length+')</div><div>'+tags+'</div></div>':'')+'</div>';
+  var tags = appData.vocabulary.map(function(v, i) {
+    return '<span class="vtag">' + v.word + '<span class="vtag-x" onclick="removeVocab(' + i + ')">×</span></span>';
+  }).join('');
+  return '<div class="panel active"><div class="pg pg-t">Vocabulary <em>Editor</em></div><div class="psub">Add words for ' + appData.student.name + ' from each lesson.</div>' +
+    '<div class="card"><div class="card-title"><div class="dot" style="background:var(--teacher)"></div>Add New Word</div>' +
+    '<div class="two-col">' +
+    '<div class="fg"><label class="flab">Word / Phrase</label><input class="fi" id="v-w" placeholder="e.g. approximately"></div>' +
+    '<div class="fg"><label class="flab">Type</label><select class="fsel" id="v-t"><option>noun</option><option>verb</option><option>adjective</option><option>adverb</option><option>phrase</option><option>phrasal verb</option><option>idiom</option></select></div>' +
+    '</div>' +
+    '<div class="fg"><label class="flab">Definition</label><input class="fi" id="v-d" placeholder="Short, clear definition…"></div>' +
+    '<div class="fg" style="margin-top:10px"><label class="flab">Example (optional)</label><input class="fi" id="v-e" placeholder="e.g. The flight takes approximately 3 hours."></div>' +
+    '<div class="btn-row" style="margin-top:8px"><button class="btn-save" onclick="addVocab()">Add Word</button></div></div>' +
+    (appData.vocabulary.length > 0 ? '<div class="card"><div class="card-title"><div class="dot"></div>Words Added (' + appData.vocabulary.length + ')</div><div>' + tags + '</div></div>' : '') +
+    '</div>';
 }
-function addVocab() {
-  var w=document.getElementById('v-w'); var t=document.getElementById('v-t'); var d=document.getElementById('v-d'); var e=document.getElementById('v-e');
-  if(!w||!d) return;
-  if(!w.value.trim()||!d.value.trim()) { showToast('Word and definition required.'); return; }
-  appData.vocabulary.push({ word:w.value.trim(), type:t?t.value:'noun', def:d.value.trim(), ex:e?e.value.trim():'' });
-  appData.student.vocab=appData.vocabulary.length;
-  saveData(); showPanel('t-vocab'); showToast('"'+w.value.trim()+'" added!',true);
-}
-function removeVocab(i) { appData.vocabulary.splice(i,1); appData.student.vocab=appData.vocabulary.length; saveData(); showPanel('t-vocab'); showToast('Word removed.',true); }
 
-/* ── UTILS ── */
-function showToast(msg,isT) {
-  var t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast show '+(isT?'toast-t':'toast-d');
-  clearTimeout(window._t);
-  window._t=setTimeout(function(){t.classList.remove('show');},3000);
+function addVocab() {
+  var w = document.getElementById('v-w');
+  var t = document.getElementById('v-t');
+  var d = document.getElementById('v-d');
+  var e = document.getElementById('v-e');
+  if (!w || !d || !w.value.trim() || !d.value.trim()) { showToast('Word and definition required.'); return; }
+  appData.vocabulary.push({ word: w.value.trim(), type: t ? t.value : 'noun', def: d.value.trim(), ex: e ? e.value.trim() : '' });
+  appData.student.vocab = appData.vocabulary.length;
+  saveData(); showPanel('t-vocab'); showToast('"' + w.value.trim() + '" added!', true);
 }
-document.addEventListener('keydown',function(e){
-  if(e.key==='Enter'&&document.getElementById('login-screen').classList.contains('active')){
-    doLogin(document.getElementById('tab-t').classList.contains('active')?'teacher':'student');
+
+function removeVocab(i) { appData.vocabulary.splice(i, 1); appData.student.vocab = appData.vocabulary.length; saveData(); showPanel('t-vocab'); showToast('Word removed.', true); }
+
+/* UTILS */
+function showToast(msg, isT) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (isT ? 'toast-t' : 'toast-d');
+  clearTimeout(window._t);
+  window._t = setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('login-screen').classList.contains('active')) {
+    doLogin(document.getElementById('tab-t').classList.contains('active') ? 'teacher' : 'student');
   }
 });
 </script>
